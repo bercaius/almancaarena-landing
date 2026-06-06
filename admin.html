@@ -297,6 +297,49 @@
                     <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">Yükleniyor...</div>
                 </div>
             </div>
+
+            <!-- Özel Destek Talepleri (Tickets) Yönetimi -->
+            <div style="margin-top: 30px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; text-align: left;">
+                <h3 style="font-size: 15px; font-weight: 800; color: var(--secondary-accent); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;">🎫 Özel Destek Talepleri (Tickets)</h3>
+                
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <!-- Ticket List -->
+                    <div style="flex: 1; min-width: 250px;">
+                        <h4 style="font-size: 12px; color: #fff; margin-bottom: 10px;">Gelen Destek Talepleri</h4>
+                        <div id="admin-ticket-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto; padding-right: 5px;">
+                            <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">Yükleniyor...</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ticket Chat Screen -->
+                    <div id="admin-ticket-chat-panel" style="flex: 1.2; min-width: 300px; display: none; background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; margin-bottom: 12px;">
+                            <strong id="adm-chat-title" style="color: #fff; font-size: 13px;">Sohbet Odası</strong>
+                            <span id="adm-chat-status" class="status-badge status-on" style="font-size: 10px; padding: 2px 8px; border-radius: 6px;">AÇIK</span>
+                        </div>
+                        
+                        <!-- Chat messages -->
+                        <div id="adm-chat-messages" style="display: flex; flex-direction: column; gap: 10px; max-height: 220px; overflow-y: auto; padding-right: 5px; margin-bottom: 12px;">
+                            <!-- Loaded dynamically -->
+                        </div>
+                        
+                        <!-- Chat input -->
+                        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                            <input type="text" id="adm-chat-input" placeholder="Cevabınızı yazın kanka..." style="flex-grow: 1; font-size: 12px; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; outline: none;">
+                            <button class="btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 11px; font-weight: bold; background: var(--secondary-accent); color: #000; border-radius: 6px;" onclick="sendAdminTicketMessage()">Gönder</button>
+                        </div>
+                        
+                        <!-- Status actions -->
+                        <div style="display: flex; gap: 8px; justify-content: space-between;">
+                            <div style="display: flex; gap: 6px;">
+                                <button class="btn" style="width: auto; margin-top: 0; padding: 4px 10px; font-size: 10px; font-weight: bold; background: var(--alert-green); color: #fff; border-radius: 6px;" onclick="updateTicketStatus('cevaplandı')">Cevaplandı Yap</button>
+                                <button class="btn" style="width: auto; margin-top: 0; padding: 4px 10px; font-size: 10px; font-weight: bold; background: var(--text-muted); color: #fff; border-radius: 6px;" onclick="updateTicketStatus('kapatıldı')">Kapat</button>
+                            </div>
+                            <button class="btn" style="width: auto; margin-top: 0; padding: 4px 10px; font-size: 10px; font-weight: bold; background: var(--alert-red); color: #fff; border-radius: 6px;" onclick="deleteTicket()">Talebi Sil</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -350,6 +393,7 @@
                 document.getElementById("panel-content").style.display = "block";
                 loadCurrentConfig();
                 listenToFeedbacks(); // Start listening to feedbacks dynamically
+                listenToTickets();   // Start listening to tickets dynamically
             } else {
                 showToast("Hatalı PIN Kodu! ❌");
             }
@@ -501,12 +545,26 @@
                     list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">Henüz hiç yorum yapılmamış kanka.</div>`;
                     return;
                 }
+
+                // Client-side sorting: Pinned first
+                const items = [];
                 snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const docId = doc.id;
+                    items.push({ id: doc.id, ...doc.data() });
+                });
+
+                items.sort((a, b) => {
+                    const aPinned = a.pinned === true;
+                    const bPinned = b.pinned === true;
+                    if (aPinned && !bPinned) return -1;
+                    if (!aPinned && bPinned) return 1;
+                    return (b.timestamp || 0) - (a.timestamp || 0);
+                });
+
+                items.forEach((data) => {
+                    const docId = data.id;
                     const card = document.createElement("div");
                     card.style.background = "rgba(0,0,0,0.2)";
-                    card.style.border = "1px solid rgba(255,255,255,0.08)";
+                    card.style.border = data.pinned ? "1.5px solid var(--color-gold)" : "1px solid rgba(255,255,255,0.08)";
                     card.style.borderRadius = "12px";
                     card.style.padding = "12px";
                     card.style.marginBottom = "10px";
@@ -522,22 +580,39 @@
                         catColor = "var(--secondary-accent)";
                     }
 
+                    let pinButtonText = data.pinned ? "📌 Sabiti Kaldır" : "📌 Sabitle";
+
+                    let replyActionsHtml = "";
+                    if (data.reply) {
+                        replyActionsHtml = `
+                            <div style="display: flex; gap: 6px; margin-top: 4px;">
+                                <button class="btn" style="width: auto; margin-top: 0; padding: 3px 8px; font-size: 10px; background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px;" onclick="editAdminReply('${docId}', '${escapeJsString(data.reply)}')">Cevabı Düzenle</button>
+                                <button class="btn" style="width: auto; margin-top: 0; padding: 3px 8px; font-size: 10px; background: rgba(229, 57, 53, 0.15); color: #e53935; border-radius: 4px;" onclick="deleteAdminReply('${docId}')">Cevabı Sil</button>
+                            </div>
+                        `;
+                    }
+
                     card.innerHTML = `
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                            <strong style="color: #fff; font-size: 13px;">${escapeHtml(data.userName)}</strong>
+                            <strong style="color: #fff; font-size: 13px;">
+                                ${escapeHtml(data.userName)} 
+                                ${data.pinned ? '<span style="font-size: 10px; color: var(--color-gold); background: rgba(212,175,55,0.1); padding: 1px 4px; border-radius: 4px; margin-left: 6px;">Sabitlendi</span>' : ''}
+                            </strong>
                             <span style="font-size: 10px; color: ${catColor}; font-weight: bold;">${catText}</span>
                         </div>
                         <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 8px; line-height: 1.4;">${escapeHtml(data.comment)}</p>
                         
                         ${data.reply ? `
                         <div style="background: rgba(212,175,55,0.05); border-left: 2px solid var(--color-gold); padding: 6px 10px; border-radius: 4px; font-size: 11px; margin-bottom: 8px; color: var(--text-light);">
-                            <strong>🏢 Yanıtınız:</strong> ${escapeHtml(data.reply)}
+                            <strong>🏢 TurcoDevelop Cevabı:</strong> ${escapeHtml(data.reply)}
+                            ${replyActionsHtml}
                         </div>
                         ` : ''}
 
-                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                        <div style="display: flex; gap: 8px; margin-top: 8px; align-items: center;">
                             <input type="text" id="reply-input-${docId}" placeholder="Cevabınızı yazın..." style="flex-grow: 1; font-size: 12px; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; outline: none;">
                             <button class="btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 11px; font-weight: bold; background: var(--secondary-accent); color: #000; border-radius: 6px;" onclick="submitAdminReply('${docId}')">Cevapla</button>
+                            <button class="btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 11px; font-weight: bold; background: rgba(255,255,255,0.05); color: #fff; border-radius: 6px;" onclick="togglePinFeedback('${docId}', ${data.pinned === true})">${pinButtonText}</button>
                             <button class="btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 11px; font-weight: bold; background: var(--alert-red); color: #fff; border-radius: 6px;" onclick="deleteFeedback('${docId}')">Sil</button>
                         </div>
                     `;
@@ -558,6 +633,13 @@
                 .replace(/'/g, "&#039;");
         }
 
+        function escapeJsString(text) {
+            if (!text) return "";
+            return text
+                .replace(/'/g, "\\'")
+                .replace(/"/g, '\\"');
+        }
+
         function submitAdminReply(docId) {
             const input = document.getElementById(`reply-input-${docId}`);
             const replyText = input.value.trim();
@@ -569,10 +651,32 @@
                 reply: replyText,
                 replyTimestamp: Date.now()
             }).then(() => {
-                showToast("Yanıt online olarak gönderildi! ⚡");
+                showToast("Yanıt online olarak kaydedildi! ⚡");
+                input.value = "";
             }).catch((error) => {
                 console.error("Yorum yanıtlama hatası:", error);
                 showToast("Yanıt gönderilemedi! ❌");
+            });
+        }
+
+        function editAdminReply(docId, oldReply) {
+            const input = document.getElementById(`reply-input-${docId}`);
+            if (input) {
+                input.value = oldReply;
+                input.focus();
+            }
+        }
+
+        function deleteAdminReply(docId) {
+            if (!confirm("Bu cevabı silmek istediğine emin misin kanka? 🐾")) return;
+            db.collection("feedbacks").doc(docId).update({
+                reply: "",
+                replyTimestamp: 0
+            }).then(() => {
+                showToast("Cevabınız silindi! 🗑️");
+            }).catch((error) => {
+                console.error("Cevap silme hatası:", error);
+                showToast("Cevap silinemedi! ❌");
             });
         }
 
@@ -583,6 +687,169 @@
             }).catch((error) => {
                 console.error("Yorum silme hatası:", error);
                 showToast("Silinemedi! ❌");
+            });
+        }
+
+        function togglePinFeedback(docId, currentPinned) {
+            db.collection("feedbacks").doc(docId).update({
+                pinned: !currentPinned
+            }).then(() => {
+                showToast(currentPinned ? "Sabit kaldırıldı! 📌" : "Yorum sabitlendi! 📌");
+            }).catch((error) => {
+                console.error("Sabitleme hatası:", error);
+                showToast("İşlem başarısız! ❌");
+            });
+        }
+
+        // --- TICKETS SYSTEM (Yönetici) ---
+        let activeAdminTicketId = null;
+        let adminTicketListener = null;
+
+        function listenToTickets() {
+            db.collection("tickets").orderBy("lastUpdated", "desc").onSnapshot((snapshot) => {
+                const list = document.getElementById("admin-ticket-list");
+                if (!list) return;
+                list.innerHTML = "";
+                if (snapshot.empty) {
+                    list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">Henüz hiç destek talebi açılmamış kanka.</div>`;
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const docId = doc.id;
+                    const card = document.createElement("div");
+                    card.style.background = "rgba(0,0,0,0.2)";
+                    card.style.border = activeAdminTicketId === docId ? "1.5px solid var(--color-gold)" : "1px solid rgba(255,255,255,0.08)";
+                    card.style.borderRadius = "10px";
+                    card.style.padding = "10px";
+                    card.style.cursor = "pointer";
+                    card.style.textAlign = "left";
+                    card.onclick = () => openAdminTicketChat(docId);
+
+                    const statusColor = data.status === 'açık' ? 'var(--alert-red)' : 'var(--alert-green)';
+
+                    card.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <strong style="color: #fff; font-size: 12px;">${escapeHtml(data.userName)} (${escapeHtml(data.ticketId)})</strong>
+                            <span style="font-size: 9px; color: ${statusColor}; font-weight: bold; text-transform: uppercase;">${data.status}</span>
+                        </div>
+                        <div style="font-size: 11px; color: var(--secondary-accent); font-weight: 700; margin-bottom: 2px;">Konu: ${escapeHtml(data.subject)}</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">E-posta: ${escapeHtml(data.email)}</div>
+                    `;
+                    list.appendChild(card);
+                });
+            }, (error) => {
+                console.error("Bilet dinleme hatası:", error);
+            });
+        }
+
+        function openAdminTicketChat(ticketId) {
+            activeAdminTicketId = ticketId;
+            document.getElementById("admin-ticket-chat-panel").style.display = "block";
+            
+            // Re-render ticket list border highlights
+            listenToTickets();
+
+            if (adminTicketListener) adminTicketListener(); // Unsubscribe first
+
+            adminTicketListener = db.collection("tickets").doc(ticketId).onSnapshot((doc) => {
+                if (!doc.exists) {
+                    document.getElementById("admin-ticket-chat-panel").style.display = "none";
+                    return;
+                }
+                const data = doc.data();
+
+                document.getElementById("adm-chat-title").innerText = `${escapeHtml(data.userName)} - ${escapeHtml(data.subject)} (${data.ticketId})`;
+                const statusBadge = document.getElementById("adm-chat-status");
+                statusBadge.innerText = data.status.toUpperCase();
+                statusBadge.className = `status-badge status-${data.status === 'açık' ? 'on' : 'off'}`;
+
+                const chatMessagesList = document.getElementById("adm-chat-messages");
+                chatMessagesList.innerHTML = "";
+
+                (data.messages || []).forEach((msg) => {
+                    const msgDiv = document.createElement("div");
+                    const isStudio = msg.sender === "TurcoDevelop";
+                    msgDiv.style.padding = "8px 10px";
+                    msgDiv.style.borderRadius = "10px";
+                    msgDiv.style.fontSize = "11px";
+                    msgDiv.style.lineHeight = "1.4";
+                    msgDiv.style.maxWidth = "80%";
+                    msgDiv.style.marginBottom = "6px";
+                    
+                    if (isStudio) {
+                        msgDiv.style.background = "rgba(212, 175, 55, 0.08)";
+                        msgDiv.style.border = "1px solid rgba(212, 175, 55, 0.2)";
+                        msgDiv.style.alignSelf = "flex-end";
+                        msgDiv.style.marginLeft = "auto";
+                    } else {
+                        msgDiv.style.background = "rgba(255, 255, 255, 0.04)";
+                        msgDiv.style.border = "1px solid rgba(255, 255, 255, 0.08)";
+                        msgDiv.style.alignSelf = "flex-start";
+                    }
+
+                    const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    msgDiv.innerHTML = `
+                        <div style="font-weight: bold; font-size: 9px; color: ${isStudio ? 'var(--color-gold)' : '#fff'}; margin-bottom: 2px;">
+                            ${isStudio ? '🏢 TurcoDevelop' : escapeHtml(data.userName)}
+                        </div>
+                        <div style="color: #fff;">${escapeHtml(msg.text)}</div>
+                        <div style="font-size: 8px; color: var(--text-muted); text-align: right; margin-top: 3px;">${time}</div>
+                    `;
+                    chatMessagesList.appendChild(msgDiv);
+                });
+
+                chatMessagesList.scrollTop = chatMessagesList.scrollHeight;
+            });
+        }
+
+        function sendAdminTicketMessage() {
+            const input = document.getElementById("adm-chat-input");
+            const text = input.value.trim();
+            if (!text || !activeAdminTicketId) return;
+
+            const now = Date.now();
+            db.collection("tickets").doc(activeAdminTicketId).update({
+                messages: firebase.firestore.FieldValue.arrayUnion({
+                    sender: "TurcoDevelop",
+                    text: text,
+                    timestamp: now
+                }),
+                lastUpdated: now,
+                status: "cevaplandı" // Set status to answered when admin replies
+            }).then(() => {
+                input.value = "";
+            }).catch((err) => {
+                console.error("Bilet mesajı gönderme hatası:", err);
+                showToast("Mesaj gönderilemedi! ❌");
+            });
+        }
+
+        function updateTicketStatus(status) {
+            if (!activeAdminTicketId) return;
+            db.collection("tickets").doc(activeAdminTicketId).update({
+                status: status,
+                lastUpdated: Date.now()
+            }).then(() => {
+                showToast(`Talep durumu '${status.toUpperCase()}' olarak güncellendi! ⚡`);
+            }).catch((err) => {
+                console.error("Durum güncelleme hatası:", err);
+                showToast("Durum güncellenemedi! ❌");
+            });
+        }
+
+        function deleteTicket() {
+            if (!activeAdminTicketId) return;
+            if (!confirm("Bu destek talebini tamamen silmek istediğine emin misin kanka? 🐾")) return;
+            db.collection("tickets").doc(activeAdminTicketId).delete().then(() => {
+                showToast("Destek talebi tamamen silindi! 🗑️");
+                activeAdminTicketId = null;
+                document.getElementById("admin-ticket-chat-panel").style.display = "none";
+                listenToTickets();
+            }).catch((err) => {
+                console.error("Bilet silme hatası:", err);
+                showToast("Silme başarısız! ❌");
             });
         }
     </script>

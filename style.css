@@ -1807,3 +1807,215 @@ footer {
 .web-toast.show {
   transform: translateX(-50%) translateY(0);
 }
+
+/* Mobil Sekme Butonları */
+.maint-mobile-tabs {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  .maint-mobile-tabs {
+    display: flex;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 4px;
+    margin-bottom: 25px;
+    gap: 5px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .maint-tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 10px 5px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    white-space: nowrap;
+  }
+  
+  .maint-tab-btn.active {
+    background: var(--color-gold);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(223, 186, 115, 0.2);
+  }
+
+  #maint-mobile-sec-feedbacks, #maint-mobile-sec-support {
+    display: none;
+  }
+}
+
+@media (min-width: 992px) {
+  #maint-mobile-sec-bello, #maint-mobile-sec-feedbacks, #maint-mobile-sec-support {
+    display: block !important;
+  }
+}
+
+/* Yorum Listesinin Aşağı Doğru Uzaması ve Düzgün Görünmesi */
+.feedback-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin: 15px 0;
+  padding-right: 5px;
+  text-align: left;
+}
+
+/* Sabitlenen Görüş Kartı Stili (Pinned Card) */
+.pinned-card {
+  border: 1px solid var(--color-gold) !important;
+  background: rgba(212, 175, 55, 0.03) !important;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.1) !important;
+}
+
+.pinned-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--color-gold);
+  background: rgba(212, 175, 55, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Destek Odası / Ticket Stilleri */
+.ticket-section {
+  margin-top: 35px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 25px;
+}
+
+.ticket-nav-tabs {
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 15px;
+  gap: 4px;
+}
+
+.tkt-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.tkt-tab-btn.active {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ticket-box {
+  background: rgba(255, 255, 255, 0.005);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.ticket-success-card {
+  text-align: center;
+  padding: 10px;
+}
+
+.ticket-code-display {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-gold);
+  background: rgba(212, 175, 55, 0.08);
+  border: 1.5px dashed var(--color-gold);
+  padding: 12px;
+  border-radius: 12px;
+  margin: 15px 0;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(223, 186, 115, 0.2);
+}
+
+.ticket-warn-txt {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Sohbet Odası */
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+.chat-messages {
+  max-height: 250px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 5px;
+}
+
+.chat-msg {
+  padding: 10px 12px;
+  border-radius: 14px;
+  max-width: 85%;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  position: relative;
+}
+
+.user-msg {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  align-self: flex-start;
+  border-bottom-left-radius: 3px;
+}
+
+.studio-msg {
+  background: rgba(212, 175, 55, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  align-self: flex-end;
+  border-bottom-right-radius: 3px;
+}
+
+.msg-sender {
+  font-weight: 700;
+  font-size: 0.65rem;
+  margin-bottom: 3px;
+  color: var(--text-muted);
+}
+
+.studio-msg .msg-sender {
+  color: var(--color-gold);
+}
+
+.msg-text {
+  color: #fff;
+  text-align: left;
+}
+
+.msg-time {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: 4px;
+}
+

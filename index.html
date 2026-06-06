@@ -36,9 +36,16 @@
         <span class="logo-text-maint">Almanca<span>Arena</span></span>
       </div>
       
+      <!-- Mobil Cihazlar İçin Sekmeli Navigasyon Çubuğu -->
+      <div class="maint-mobile-tabs">
+        <button class="maint-tab-btn active" id="btn-tab-bello" onclick="switchMobileTab('bello')">🐾 Bello & Mağaza</button>
+        <button class="maint-tab-btn" id="btn-tab-feedbacks" onclick="switchMobileTab('feedbacks')">💬 Görüşler</button>
+        <button class="maint-tab-btn" id="btn-tab-support" onclick="switchMobileTab('support')">🎫 Canlı Destek</button>
+      </div>
+      
       <div class="maint-cols-wrapper">
         <!-- SOL KOLON (Mascot, Sayaç, Sosyal ve Mağaza) -->
-        <div class="maint-left-col">
+        <div class="maint-left-col" id="maint-mobile-sec-bello">
           <div class="maintenance-mascot-container">
             <div class="maint-speech-bubble" id="maint-bubble" style="display: none;">Zzz... Uyuyorum kanka!</div>
             <img src="assets/bello_sleeping.png" alt="Bello Uyuyor" class="mascot-sleeping">
@@ -98,11 +105,11 @@
           </div>
         </div>
 
-        <!-- SAĞ KOLON (Geri Bildirimler & Yorumlar) -->
+        <!-- SAĞ KOLON (Geri Bildirimler & Yorumlar & Canlı Destek) -->
         <div class="maint-right-col">
           <!-- Feedbacks Section -->
-          <div class="feedback-section">
-            <p class="social-title-maint">Kullanıcı Görüşleri & Geri Bildirimler</p>
+          <div class="feedback-section" id="maint-mobile-sec-feedbacks">
+            <p class="social-title-maint">💬 Kullanıcı Görüşleri & Geri Bildirimler</p>
             <div class="feedback-list" id="feedback-display-list">
               <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 20px;">Yorumlar yükleniyor...</div>
             </div>
@@ -120,6 +127,56 @@
               <textarea id="fb-comment" placeholder="Almanca Arena hakkındaki görüşlerinizi yazın..." required style="height: 60px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none; resize: none; width: 100%; margin-top: 8px;"></textarea>
               <button class="store-code-btn" type="submit" style="margin-top: 8px; font-size: 0.8rem; padding: 8px; border-style: solid;">Geri Bildirim Gönder 🐾</button>
             </form>
+          </div>
+
+          <!-- Özel Destek Odası (Ticket) Bölümü -->
+          <div class="ticket-section" id="maint-mobile-sec-support">
+            <p class="social-title-maint">🎫 Özel Destek Odası (Ticket)</p>
+            <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4; text-align: left;">
+              Bizimle özel olarak mesajlaşabilirsin kanka. Talepler yoğunluğa göre geç yanıtlanabilir. Acil durumlarda doğrudan <strong>turcodevelop@gmail.com</strong> adresine yazabilirsin.
+            </p>
+            
+            <div class="ticket-nav-tabs">
+              <button class="tkt-tab-btn active" id="tab-new-tkt" onclick="openNewTicketTab()">Yeni Talep</button>
+              <button class="tkt-tab-btn" id="tab-query-tkt" onclick="openQueryTicketTab()">Talep Sorgula</button>
+            </div>
+
+            <!-- Create Ticket Box -->
+            <div id="ticket-create-box" class="ticket-box">
+              <form onsubmit="createTicket(event)" class="feedback-form">
+                <div class="feedback-row">
+                  <input type="text" id="tkt-name" placeholder="Adınız" required style="width: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                  <input type="email" id="tkt-email" placeholder="E-posta" required style="width: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                </div>
+                <input type="text" id="tkt-subject" placeholder="Konu (Örn: Altın Transferi)" required style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none; width: 100%;">
+                <textarea id="tkt-msg" placeholder="Lütfen mesajınızı detaylıca yazın..." required style="height: 65px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none; resize: none; width: 100%;"></textarea>
+                <button class="store-code-btn" type="submit" style="font-size: 0.8rem; padding: 8px; border-style: solid;">Destek Talebi Oluştur 🐾</button>
+              </form>
+            </div>
+
+            <!-- Query Ticket Box -->
+            <div id="ticket-query-box" class="ticket-box" style="display: none;">
+              <div class="feedback-row">
+                <input type="text" id="tkt-code-input" placeholder="Destek Kodu (Örn: TURCO-1234)" style="width: 70%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                <button class="store-code-btn" type="button" style="width: 30%; font-size: 0.8rem; padding: 8px; border-style: solid;" onclick="queryTicket()">Sorgula</button>
+              </div>
+            </div>
+
+            <!-- Chat Room Box -->
+            <div id="ticket-chat-box" class="ticket-box" style="display: none;">
+              <div class="chat-header">
+                <span id="chat-subject-title" style="font-weight: 700; font-size: 0.82rem; color: #fff; text-align: left;">Sohbet</span>
+                <span id="chat-status-badge" class="status-badge status-on">AÇIK</span>
+              </div>
+              <div class="chat-messages" id="chat-messages-list">
+                <!-- Messages load here -->
+              </div>
+              <div class="chat-input-row" style="display: flex; gap: 8px; margin-top: 10px;">
+                <input type="text" id="chat-input-text" placeholder="Mesajınızı yazın kanka..." style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                <button class="store-code-btn" style="width: auto; padding: 8px 16px; border-style: solid;" onclick="sendTicketMessage()">Gönder</button>
+              </div>
+              <button class="store-code-btn" style="margin-top: 10px; border-style: dashed; font-size: 0.72rem; padding: 4px;" onclick="openQueryTicketTab()">Sohbetten Çık</button>
+            </div>
           </div>
         </div>
       </div>
@@ -819,10 +876,26 @@
         return;
       }
       
+      // Client-side sorting: Pinned first, then by timestamp desc
+      const feedbacks = [];
       querySnapshot.forEach((doc) => {
-        const data = doc.data();
+        feedbacks.push({ id: doc.id, ...doc.data() });
+      });
+      
+      feedbacks.sort((a, b) => {
+        const aPinned = a.pinned === true;
+        const bPinned = b.pinned === true;
+        if (aPinned && !bPinned) return -1;
+        if (!aPinned && bPinned) return 1;
+        return (b.timestamp || 0) - (a.timestamp || 0);
+      });
+      
+      feedbacks.forEach((data) => {
         const card = document.createElement("div");
         card.className = "feedback-card";
+        if (data.pinned) {
+          card.classList.add("pinned-card");
+        }
         
         let tagClass = "tag-thanks";
         let tagText = "Teşekkür";
@@ -834,11 +907,13 @@
           tagText = "Öneri";
         }
         
+        let pinnedBadge = data.pinned ? `<span class="pinned-badge">📌 Sabitlenen Görüş</span>` : "";
+        
         let replyHtml = "";
         if (data.reply) {
           replyHtml = `
             <div class="feedback-reply-box">
-              <div class="feedback-reply-title">🏢 Stüdyo Yanıtı:</div>
+              <div class="feedback-reply-title">🏢 TurcoDevelop Cevabı:</div>
               <div>${data.reply}</div>
             </div>
           `;
@@ -846,7 +921,7 @@
         
         card.innerHTML = `
           <div class="feedback-user-row">
-            <span class="feedback-user">${escapeHtml(data.userName)}</span>
+            <span class="feedback-user">${escapeHtml(data.userName)} ${pinnedBadge}</span>
             <span class="feedback-tag ${tagClass}">${tagText}</span>
           </div>
           <p class="feedback-comment">${escapeHtml(data.comment)}</p>
@@ -857,6 +932,203 @@
     }, (error) => {
       console.error("Geri bildirim dinleme hatası:", error);
     });
+
+    // Mobil Sekme Geçişi
+    function switchMobileTab(tabName) {
+      const secBello = document.getElementById("maint-mobile-sec-bello");
+      const secFeedbacks = document.getElementById("maint-mobile-sec-feedbacks");
+      const secSupport = document.getElementById("maint-mobile-sec-support");
+      
+      const btnBello = document.getElementById("btn-tab-bello");
+      const btnFeedbacks = document.getElementById("btn-tab-feedbacks");
+      const btnSupport = document.getElementById("btn-tab-support");
+
+      if (tabName === "bello") {
+        secBello.style.display = "block";
+        secFeedbacks.style.display = "none";
+        secSupport.style.display = "none";
+        
+        btnBello.classList.add("active");
+        btnFeedbacks.classList.remove("active");
+        btnSupport.classList.remove("active");
+      } else if (tabName === "feedbacks") {
+        secBello.style.display = "none";
+        secFeedbacks.style.display = "block";
+        secSupport.style.display = "none";
+        
+        btnBello.classList.remove("active");
+        btnFeedbacks.classList.add("active");
+        btnSupport.classList.remove("active");
+      } else if (tabName === "support") {
+        secBello.style.display = "none";
+        secFeedbacks.style.display = "none";
+        secSupport.style.display = "block";
+        
+        btnBello.classList.remove("active");
+        btnFeedbacks.classList.remove("active");
+        btnSupport.classList.add("active");
+      }
+    }
+
+    // --- TICKET SYSTEM ---
+    function openNewTicketTab() {
+      document.getElementById("ticket-create-box").style.display = "block";
+      document.getElementById("ticket-query-box").style.display = "none";
+      document.getElementById("ticket-chat-box").style.display = "none";
+      document.getElementById("tab-new-tkt").classList.add("active");
+      document.getElementById("tab-query-tkt").classList.remove("active");
+    }
+
+    function openQueryTicketTab() {
+      document.getElementById("ticket-create-box").style.display = "none";
+      document.getElementById("ticket-query-box").style.display = "block";
+      document.getElementById("ticket-chat-box").style.display = "none";
+      document.getElementById("tab-new-tkt").classList.remove("active");
+      document.getElementById("tab-query-tkt").classList.add("active");
+    }
+
+    // Generate unique random ticket code
+    function generateTicketCode() {
+      const chars = "0123456789";
+      let code = "";
+      for (let i = 0; i < 4; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return "TURCO-" + code;
+    }
+
+    let activeTicketId = null;
+    let ticketListener = null;
+
+    // Create Ticket
+    function createTicket(event) {
+      event.preventDefault();
+      const name = document.getElementById("tkt-name").value.trim();
+      const email = document.getElementById("tkt-email").value.trim();
+      const subject = document.getElementById("tkt-subject").value.trim();
+      const msg = document.getElementById("tkt-msg").value.trim();
+
+      if (!name || !email || !subject || !msg) {
+        showWebToast("Lütfen tüm alanları doldur kanka! 🐾");
+        return;
+      }
+
+      const ticketCode = generateTicketCode();
+      const now = Date.now();
+
+      db.collection("tickets").doc(ticketCode).set({
+        ticketId: ticketCode,
+        userName: name,
+        email: email,
+        subject: subject,
+        status: "açık",
+        createdAt: now,
+        lastUpdated: now,
+        messages: [
+          {
+            sender: "user",
+            text: msg,
+            timestamp: now
+          }
+        ]
+      }).then(() => {
+        showWebToast("Destek talebin oluşturuldu kanka! 🐾");
+        document.getElementById("ticket-create-box").innerHTML = `
+          <div class="ticket-success-card">
+            <h4 style="color: #4caf50; font-size: 0.95rem; margin-bottom: 10px;">Destek Talebi Başarıyla Oluşturuldu! 🎉</h4>
+            <p style="font-size: 0.78rem; color: #fff;">Talebinizin yanıtlarını takip etmek için lütfen aşağıdaki destek kodunu kaydedin:</p>
+            <div class="ticket-code-display">${ticketCode}</div>
+            <p class="ticket-warn-txt">⚠️ Önemli: Yoğunluğa bağlı olarak yanıt süremiz uzayabilir. Acil konularda doğrudan <strong>turcodevelop@gmail.com</strong> adresine e-posta atabilirsiniz.</p>
+            <button class="store-code-btn" style="margin-top: 15px; width: auto; padding: 6px 20px; border-style: solid;" onclick="location.reload()">Tamam</button>
+          </div>
+        `;
+      }).catch((err) => {
+        console.error("Ticket oluşturma hatası:", err);
+        showWebToast("Hata: Talep oluşturulamadı. ❌");
+      });
+    }
+
+    // Query Ticket
+    function queryTicket() {
+      const code = document.getElementById("tkt-code-input").value.trim().toUpperCase();
+      if (!code) {
+        showWebToast("Lütfen bir destek kodu gir kanka! 🐾");
+        return;
+      }
+
+      db.collection("tickets").doc(code).get().then((doc) => {
+        if (!doc.exists) {
+          showWebToast("Geçersiz veya bulunamayan destek kodu! ❌");
+          return;
+        }
+        activeTicketId = code;
+        openTicketChat(code);
+      }).catch((err) => {
+        console.error("Ticket sorgulama hatası:", err);
+        showWebToast("Sorgulama hatası oluştu! ❌");
+      });
+    }
+
+    // Open chat and listen to updates
+    function openTicketChat(ticketCode) {
+      document.getElementById("ticket-query-box").style.display = "none";
+      document.getElementById("ticket-create-box").style.display = "none";
+      document.getElementById("ticket-chat-box").style.display = "block";
+
+      if (ticketListener) ticketListener(); // Unsubscribe first
+      
+      ticketListener = db.collection("tickets").doc(ticketCode).onSnapshot((doc) => {
+        if (!doc.exists) return;
+        const data = doc.data();
+
+        document.getElementById("chat-subject-title").innerText = `${data.subject} (${data.ticketId})`;
+        const statusBadge = document.getElementById("chat-status-badge");
+        statusBadge.innerText = data.status.toUpperCase();
+        statusBadge.className = `status-badge status-${data.status === 'açık' ? 'on' : 'off'}`;
+
+        const chatList = document.getElementById("chat-messages-list");
+        chatList.innerHTML = "";
+        
+        (data.messages || []).forEach((msg) => {
+          const msgDiv = document.createElement("div");
+          const isStudio = msg.sender === "TurcoDevelop";
+          msgDiv.className = isStudio ? "chat-msg studio-msg" : "chat-msg user-msg";
+          
+          const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          msgDiv.innerHTML = `
+            <div class="msg-sender">${isStudio ? '🏢 TurcoDevelop' : escapeHtml(data.userName)}</div>
+            <div class="msg-text">${escapeHtml(msg.text)}</div>
+            <div class="msg-time">${time}</div>
+          `;
+          chatList.appendChild(msgDiv);
+        });
+
+        chatList.scrollTop = chatList.scrollHeight;
+      });
+    }
+
+    // Send Message inside chat
+    function sendTicketMessage() {
+      const input = document.getElementById("chat-input-text");
+      const text = input.value.trim();
+      if (!text || !activeTicketId) return;
+
+      const now = Date.now();
+      db.collection("tickets").doc(activeTicketId).update({
+        messages: firebase.firestore.FieldValue.arrayUnion({
+          sender: "user",
+          text: text,
+          timestamp: now
+        }),
+        lastUpdated: now,
+        status: "açık"
+      }).then(() => {
+        input.value = "";
+      }).catch((err) => {
+        console.error("Mesaj gönderme hatası:", err);
+        showWebToast("Mesaj gönderilemedi! ❌");
+      });
+    }
 
     function escapeHtml(text) {
       if (!text) return "";
