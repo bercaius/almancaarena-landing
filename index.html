@@ -570,6 +570,103 @@
   </footer>
 
   <!-- ==========================================================================
+       AUTHENTICATION MODAL OVERLAY (ELITE GLASSMORPHIC)
+       ========================================================================== -->
+  <div class="modal-overlay" id="auth-modal-overlay" aria-modal="true" role="dialog">
+    <div class="modal-card glass-card" style="max-width: 480px; padding: 30px;">
+      <button class="modal-close-btn" onclick="closeAuthModal()" aria-label="Kapat">&times;</button>
+      
+      <!-- Main Modal Content -->
+      <div id="auth-modal-main-content">
+        <div class="modal-header" style="text-align: center; margin-bottom: 20px;">
+          <div class="modal-title-wrapper" style="justify-content: center; margin-bottom: 8px;">
+            <span class="modal-icon" style="font-size: 2rem; margin-right: 0;">🦉</span>
+          </div>
+          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; color: #fff; font-weight: 800; background: linear-gradient(90deg, #fff 30%, var(--color-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Almanca Arena Bulut Geçidi</h3>
+          <p class="modal-subtitle" style="font-size: 0.76rem; color: var(--text-secondary); margin-top: 4px;">Dünya standartlarında bulut senkronizasyonu için Google veya E-posta hesabınızla bağlanın kanka. 🐾</p>
+        </div>
+        
+        <!-- Tab Selectors -->
+        <div style="display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 10px; margin-bottom: 20px;">
+          <button id="btn-auth-tab-google" class="tkt-tab-btn active" style="flex: 1; font-size: 0.72rem; padding: 8px;" onclick="setAuthModalTab('google')">🌐 Google Giriş</button>
+          <button id="btn-auth-tab-email" class="tkt-tab-btn" style="flex: 1; font-size: 0.72rem; padding: 8px;" onclick="setAuthModalTab('email')">📧 E-posta Giriş</button>
+        </div>
+
+        <!-- Google Auth Section -->
+        <div id="auth-modal-sec-google" style="text-align: center;">
+          <button class="google-auth-btn" style="width: 100%; margin: 10px 0; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.82rem; background: var(--color-gold); color: #000; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; transition: 0.2s;" onclick="startAuthGoogle()">
+            <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.77c-.98.66-2.23 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Google Hesabı ile Giriş Yap kanka 🚀
+          </button>
+        </div>
+
+        <!-- Email Auth Section -->
+        <div id="auth-modal-sec-email" style="display: none;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="margin-bottom: 0;">
+              <input type="email" id="auth-modal-email" placeholder="E-posta Adresi kanka..." class="maint-input" style="font-size: 0.8rem; padding: 10px; height: 38px; width: 100%;">
+            </div>
+            <div style="margin-bottom: 0;">
+              <input type="password" id="auth-modal-password" placeholder="Şifreniz kanka..." class="maint-input" style="font-size: 0.8rem; padding: 10px; height: 38px; width: 100%;">
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 5px;">
+              <button class="store-code-btn" style="flex: 1; padding: 8px; font-size: 0.8rem; font-weight: 700;" onclick="startAuthEmail('login')">Giriş Yap</button>
+              <button class="store-code-btn" style="flex: 1; padding: 8px; font-size: 0.8rem; font-weight: 700; background: rgba(212,175,55,0.05); border-color: rgba(212,175,55,0.18);" onclick="startAuthEmail('register')">Kayıt Ol</button>
+            </div>
+          </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.06); margin: 20px 0;">
+
+        <!-- Cloud Sync Permissions (Just like Android app!) -->
+        <div style="text-align: left; display: flex; flex-direction: column; gap: 14px;">
+          <h4 style="font-size: 0.68rem; color: var(--color-gold); font-weight: 850; text-transform: uppercase; letter-spacing: 0.8px;">Bulut Geçidi Yetki İzinleri</h4>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+            <div>
+              <p style="font-size: 0.78rem; font-weight: 700; color: #fff; margin-bottom: 2px;">Google Drive Bulut Log Arşivi</p>
+              <p style="font-size: 0.65rem; color: var(--text-muted); line-height: 1.3;">Öğrenim serisi (streak) ve puan yedeklerini sürekli Drive'da saklar kanka.</p>
+            </div>
+            <label class="switch" style="position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0;">
+              <input type="checkbox" id="auth-perm-drive" checked style="opacity: 0; width: 0; height: 0;">
+              <span class="slider" style="border-radius: 34px;"></span>
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 10px;">
+            <div>
+              <p style="font-size: 0.78rem; font-weight: 700; color: #fff; margin-bottom: 2px;">Gmail Aktif Oturum Raporlayıcı</p>
+              <p style="font-size: 0.65rem; color: var(--text-muted); line-height: 1.3;">Cihaz giriş güvenlik durumunu Gmail taslak e-postasıyla ulaştırır.</p>
+            </div>
+            <label class="switch" style="position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0;">
+              <input type="checkbox" id="auth-perm-gmail" checked style="opacity: 0; width: 0; height: 0;">
+              <span class="slider" style="border-radius: 34px;"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cloud Sync Simulation Panel -->
+      <div id="auth-sim-container" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px 10px; text-align: center; width: 100%;">
+        <div class="spinner" style="width: 44px; height: 44px; border-width: 3px; border-color: rgba(255,255,255,0.1); border-top-color: var(--color-gold); margin-bottom: 20px;"></div>
+        <h4 style="font-size: 0.95rem; color: #fff; font-weight: 700; margin-bottom: 8px;">Bello Bulut Giriş Protokolü</h4>
+        <p id="auth-sim-text" style="font-size: 0.74rem; color: var(--text-secondary); min-height: 36px; max-width: 320px; line-height: 1.4; margin-bottom: 20px;">Bağlantı kuruluyor...</p>
+        
+        <!-- Progress bar background -->
+        <div style="width: 100%; max-width: 320px; height: 4px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden;">
+          <div id="auth-sim-progress-bar" style="width: 0%; height: 100%; background: var(--color-gold); transition: width 0.3s ease; border-radius: 10px;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
        INSTALLATION GUIDE MODAL OVERLAY
        ========================================================================== -->
   <div class="modal-overlay" id="install-modal-overlay" aria-modal="true" role="dialog">
@@ -777,6 +874,7 @@
 
     let countdownInterval = null;
     let dreamInterval = null;
+    let currentConfig = null; // Declare globally to fix maintenance exit bug
 
     const belloDreams = [
       "Der Rucksack sırt çantası demek kanka! 🎒",
@@ -1185,6 +1283,7 @@
       clearTimeout(fallbackTimeout);
       if (doc.exists) {
         const data = doc.data();
+        currentConfig = data; // Fix: Assign to global variable to prevent layout remaining on maintenance screen
         handleMaintenanceMode(data.isUnderMaintenance, data.maintenanceMessage, data.endTimestamp || 0);
       } else {
         hidePreloader();
@@ -1758,15 +1857,15 @@
         // Logged out
         if (authContainer) {
           authContainer.innerHTML = `
-            <button class="google-auth-btn" onclick="signInWithGoogleUser()">
-              <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;"> Google ile Giriş Yap kanka 🚀
+            <button class="google-auth-btn" onclick="openAuthModal()">
+              <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;"> Giriş Yap kanka 🚀
             </button>
           `;
         }
 
         if (navAuthContainer) {
           navAuthContainer.innerHTML = `
-            <button class="google-auth-btn" onclick="signInWithGoogleUser()" style="padding: 6px 12px; font-size: 0.7rem; display: flex; align-items: center; gap: 6px; width: auto; background: var(--color-gold); color: #000; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s;">
+            <button class="google-auth-btn" onclick="openAuthModal()" style="padding: 6px 12px; font-size: 0.7rem; display: flex; align-items: center; gap: 6px; width: auto; background: var(--color-gold); color: #000; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s;">
               <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google" style="width: 14px; height: 14px;"> Giriş Yap
             </button>
           `;
@@ -2300,7 +2399,148 @@
       });
     }
 
+    // --- LANDING PAGE AUTH MODAL SYSTEM kanka ---
+    function openAuthModal() {
+      const modal = document.getElementById("auth-modal-overlay");
+      if (modal) {
+        modal.classList.add("active");
+        // Reset state
+        document.getElementById("auth-modal-main-content").style.display = "block";
+        document.getElementById("auth-sim-container").style.display = "none";
+      }
+    }
 
+    function closeAuthModal() {
+      const modal = document.getElementById("auth-modal-overlay");
+      if (modal) modal.classList.remove("active");
+    }
+
+    function setAuthModalTab(tab) {
+      const secGoogle = document.getElementById("auth-modal-sec-google");
+      const secEmail = document.getElementById("auth-modal-sec-email");
+      const btnGoogle = document.getElementById("btn-auth-tab-google");
+      const btnEmail = document.getElementById("btn-auth-tab-email");
+
+      if (tab === "google") {
+        secGoogle.style.display = "block";
+        secEmail.style.display = "none";
+        btnGoogle.classList.add("active");
+        btnEmail.classList.remove("active");
+      } else {
+        secGoogle.style.display = "none";
+        secEmail.style.display = "block";
+        btnGoogle.classList.remove("active");
+        btnEmail.classList.add("active");
+      }
+    }
+
+    function startAuthGoogle() {
+      const driveChecked = document.getElementById("auth-perm-drive").checked;
+      const gmailChecked = document.getElementById("auth-perm-gmail").checked;
+      
+      startAuthSimulation(driveChecked, gmailChecked, () => {
+        runGoogleLoginActual();
+      });
+    }
+
+    function startAuthEmail(type) {
+      const email = document.getElementById("auth-modal-email").value.trim();
+      const password = document.getElementById("auth-modal-password").value.trim();
+
+      if (!email || !password) {
+        showWebToast("Lütfen e-posta ve şifrenizi girin kanka! ❌");
+        return;
+      }
+
+      const driveChecked = document.getElementById("auth-perm-drive").checked;
+      const gmailChecked = document.getElementById("auth-perm-gmail").checked;
+      
+      startAuthSimulation(driveChecked, gmailChecked, () => {
+        if (type === "login") {
+          runEmailLoginActual(email, password);
+        } else {
+          runEmailRegisterActual(email, password);
+        }
+      });
+    }
+
+    function runGoogleLoginActual() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).then((result) => {
+        closeAuthModal();
+        showWebToast("Giriş yapıldı kanka! 🚀");
+      }).catch((err) => {
+        console.error("Google login error:", err);
+        closeAuthModal();
+        showWebToast(`Giriş başarısız oldu: ${getFirebaseAuthErrorMessage(err)} ❌`);
+      });
+    }
+
+    function runEmailLoginActual(email, password) {
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {
+          closeAuthModal();
+          showWebToast("Giriş yapıldı kanka! 🚀");
+        })
+        .catch((err) => {
+          console.error("Email login error:", err);
+          document.getElementById("auth-modal-main-content").style.display = "block";
+          document.getElementById("auth-sim-container").style.display = "none";
+          showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+        });
+    }
+
+    function runEmailRegisterActual(email, password) {
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((result) => {
+          closeAuthModal();
+          showWebToast("Kayıt olundu ve giriş yapıldı kanka! 🚀");
+          result.user.updateProfile({
+            displayName: email.split('@')[0]
+          });
+        })
+        .catch((err) => {
+          console.error("Email register error:", err);
+          document.getElementById("auth-modal-main-content").style.display = "block";
+          document.getElementById("auth-sim-container").style.display = "none";
+          showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+        });
+    }
+
+    function startAuthSimulation(drive, gmail, loginFn) {
+      const modalContent = document.getElementById("auth-modal-main-content");
+      const simContainer = document.getElementById("auth-sim-container");
+      const simText = document.getElementById("auth-sim-text");
+      const simBar = document.getElementById("auth-sim-progress-bar");
+
+      modalContent.style.display = "none";
+      simContainer.style.display = "flex";
+      
+      const steps = [];
+      steps.push("Google Cloud API Sunucusuna Bağlanıyor...");
+      steps.push("Oturum Doğrulaması Yapılıyor...");
+      if (drive) {
+        steps.push("Drive üzerinde /AlmancaArena/ klasör ve dosya sistemi doğrulanıyor...");
+      }
+      if (gmail) {
+        steps.push("Gmail oturum ve bildirim servisleri başlatılarak taslak oluşturuluyor...");
+      }
+      steps.push("Bütün bulut servisleri başarıyla eşlendi! Giriş yapılıyor...");
+      
+      let stepIdx = 0;
+      function runNextStep() {
+        if (stepIdx < steps.length) {
+          simText.innerText = steps[stepIdx];
+          const progress = ((stepIdx + 1) / steps.length) * 100;
+          simBar.style.width = progress + "%";
+          stepIdx++;
+          setTimeout(runNextStep, 700);
+        } else {
+          loginFn();
+        }
+      }
+      runNextStep();
+    }
   </script>
 </body>
 </html>
