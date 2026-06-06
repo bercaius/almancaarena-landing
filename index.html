@@ -185,6 +185,35 @@
   </section>
 
   <!-- ==========================================================================
+       MINI GAME PLAYGROUND / SANDBOX
+       ========================================================================== -->
+  <section class="container sandbox-section" id="playground">
+    <div class="section-header">
+      <h2>Mini Almanca Arenası</h2>
+      <p>Aşağıdaki Almanca kelimenin doğru artikelini (Der, Die, Das) tahmin ederek uygulamanın temel pratik motorunu hemen test et!</p>
+    </div>
+
+    <div class="glass-card sandbox-card">
+      <div class="sandbox-word-box" id="quiz-word-box">
+        <div class="sandbox-word" id="quiz-word">Apfel</div>
+        <div class="sandbox-translation" id="quiz-translation">(Elma)</div>
+      </div>
+
+      <div class="sandbox-btn-group">
+        <button class="btn-premium btn-outline btn-quiz" onclick="submitAnswer('der')">DER</button>
+        <button class="btn-premium btn-outline btn-quiz" onclick="submitAnswer('die')">DIE</button>
+        <button class="btn-premium btn-outline btn-quiz" onclick="submitAnswer('das')">DAS</button>
+      </div>
+
+      <div class="sandbox-feedback" id="quiz-feedback">Doğru artikeli seçin!</div>
+      
+      <div class="sandbox-score-board">
+        Doğru Tahmin: <span id="quiz-score">0</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
        DOWNLOAD & BETA CALLOUT (CALL TO ACTION)
        ========================================================================== -->
   <section class="container download-section" id="download">
@@ -196,9 +225,6 @@
         <!-- Direct APK Download Link pointing to the landing repo's releases asset -->
         <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta/app-release.apk" class="btn-premium btn-cyan" id="final-apk-download-btn">
           💾 Beta APK İndir (v1.0.0)
-        </a>
-        <a href="https://github.com/bercaius/almancaarena" target="_blank" rel="noopener" class="btn-premium btn-outline" id="final-source-view-btn">
-          💻 Geliştirici Kod Deposu
         </a>
       </div>
       
@@ -248,6 +274,65 @@
         header.classList.remove('scrolled');
       }
     });
+
+    // Interactive Quiz Logic
+    const quizWords = [
+      { word: "Apfel", gender: "der", translation: "Elma" },
+      { word: "Katze", gender: "die", translation: "Kedi" },
+      { word: "Buch", gender: "das", translation: "Kitap" },
+      { word: "Tisch", gender: "der", translation: "Masa" },
+      { word: "Tür", gender: "die", translation: "Kapı" },
+      { word: "Auto", gender: "das", translation: "Araba" },
+      { word: "Hund", gender: "der", translation: "Köpek" },
+      { word: "Tasche", gender: "die", translation: "Çanta" },
+      { word: "Mädchen", gender: "das", translation: "Kız çocuğu" },
+      { word: "Sonne", gender: "die", translation: "Güneş" },
+      { word: "Baum", gender: "der", translation: "Ağaç" },
+      { word: "Kind", gender: "das", translation: "Çocuk" }
+    ];
+
+    let currentWordIndex = 0;
+    let score = 0;
+    let isWaiting = false;
+
+    function loadWord() {
+      const wordBox = document.getElementById('quiz-word-box');
+      wordBox.classList.remove('correct-pulse', 'incorrect-pulse');
+      
+      const feedback = document.getElementById('quiz-feedback');
+      feedback.textContent = "Doğru artikeli seçin!";
+      feedback.className = "sandbox-feedback";
+      
+      const wordObj = quizWords[currentWordIndex];
+      document.getElementById('quiz-word').textContent = wordObj.word;
+      document.getElementById('quiz-translation').textContent = `(${wordObj.translation})`;
+      isWaiting = false;
+    }
+
+    function submitAnswer(genderChoice) {
+      if (isWaiting) return;
+      isWaiting = true;
+
+      const wordObj = quizWords[currentWordIndex];
+      const wordBox = document.getElementById('quiz-word-box');
+      const feedback = document.getElementById('quiz-feedback');
+      const scoreSpan = document.getElementById('quiz-score');
+
+      if (genderChoice === wordObj.gender) {
+        score++;
+        scoreSpan.textContent = score;
+        wordBox.classList.add('correct-pulse');
+        feedback.textContent = `Doğru! "${wordObj.gender.toUpperCase()} ${wordObj.word}" harika bir tahmin.`;
+        feedback.classList.add('correct-text');
+      } else {
+        wordBox.classList.add('incorrect-pulse');
+        feedback.textContent = `Yanlış! Doğru artikel: ${wordObj.gender.toUpperCase()}`;
+        feedback.classList.add('incorrect-text');
+      }
+
+      currentWordIndex = (currentWordIndex + 1) % quizWords.length;
+      setTimeout(loadWord, 1800);
+    }
   </script>
 </body>
 </html>

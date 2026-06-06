@@ -715,6 +715,113 @@ footer {
 }
 
 /* --------------------------------------------------------------------------
+   INTERACTIVE QUIZ SANDBOX
+   -------------------------------------------------------------------------- */
+.sandbox-section {
+  text-align: center;
+  position: relative;
+  background: linear-gradient(180deg, transparent, rgba(0, 240, 255, 0.01), transparent);
+}
+
+.sandbox-card {
+  padding: 60px 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.sandbox-word-box {
+  background: rgba(0, 240, 255, 0.03);
+  border: 1px dashed rgba(0, 240, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px 60px;
+  min-width: 280px;
+  margin: 10px 0;
+  transition: var(--transition-smooth);
+}
+
+.sandbox-word-box.correct-pulse {
+  background: rgba(46, 204, 113, 0.1);
+  border-color: #2ecc71;
+  box-shadow: 0 0 20px rgba(46, 204, 113, 0.2);
+}
+
+.sandbox-word-box.incorrect-pulse {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: #e74c3c;
+  box-shadow: 0 0 20px rgba(231, 76, 60, 0.2);
+}
+
+.sandbox-word {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.sandbox-translation {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.sandbox-btn-group {
+  display: flex;
+  gap: 16px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-quiz {
+  min-width: 110px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-color: var(--glass-border-hover);
+  letter-spacing: 0.05em;
+  background: transparent;
+}
+
+.btn-quiz:hover {
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+  box-shadow: 0 0 15px var(--color-cyan-glow);
+}
+
+.sandbox-feedback {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-height: 28px;
+  transition: var(--transition-fast);
+}
+
+.sandbox-feedback.correct-text {
+  color: #2ecc71;
+  text-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
+}
+
+.sandbox-feedback.incorrect-text {
+  color: #e74c3c;
+  text-shadow: 0 0 10px rgba(231, 76, 60, 0.2);
+}
+
+.sandbox-score-board {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+
+.sandbox-score-board span {
+  color: var(--color-gold);
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
    RESPONSIVE DESIGN
    -------------------------------------------------------------------------- */
 @media (max-width: 992px) {
