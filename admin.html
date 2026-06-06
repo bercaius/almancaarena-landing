@@ -289,6 +289,14 @@
             </div>
 
             <button class="btn" style="background: var(--secondary-accent);" onclick="saveConfig()">Ayarları Kaydet</button>
+
+            <!-- Geri Bildirim Yönetimi -->
+            <div style="margin-top: 30px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; text-align: left;">
+                <h3 style="font-size: 15px; font-weight: 800; color: var(--secondary-accent); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;">Geri Bildirim & Yorum Yönetimi</h3>
+                <div id="admin-feedback-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 350px; overflow-y: auto; padding-right: 5px;">
+                    <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">Yükleniyor...</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -341,6 +349,7 @@
                 document.getElementById("login-form").style.display = "none";
                 document.getElementById("panel-content").style.display = "block";
                 loadCurrentConfig();
+                listenToFeedbacks(); // Start listening to feedbacks dynamically
             } else {
                 showToast("Hatalı PIN Kodu! ❌");
             }
@@ -376,20 +385,55 @@
             const msgInput = document.getElementById("msg");
             const badge = document.getElementById("status-display");
             const durationSelect = document.getElementById("duration-select");
+            const durationGroup = document.getElementById("duration-group");
 
-            toggle.checked = currentConfig.isUnderMaintenance;
+            // Eğer bakım modu aktifse ancak bitiş zamanı girilmiş ve bu zaman geçmişte kalmışsa bakım modu kapanmıştır.
+            let activeMaintenance = currentConfig.isUnderMaintenance;
+            if (activeMaintenance && currentConfig.endTimestamp > 0 && currentConfig.endTimestamp <= Date.now()) {
+                activeMaintenance = false;
+                currentConfig.isUnderMaintenance = false;
+                currentConfig.endTimestamp = 0;
+                // Veritabanını otomatik olarak güncelle
+                configRef.set(currentConfig).catch(err => console.error("Auto-disable maintenance failed:", err));
+            }
+
+            toggle.checked = activeMaintenance;
             msgInput.value = currentConfig.maintenanceMessage;
 
-            // Restoring remaining minutes if countdown is active
-            if (currentConfig.isUnderMaintenance && currentConfig.endTimestamp > Date.now()) {
+            if (activeMaintenance) {
                 badge.innerText = "Sistem Bakımda 🛠️";
                 badge.className = "status-badge status-on";
-                document.getElementById("duration-group").style.display = "block";
+                durationGroup.style.display = "block";
+
+                // Geri kalan dakikayı dropdown'da seç
+                const remainingMin = Math.round((currentConfig.endTimestamp - Date.now()) / (60 * 1000));
+                if (remainingMin > 0) {
+                    let found = false;
+                    for (let i = 0; i < durationSelect.options.length; i++) {
+                        if (parseInt(durationSelect.options[i].value) === remainingMin) {
+                            durationSelect.selectedIndex = i;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        const newOpt = document.createElement("option");
+                        newOpt.value = remainingMin;
+                        newOpt.text = `${remainingMin} Dakika`;
+                        durationSelect.add(newOpt);
+                        durationSelect.value = remainingMin;
+                    }
+                } else {
+                    durationSelect.value = "0";
+                }
             } else {
                 badge.innerText = "Sistem Aktif (Bakım Kapalı) 🟢";
                 badge.className = "status-badge status-off";
+                durationGroup.style.display = "none";
+                durationSelect.value = "0";
             }
         }
+
 
         // Handle toggle change locally
         function toggleMaintenance(isChecked) {
@@ -428,12 +472,14 @@
             configRef.set(currentConfig)
                 .then(() => {
                     showToast("Ayarlar online olarak kaydedildi! ⚡");
+                    updateUiState();
                 })
                 .catch((error) => {
                     console.error("Kaydetme hatası:", error);
                     showToast("Kaydedilemedi! İzin hatası olabilir. ❌");
                 });
         }
+
 
         // Toast message helper
         function showToast(text) {
@@ -443,6 +489,101 @@
             setTimeout(() => {
                 toast.classList.remove("show");
             }, 3000);
+        }
+
+        // --- Feedbacks & Opinions Live Listener ---
+        function listenToFeedbacks() {
+            db.collection("feedbacks").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+                const list = document.getElementById("admin-feedback-list");
+                if (!list) return;
+                list.innerHTML = "";
+                if (snapshot.empty) {
+                    list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">Henüz hiç yorum yapılmamış kanka.</div>`;
+                    return;
+                }
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const docId = doc.id;
+                    const card = document.createElement("div");
+                    card.style.background = "rgba(0,0,0,0.2)";
+                    card.style.border = "1px solid rgba(255,255,255,0.08)";
+                    card.style.borderRadius = "12px";
+                    card.style.padding = "12px";
+                    card.style.marginBottom = "10px";
+                    card.style.textAlign = "left";
+
+                    let catText = "Teşekkür";
+                    let catColor = "var(--alert-green)";
+                    if (data.category === "bug") {
+                        catText = "Hata Bildirimi";
+                        catColor = "var(--alert-red)";
+                    } else if (data.category === "suggestion") {
+                        catText = "Öneri";
+                        catColor = "var(--secondary-accent)";
+                    }
+
+                    card.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <strong style="color: #fff; font-size: 13px;">${escapeHtml(data.userName)}</strong>
+                            <span style="font-size: 10px; color: ${catColor}; font-weight: bold;">${catText}</span>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 8px; line-height: 1.4;">${escapeHtml(data.comment)}</p>
+                        
+                        ${data.reply ? `
+                        <div style="background: rgba(212,175,55,0.05); border-left: 2px solid var(--color-gold); padding: 6px 10px; border-radius: 4px; font-size: 11px; margin-bottom: 8px; color: var(--text-light);">
+                            <strong>🏢 Yanıtınız:</strong> ${escapeHtml(data.reply)}
+                        </div>
+                        ` : ''}
+
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <input type="text" id="reply-input-${docId}" placeholder="Cevabınızı yazın..." style="flex-grow: 1; font-size: 12px; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; outline: none;">
+                            <button class="btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 11px; font-weight: bold; background: var(--secondary-accent); color: #000; border-radius: 6px;" onclick="submitAdminReply('${docId}')">Cevapla</button>
+                            <button class="btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 11px; font-weight: bold; background: var(--alert-red); color: #fff; border-radius: 6px;" onclick="deleteFeedback('${docId}')">Sil</button>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+            }, (error) => {
+                console.error("Geri bildirimleri alma hatası:", error);
+            });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return "";
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function submitAdminReply(docId) {
+            const input = document.getElementById(`reply-input-${docId}`);
+            const replyText = input.value.trim();
+            if (!replyText) {
+                showToast("Lütfen bir yanıt yaz kanka! 🐾");
+                return;
+            }
+            db.collection("feedbacks").doc(docId).update({
+                reply: replyText,
+                replyTimestamp: Date.now()
+            }).then(() => {
+                showToast("Yanıt online olarak gönderildi! ⚡");
+            }).catch((error) => {
+                console.error("Yorum yanıtlama hatası:", error);
+                showToast("Yanıt gönderilemedi! ❌");
+            });
+        }
+
+        function deleteFeedback(docId) {
+            if (!confirm("Bu yorumu silmek istediğine emin misin kanka? 🐾")) return;
+            db.collection("feedbacks").doc(docId).delete().then(() => {
+                showToast("Yorum silindi! 🗑️");
+            }).catch((error) => {
+                console.error("Yorum silme hatası:", error);
+                showToast("Silinemedi! ❌");
+            });
         }
     </script>
 </body>

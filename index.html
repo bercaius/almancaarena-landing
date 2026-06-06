@@ -74,8 +74,52 @@
           </a>
         </div>
       </div>
+
+      <!-- Feedbacks Section -->
+      <div class="feedback-section">
+        <p class="social-title-maint">Kullanıcı Görüşleri & Geri Bildirimler</p>
+        <div class="feedback-list" id="feedback-display-list">
+          <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 20px;">Yorumlar yükleniyor...</div>
+        </div>
+        
+        <!-- Feedback Form -->
+        <form class="feedback-form" id="maint-feedback-form" onsubmit="submitFeedback(event)">
+          <div class="feedback-row">
+            <input type="text" id="fb-user" placeholder="Adınız / Rumuz" required style="width: 60%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+            <select id="fb-category" style="width: 40%; background: #06030c; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+              <option value="thanks">Teşekkür 😊</option>
+              <option value="suggestion">Öneri 💡</option>
+              <option value="bug">Hata Bildirimi 🛠️</option>
+            </select>
+          </div>
+          <textarea id="fb-comment" placeholder="Almanca Arena hakkındaki görüşlerinizi yazın..." required style="height: 60px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none; resize: none; width: 100%; margin-top: 8px;"></textarea>
+          <button class="store-code-btn" type="submit" style="margin-top: 8px; font-size: 0.8rem; padding: 8px; border-style: solid;">Geri Bildirim Gönder 🐾</button>
+        </form>
+      </div>
+      
+      <!-- Hediye Mağazası Section -->
+      <div class="web-store-section">
+        <p class="social-title-maint">Almanca Arena Hediye Mağazası</p>
+        <div class="web-store-grid">
+          <div class="web-store-card">
+            <div class="store-icon">🪙</div>
+            <div class="store-title">Başlangıç Paketi</div>
+            <div class="store-desc">Uygulamada geçerli 50 Altın hediye kodu.</div>
+            <button class="store-code-btn" type="button" onclick="copyPromoCode('ARENA50')">Kopyala: ARENA50</button>
+          </div>
+          <div class="web-store-card">
+            <div class="store-icon">🍪</div>
+            <div class="store-title">Bello Dostluk Paketi</div>
+            <div class="store-desc">100 Altın ve 1 Bello Bisküvisi hediye kodu.</div>
+            <button class="store-code-btn" type="button" onclick="copyPromoCode('BELLO100')">Kopyala: BELLO100</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
+
+  <div id="web-toast" class="web-toast">Kod kopyalandı!</div>
 
   <!-- Main Landing Content (Hidden initially to prevent leaks) -->
   <div id="landing-content" style="display: none;">
@@ -534,12 +578,115 @@
     let dreamInterval = null;
 
     const belloDreams = [
-      "Şşşt, veritabanını süpürüyorum gürültü yapma kanka! 🧹",
-      "Bello rüyasında Almanca artikeller heceliyor... Zzz... 🐾",
-      "Zırhımı cilalıyorum, az sonra arenaya döneceğiz! 🛡️",
-      "Sunucu odası çok sıcak, vantilatör getirin kanka! 💨",
-      "Zzz... Bir sonraki güncellemede harika sürprizler var! 🎁"
+      "Der Rucksack sırt çantası demek kanka! 🎒",
+      "Rüyamda Bavyera Sarayı'nın bahçesindeyim! 🏰",
+      "Zzz... Bercaius bana bisküvi vermeyi unuttu... 🍪",
+      "Kedileri kovalamak Almanca öğrenmekten kolay! 🐈",
+      "Der miydi, Die miydi, Das mıydı? Kafam karıştı! 🤯",
+      "Akustik rate limiter jilet gibi çalışıyor kanka! ⚡",
+      "Zırhımı cilalıyorum, savaşa az kaldı! 🛡️",
+      "Veritabanı temizliği yapıyorum, sessiz ol! 🧹",
+      "Rüyamda 1000 günlük seri (streak) yapmışım! 🔥",
+      "Gemini AI telaffuzumu dinliyor... A+ aldım! 🎙️",
+      "Kara Ormanlar'da kayboldum, yönümü bulamıyorum! 🌲",
+      "Kelimeleri hecelerine ayırırken uyuyakalmışım... 😴",
+      "Bu altınlar gerçek altın mı kanka? 🪙",
+      "Rüyamda Tokyo sokaklarında siber punk Bello olmuşum! 🌌",
+      "Apfel elma ise, Das Buch neydi kanka? 📖",
+      "TurcoDevelop ekibi yine harika işler çıkarıyor! 🏢",
+      "Sunucular çok sıcak, vantilatör getirin! 💨",
+      "Hile yapmaya çalışanları siber zırhımla engelliyorum! 🔒",
+      "SQLite veritabanı şifrelemelerim jilet gibi! 💾",
+      "Zzz... 5 dakika daha kanka, çok tatlı uyuyorum... 🐾",
+      "Beni 100 kez tıklarsan uyanabilirim belki! 😉",
+      "Bir bisküvi versen hemen uyanırım kanka! 🍪",
+      "Rüyamda Almanca makaleler yazıyorum, inanamazsın! ✍️",
+      "Siber güvenlik motorunu güncelliyorum... 🛠️",
+      "Artikelleri hafızama kazıdım, Leitner sistemi sağ olsun! 🗃️",
+      "Max ve Emma rüyamda beni ziyarete geldi. 🙋‍♂️",
+      "Kosinüs benzerliği ses puanımı yüksek tut kanka! 📈",
+      "Rüyamda Bavyera Alpleri'nde geyik kovalıyorum! 🦌",
+      "Müzik dinlemek beni çok rahatlatıyor... 🎵",
+      "Akuzatif çekiminde der artikeli den olur kanka! den!",
+      "Çoğul isimlerin artikeli her zaman die olur! 📚",
+      "Kedi masanın altında: Die Katze ist unter dem Tisch. 🐈",
+      "Mein Bruder benim erkek kardeşim demek! 👦",
+      "Sahiplik zamirlerine dikkat et, hata yapma! ⚠️",
+      "Rüyamda Almanca Arena şampiyonu oldum! 🏆",
+      "Bello'nun siber güçleri yakında aktif olacak! ⚡",
+      "Zzz... Kod yazmaktan gözlerim ağrımış... 💻",
+      "Bercaius kanka, yeni özellikler efsane olmuş! 👍",
+      "Siber saldırıları zırhımla püskürtüyorum! 🛡️",
+      "Bu arenada kaybetmek yok, sadece öğrenmek var! 🌟",
+      "Rüyamda Berlin Duvarı'nın önünde fotoğraf çekiliyorum! 📷",
+      "Brandenburg Kapısı rüyamda altından yapılmıştı! 🏛️",
+      "Neuschwanstein Şatosu'nu siber kaleye çevirdim! 🏯",
+      "Zzz... Rüyamda kemikten dev bir şato gördüm! 🦴",
+      "Bisküvi kokusu alıyorum, yoksa gerçek mi? 🍪",
+      "Offline AI modelini optimize ediyorum... 🧠",
+      "HMAC-SHA-256 imzalarım sapasağlam kanka! 🔒",
+      "Root/Debugger koruması aktif, sızamazsınız! 🚫",
+      "Bello rüyasında Almanca şarkılar söylüyor... 🎤",
+      "Sonne teması çok sıcak, gözlerimi kamaştırdı! ☀️",
+      "Volcano teması lav gibi parlıyor kanka! 🌋",
+      "Buz dağlarının üzerindeyim, çok soğuk! ❄️",
+      "Okyanusun derinliklerinde hazine arıyorum! 🌊",
+      "Bello uykusunda kuyruğunu sallıyor... 🐾",
+      "Almanca fiilleri düzenli ve düzensiz diye ayırıyorum... 📝",
+      "Sein fiili: Ich bin, Du bist, Er ist... Zzz...",
+      "Haben fiili Akuzatif gerektirir kanka, unutma! ⚠️",
+      "Guten Morgen! Yoksa akşam mı oldu? 🌅",
+      "Wie geht es dir? İyiyim kanka, sen nasılsın? 👋",
+      "Rüyamda uzay gemisinde Almanca dersi veriyorum! 🚀",
+      "Siber zırhımın enerjisi %100 doldu! 🔋",
+      "Bello'nun dostluk seviyesi tavan yaptı! ❤️",
+      "Bercaius stüdyosunda kodlar derleniyor... 🛠️",
+      "Zzz... 10 milyon parametreli rüyalar görüyorum... 🧠",
+      "Makine öğrenmesi artikeli tahmin etti: %99 doğru! 🎯",
+      "Yumuşak bir yastık ve bir kemik... Dünyanın en mutlu köpeğiyim! 🐕",
+      "Almanca Arena v1.0.0-beta.8 bomba gibi geliyor! 💣",
+      "Büyüleyici neon ışıklar altında uyuyorum... 🌌",
+      "Bello'nun siber dünyasına hoş geldiniz! 👾",
+      "Hediye kodlarını dükkanda kullanmayı unutma! 🎁",
+      "Rüyamda Almanca oyunlar tasarlıyorum... 🎮",
+      "Bello esniyor... Oooah, uykum çok derin! 🥱",
+      "Database şeması güncellendi, her şey stabil! ⚡",
+      "PIN kodunu SHA-256 ile hashledim, siber güvenlik bizim işimiz! 🔐",
+      "Zzz... Rüyamda Almanca artikeller dans ediyor... 💃",
+      "Der el ele tutuşmuş, Die ile dans ediyor... 🕺",
+      "Bello'ya bisküvi veren eller dert görmesin! 🍪",
+      "Rüyamda Almanca Arena logolu t-shirt giyiyorum! 👕",
+      "Bercaius kanka bana siber tasma almış! 🐕‍🦺",
+      "TurcoDevelop stüdyosu siber geleceğin mimarı! 🏢",
+      "Hata bildirimlerini admin panelinden inceliyoruz... 🛠️",
+      "Yorumlarınıza admin panelinden cevap yazıyorum kanka! ✍️",
+      "Spam yorum atanları siber zırhımla engellerim! 🛑",
+      "Çevrimdışı modda bile rüya görebiliyorum! 🔌",
+      "Bello'nun dostluğu ömür boyu sürer! 💕",
+      "Rüyamda Köln Katedrali'nin tepesine tırmanıyorum! ⛪",
+      "Almanca kelime kartları havada uçuşuyor! 🃏",
+      "Der Tisch masa demekse, die Tasche çanta kanka! 🎒",
+      "Zzz... Rüyamda siber kemik fabrikası kurmuşum! 🦴",
+      "Admin panelinin arayüzü çok kararlı ve akıcı olmuş! ⚡",
+      "Bello'nun uykusu Almanca dersi gibi dinlendirici... 😴",
+      "Artikelleri tahmin eden nöral ağı eğitiyorum... 🧠",
+      "Zzz... Bercaius'un klavye sesleri ninnim oldu... ⌨️",
+      "TurcoDevelop yazılımcıları hiç uyumaz mı kanka? ☕",
+      "Rüyamda Almanca sınavından 100 almışım! 💯",
+      "Bello'nun siber gözlükleri rüyasında parlıyor... 👓",
+      "Zzz... Son 10 rüya kaldı uyanmama... 🐾",
+      "Siber dünyada Almanca rüzgarları esiyor! 🌪️",
+      "Bello arenaya dönmek için sabırsızlanıyor! 🐕"
     ];
+
+    // SHA-256 Hash Helper
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashHex;
+    }
 
     // Timeout fallback (5 seconds) to hide preloader if Firestore fails
     const fallbackTimeout = setTimeout(() => {
@@ -600,7 +747,7 @@
           bubble.innerText = belloDreams[Math.floor(Math.random() * belloDreams.length)];
           dreamInterval = setInterval(() => {
             bubble.innerText = belloDreams[Math.floor(Math.random() * belloDreams.length)];
-          }, 6000);
+          }, 4000); // 4 seconds rotation as requested!
         }
 
         if (endTimestamp > Date.now()) {
@@ -636,6 +783,10 @@
           countdownInterval = null;
         }
         countdownWrapper.style.display = 'none';
+        // Auto reload to check if maintenance is officially over
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
         return;
       }
 
@@ -648,6 +799,131 @@
       minsVal.innerText = String(minutes).padStart(2, '0');
       secsVal.innerText = String(seconds).padStart(2, '0');
     }
+
+    // --- Feedbacks Online Listener ---
+    db.collection("feedbacks").orderBy("timestamp", "desc").limit(30).onSnapshot((querySnapshot) => {
+      const listContainer = document.getElementById("feedback-display-list");
+      if (!listContainer) return;
+      
+      listContainer.innerHTML = "";
+      if (querySnapshot.empty) {
+        listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 20px;">Henüz geri bildirim yapılmamış kanka. İlk yorumu sen at! 🐾</div>`;
+        return;
+      }
+      
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const card = document.createElement("div");
+        card.className = "feedback-card";
+        
+        let tagClass = "tag-thanks";
+        let tagText = "Teşekkür";
+        if (data.category === "bug") {
+          tagClass = "tag-bug";
+          tagText = "Hata Bildirimi";
+        } else if (data.category === "suggestion") {
+          tagClass = "tag-suggestion";
+          tagText = "Öneri";
+        }
+        
+        let replyHtml = "";
+        if (data.reply) {
+          replyHtml = `
+            <div class="feedback-reply-box">
+              <div class="feedback-reply-title">🏢 Stüdyo Yanıtı:</div>
+              <div>${data.reply}</div>
+            </div>
+          `;
+        }
+        
+        card.innerHTML = `
+          <div class="feedback-user-row">
+            <span class="feedback-user">${escapeHtml(data.userName)}</span>
+            <span class="feedback-tag ${tagClass}">${tagText}</span>
+          </div>
+          <p class="feedback-comment">${escapeHtml(data.comment)}</p>
+          ${replyHtml}
+        `;
+        listContainer.appendChild(card);
+      });
+    }, (error) => {
+      console.error("Geri bildirim dinleme hatası:", error);
+    });
+
+    function escapeHtml(text) {
+      if (!text) return "";
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // --- Feedback Submit Handler ---
+    function submitFeedback(event) {
+      event.preventDefault();
+      
+      const userNameInput = document.getElementById("fb-user");
+      const categorySelect = document.getElementById("fb-category");
+      const commentInput = document.getElementById("fb-comment");
+      
+      const userName = userNameInput.value.trim();
+      const category = categorySelect.value;
+      const comment = commentInput.value.trim();
+      
+      if (!userName || !comment) {
+        showWebToast("Lütfen tüm alanları doldur kanka! 🐾");
+        return;
+      }
+      
+      // Rate limit check: 3 minutes (180000ms)
+      const lastSubmit = localStorage.getItem("last_feedback_submit_time");
+      const now = Date.now();
+      if (lastSubmit && (now - lastSubmit < 180000)) {
+        const remainingSec = Math.ceil((180000 - (now - lastSubmit)) / 1000);
+        showWebToast(`Çok hızlı gidiyorsun kanka! 🐾 Lütfen ${remainingSec} saniye bekle.`);
+        return;
+      }
+      
+      db.collection("feedbacks").add({
+        userName: userName,
+        category: category,
+        comment: comment,
+        timestamp: now,
+        reply: "",
+        replyTimestamp: 0
+      }).then(() => {
+        showWebToast("Geri bildirimin başarıyla gönderildi kanka! 🐾");
+        commentInput.value = "";
+        localStorage.setItem("last_feedback_submit_time", String(now));
+      }).catch((error) => {
+        console.error("Yorum gönderme hatası:", error);
+        showWebToast("Gönderilemedi! Firebase izin hatası olabilir. ❌");
+      });
+    }
+
+    // --- Toast & Copy Code Helpers ---
+    function showWebToast(message) {
+      const toast = document.getElementById('web-toast');
+      if (toast) {
+        toast.innerText = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3000);
+      }
+    }
+    
+    function copyPromoCode(code) {
+      navigator.clipboard.writeText(code).then(() => {
+        showWebToast(`Kod "${code}" kopyalandı! Dükkanda kullan kanka! 🎁`);
+      }).catch(() => {
+        showWebToast(`Hediye Kodu: ${code}`);
+      });
+    }
+
+
   </script>
 </body>
 </html>
