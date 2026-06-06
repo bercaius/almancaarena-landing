@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almanca Arena — Admin Kontrol Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0515;
+            --card-bg: rgba(27, 15, 48, 0.65);
+            --primary-accent: #ff007f;
+            --secondary-accent: #00f0ff;
+            --text-light: #eceff1;
+            --text-muted: #b0bec5;
+            --alert-red: #e53935;
+            --alert-green: #4caf50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 127, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 240, 255, 0.08) 0%, transparent 40%);
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+            background: linear-gradient(45deg, #fff 30%, var(--primary-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1 span {
+            color: var(--primary-accent);
+            -webkit-text-fill-color: initial;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="password"], textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="password"]:focus, textarea:focus {
+            border-color: var(--secondary-accent);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+
+        textarea {
+            resize: none;
+            height: 100px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            width: 100%;
+            background: var(--primary-accent);
+            color: #000;
+            border: none;
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Panel Content (Hidden initially) */
+        #panel-content {
+            display: none;
+        }
+
+        /* Switch toggle */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .switch-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.15);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .status-off {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--alert-green);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .status-on {
+            background: rgba(229, 57, 53, 0.15);
+            color: var(--alert-red);
+            border: 1px solid rgba(229, 57, 53, 0.3);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>ALMANCA <span>ARENA</span></h1>
+        
+        <!-- Login Form -->
+        <div id="login-form">
+            <h2 style="font-size: 18px; margin-bottom: 20px; font-weight: 600;">Admin Girişi</h2>
+            <div class="form-group">
+                <label for="pin">Yönetici PIN Kodu</label>
+                <input type="password" id="pin" placeholder="••••••••" autofocus>
+            </div>
+            <button class="btn" onclick="checkPin()">Giriş Yap</button>
+        </div>
+
+        <!-- Panel Controls -->
+        <div id="panel-content">
+            <div id="status-display" class="status-badge status-off">Sistem Aktif (Bakım Kapalı)</div>
+            
+            <div class="switch-container">
+                <span class="switch-label">Bakım Modu</span>
+                <label class="switch">
+                    <input type="checkbox" id="maintenance-toggle" onchange="toggleMaintenance(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="msg">Bakım Mesajı</label>
+                <textarea id="msg" placeholder="Kullanıcılara gösterilecek bakım açıklamasını yazın..."></textarea>
+            </div>
+
+            <button class="btn" style="background: var(--secondary-accent);" onclick="saveConfig()">Ayarları Kaydet</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Ayarlar kaydedildi!</div>
+
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBgP9Cr_XuIdcCx7RZykQNP9b93YuP1MYo",
+            authDomain: "almanca-arena.firebaseapp.com",
+            projectId: "almanca-arena",
+            storageBucket: "almanca-arena.firebasestorage.app",
+            messagingSenderId: "274345916793"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Admin Config Document Reference
+        const configRef = db.collection("system_config").doc("maintenance");
+
+        let currentConfig = {
+            isUnderMaintenance: false,
+            maintenanceMessage: "Almanca Arena şu an planlı bakım çalışmasındadır. En kısa sürede döneceğiz!"
+        };
+
+        // Check Admin PIN
+        function checkPin() {
+            const pinVal = document.getElementById("pin").value;
+            if (pinVal === "turco2026") {
+                document.getElementById("login-form").style.display = "none";
+                document.getElementById("panel-content").style.display = "block";
+                loadCurrentConfig();
+            } else {
+                showToast("Hatalı PIN Kodu! ❌");
+            }
+        }
+
+        // Handle Enter key on PIN input
+        document.getElementById("pin").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkPin();
+            }
+        });
+
+        // Load current config from Firestore
+        function loadCurrentConfig() {
+            configRef.get().then((doc) => {
+                if (doc.exists) {
+                    currentConfig = doc.data();
+                    updateUiState();
+                } else {
+                    // Create default config if not exists
+                    configRef.set(currentConfig);
+                    updateUiState();
+                }
+            }).catch((error) => {
+                console.error("Veri okuma hatası:", error);
+                showToast("Hata: Firestore bağlantısı başarısız.");
+            });
+        }
+
+        // Update UI components with current settings
+        function updateUiState() {
+            const toggle = document.getElementById("maintenance-toggle");
+            const msgInput = document.getElementById("msg");
+            const badge = document.getElementById("status-display");
+
+            toggle.checked = currentConfig.isUnderMaintenance;
+            msgInput.value = currentConfig.maintenanceMessage;
+
+            if (currentConfig.isUnderMaintenance) {
+                badge.innerText = "Sistem Bakımda 🛠️";
+                badge.className = "status-badge status-on";
+            } else {
+                badge.innerText = "Sistem Aktif (Bakım Kapalı) 🟢";
+                badge.className = "status-badge status-off";
+            }
+        }
+
+        // Handle toggle change locally
+        function toggleMaintenance(isChecked) {
+            currentConfig.isUnderMaintenance = isChecked;
+            const badge = document.getElementById("status-display");
+            if (isChecked) {
+                badge.innerText = "Sistem Bakımda 🛠️";
+                badge.className = "status-badge status-on";
+            } else {
+                badge.innerText = "Sistem Aktif (Bakım Kapalı) 🟢";
+                badge.className = "status-badge status-off";
+            }
+        }
+
+        // Save updated settings to Firestore
+        function saveConfig() {
+            currentConfig.maintenanceMessage = document.getElementById("msg").value;
+            
+            configRef.set(currentConfig)
+                .then(() => {
+                    showToast("Ayarlar online olarak kaydedildi! ⚡");
+                })
+                .catch((error) => {
+                    console.error("Kaydetme hatası:", error);
+                    showToast("Kaydedilemedi! İzin hatası olabilir. ❌");
+                });
+        }
+
+        // Toast message helper
+        function showToast(text) {
+            const toast = document.getElementById("toast");
+            toast.innerText = text;
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

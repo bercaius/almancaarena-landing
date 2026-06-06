@@ -48,7 +48,7 @@
         <div class="hero-content">
           <div class="hero-badge-container">
             <span class="hero-badge-pulse"></span>
-            <span>Sürüm v1.0.0-beta.7 Yayında!</span>
+            <span>Sürüm v1.0.0-beta.8 Yayında!</span>
           </div>
           <h1>
             Almanca Öğrenmenin <br>
@@ -225,8 +225,8 @@
       
       <div class="download-btn-group">
         <!-- Direct APK Download Link pointing to the landing repo's releases asset -->
-        <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta.7/app-release.apk" class="btn-premium btn-gold" id="final-apk-download-btn">
-          💾 Beta APK İndir (v1.0.0-beta.7)
+        <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta.8/app-release.apk" class="btn-premium btn-gold" id="final-apk-download-btn">
+          💾 Beta APK İndir (v1.0.0-beta.8)
         </a>
       </div>
       
@@ -446,6 +446,106 @@
           closeModal();
         }
       });
+    }
+  </script>
+
+  <!-- Firebase Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // --- Firebase Maintenance Mode Integration ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyBgP9Cr_XuIdcCx7RZykQNP9b93YuP1MYo",
+      authDomain: "almanca-arena.firebaseapp.com",
+      projectId: "almanca-arena",
+      storageBucket: "almanca-arena.firebasestorage.app",
+      messagingSenderId: "274345916793"
+    };
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+
+    // Listen to maintenance config
+    db.collection("system_config").doc("maintenance").onSnapshot((doc) => {
+      if (doc.exists) {
+        const data = doc.data();
+        handleMaintenanceMode(data.isUnderMaintenance, data.maintenanceMessage);
+      }
+    });
+
+    function handleMaintenanceMode(isMaint, message) {
+      const downloadBtns = [
+        document.getElementById('final-apk-download-btn'),
+        document.getElementById('hero-primary-download'),
+        document.getElementById('coach-cta-download'),
+        document.getElementById('link-download-btn')
+      ];
+
+      // Remove existing banner if any
+      const oldBanner = document.getElementById('maint-banner');
+      if (oldBanner) oldBanner.remove();
+
+      if (isMaint) {
+        // Create premium alert banner
+        const banner = document.createElement('div');
+        banner.id = 'maint-banner';
+        banner.style.position = 'fixed';
+        banner.style.top = '70px'; // Below header
+        banner.style.left = '0';
+        banner.style.width = '100%';
+        banner.style.background = 'rgba(229, 57, 53, 0.9)';
+        banner.style.color = '#fff';
+        banner.style.textAlign = 'center';
+        banner.style.padding = '12px 20px';
+        banner.style.fontSize = '14px';
+        banner.style.fontWeight = '800';
+        banner.style.zIndex = '999';
+        banner.style.backdropFilter = 'blur(10px)';
+        banner.style.borderBottom = '1px solid rgba(255,255,255,0.2)';
+        banner.style.boxShadow = '0 5px 15px rgba(229,57,53,0.3)';
+        banner.innerText = "🛠️ BAKIM MODU: " + message;
+        document.body.appendChild(banner);
+
+        // Update download buttons
+        downloadBtns.forEach(btn => {
+          if (btn) {
+            btn.style.pointerEvents = 'none';
+            btn.style.opacity = '0.5';
+            btn.style.background = '#e53935';
+            btn.style.color = '#fff';
+            btn.style.border = 'none';
+            if (btn.id === 'final-apk-download-btn') {
+              btn.innerText = "🛠️ Sunucu Bakımdadır (İndirilemez)";
+            } else {
+              btn.innerText = "Bakımda";
+            }
+          }
+        });
+      } else {
+        // Reset download buttons
+        downloadBtns.forEach(btn => {
+          if (btn) {
+            btn.style.pointerEvents = 'auto';
+            btn.style.opacity = '1';
+            btn.style.background = ''; // reset to CSS defaults
+            btn.style.color = '';
+            btn.style.border = '';
+            if (btn.id === 'final-apk-download-btn') {
+              btn.innerText = "💾 Beta APK İndir (v1.0.0-beta.8)";
+            } else if (btn.id === 'hero-primary-download') {
+              btn.innerText = "Beta APK İndir";
+            } else if (btn.id === 'coach-cta-download') {
+              btn.innerText = "AI Koçu Test Et";
+            } else if (btn.id === 'link-download-btn') {
+              btn.innerText = "Hemen İndir";
+            }
+          }
+        });
+      }
     }
   </script>
 </body>
