@@ -138,11 +138,40 @@
               Bizimle özel olarak mesajlaşabilirsin kanka. Talepler yoğunluğa göre geç yanıtlanabilir. Acil durumlarda doğrudan <strong>turcodevelop@gmail.com</strong> adresine yazabilirsin.
             </p>
             
-            <!-- Google Login Panel -->
-            <div class="google-auth-container" id="user-google-auth-container" style="margin-bottom: 15px;">
-              <button class="google-auth-btn" onclick="signInWithGoogleUser()">
-                <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google"> Google ile Giriş Yap kanka 🚀
-              </button>
+            <!-- User Authentication Panel kanka -->
+            <div class="google-auth-container" id="user-google-auth-container" style="margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; padding: 15px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px;">
+              
+              <!-- Tab selection for users kanka -->
+              <div style="display: flex; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                <button id="btn-user-login-google" class="tkt-tab-btn active" style="flex: 1; font-size: 0.68rem; padding: 4px;" onclick="setUserAuthTab('google')">🌐 Google Giriş</button>
+                <button id="btn-user-login-email" class="tkt-tab-btn" style="flex: 1; font-size: 0.68rem; padding: 4px;" onclick="setUserAuthTab('email')">📧 E-posta Giriş</button>
+              </div>
+
+              <!-- Google Login Panel -->
+              <div id="user-auth-sec-google">
+                <button class="google-auth-btn" onclick="signInWithGoogleUser()">
+                  <svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px; vertical-align: middle;">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.77c-.98.66-2.23 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                  </svg>
+                  Google ile Giriş Yap kanka 🚀
+                </button>
+              </div>
+
+              <!-- Email Login Panel -->
+              <div id="user-auth-sec-email" style="display: none; text-align: left;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <input type="email" id="user-login-email" placeholder="E-posta Adresi kanka..." class="maint-input" style="font-size: 0.76rem; padding: 8px 12px; height: 36px;">
+                  <input type="password" id="user-login-password" placeholder="Şifre kanka..." class="maint-input" style="font-size: 0.76rem; padding: 8px 12px; height: 36px;">
+                  
+                  <div style="display: flex; gap: 6px; margin-top: 4px;">
+                    <button class="store-code-btn maint-flex-1" style="font-size: 0.72rem; padding: 6px;" onclick="signInWithEmailUser()">Giriş Yap</button>
+                    <button class="store-code-btn maint-flex-1" style="font-size: 0.72rem; padding: 6px; background: rgba(212,175,55,0.05); border-color: rgba(212,175,55,0.18);" onclick="signUpWithEmailUser()">Kayıt Ol</button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="ticket-nav-tabs">
@@ -1075,10 +1104,29 @@
           loginWarning.id = "ban-af-login-warning";
           loginWarning.style.cssText = "padding: 15px; background: rgba(229,57,53,0.08); border: 1.5px dashed var(--alert-red); border-radius: 12px; margin-top: 15px; text-align: center;";
           loginWarning.innerHTML = `
-            <p style="font-size: 0.76rem; color: #fff; margin-bottom: 10px;">Af talebi gönderebilmek ve admin yanıtlarını görebilmek için Google ile giriş yapmalısın kanka.</p>
-            <button class="google-auth-btn" style="margin: 0 auto; width: auto; font-size: 0.72rem; padding: 6px 12px;" onclick="signInWithGoogleUser()">
-              <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google" style="width: 14px; height: 14px;"> Google ile Giriş Yap 🚀
+            <p style="font-size: 0.76rem; color: #fff; margin-bottom: 12px;">Af talebi gönderebilmek ve admin yanıtlarını takip edebilmek için giriş yapmalısın kanka.</p>
+            
+            <!-- Google Login Button (SVG) -->
+            <button class="google-auth-btn" style="margin: 0 auto 12px; width: auto; font-size: 0.72rem; padding: 6px 12px; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="signInWithGoogleUser()">
+              <svg viewBox="0 0 24 24" width="14" height="14" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.77c-.98.66-2.23 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Google ile Giriş Yap 🚀
             </button>
+
+            <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: bold; margin: 10px 0;">VEYA E-POSTA İLE GİRİŞ/KAYIT</div>
+            <div style="display: flex; flex-direction: column; gap: 8px; max-width: 280px; margin: 0 auto; text-align: left;">
+              <input type="email" id="ban-email-input" placeholder="E-posta Adresi kanka..." class="maint-input" style="font-size: 0.72rem; padding: 6px 10px; height: 32px;">
+              <input type="password" id="ban-password-input" placeholder="Şifre kanka..." class="maint-input" style="font-size: 0.72rem; padding: 6px 10px; height: 32px;">
+              
+              <div style="display: flex; gap: 6px; margin-top: 2px;">
+                <button class="store-code-btn maint-flex-1" style="font-size: 0.68rem; padding: 5px;" onclick="signInWithEmailBan()">Giriş Yap</button>
+                <button class="store-code-btn maint-flex-1" style="font-size: 0.68rem; padding: 5px; background: rgba(212,175,55,0.05); border-color: rgba(212,175,55,0.18);" onclick="signUpWithEmailBan()">Kayıt Ol</button>
+              </div>
+            </div>
           `;
           afFormContainer.appendChild(loginWarning);
         }
@@ -1489,6 +1537,140 @@
       }
     }
 
+    // Toggle User Auth Method (Google / Email) kanka!
+    function setUserAuthTab(tab) {
+      const secGoogle = document.getElementById("user-auth-sec-google");
+      const secEmail = document.getElementById("user-auth-sec-email");
+      const btnGoogle = document.getElementById("btn-user-login-google");
+      const btnEmail = document.getElementById("btn-user-login-email");
+
+      if (tab === "google") {
+        if (secGoogle) secGoogle.style.display = "block";
+        if (secEmail) secEmail.style.display = "none";
+        if (btnGoogle) btnGoogle.classList.add("active");
+        if (btnEmail) btnEmail.classList.remove("active");
+      } else {
+        if (secGoogle) secGoogle.style.display = "none";
+        if (secEmail) secEmail.style.display = "block";
+        if (btnGoogle) btnGoogle.classList.remove("active");
+        if (btnEmail) btnEmail.classList.add("active");
+      }
+    }
+
+    // Email/Password Login for Users on Maintenance kanka!
+    function signInWithEmailUser() {
+      const email = document.getElementById("user-login-email").value.trim();
+      const password = document.getElementById("user-login-password").value.trim();
+
+      if (!email || !password) {
+        showWebToast("E-posta ve şifrenizi girin kanka! ❌");
+        return;
+      }
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {
+          showWebToast("Giriş yapıldı kanka! 🚀");
+        })
+        .catch((err) => {
+          console.error("User Email login error:", err);
+          showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+        });
+    }
+
+    // Email/Password Registration for Users on Maintenance kanka!
+    function signUpWithEmailUser() {
+      const email = document.getElementById("user-login-email").value.trim();
+      const password = document.getElementById("user-login-password").value.trim();
+
+      if (!email || !password) {
+        showWebToast("E-posta ve şifrenizi girin kanka! ❌");
+        return;
+      }
+
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((result) => {
+          showWebToast("Kayıt olundu ve giriş yapıldı kanka! 🚀");
+          // Update profile name
+          result.user.updateProfile({
+            displayName: email.split('@')[0]
+          });
+        })
+        .catch((err) => {
+          console.error("User Email register error:", err);
+          showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+        });
+    }
+
+    // Email/Password Login for Banned Users on Ban Screen kanka!
+    function signInWithEmailBan() {
+      const email = document.getElementById("ban-email-input").value.trim();
+      const password = document.getElementById("ban-password-input").value.trim();
+
+      if (!email || !password) {
+        showWebToast("E-posta ve şifrenizi girin kanka! ❌");
+        return;
+      }
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {
+          showWebToast("Giriş yapıldı kanka! 🚀");
+        })
+        .catch((err) => {
+          console.error("Banned User Email login error:", err);
+          showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+        });
+    }
+
+    // Email/Password Registration for Banned Users on Ban Screen kanka!
+    function signUpWithEmailBan() {
+      const email = document.getElementById("ban-email-input").value.trim();
+      const password = document.getElementById("ban-password-input").value.trim();
+
+      if (!email || !password) {
+        showWebToast("E-posta ve şifrenizi girin kanka! ❌");
+        return;
+      }
+
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((result) => {
+          showWebToast("Kayıt olundu ve giriş yapıldı kanka! 🚀");
+          result.user.updateProfile({
+            displayName: email.split('@')[0]
+          });
+        })
+        .catch((err) => {
+          console.error("Banned User Email register error:", err);
+          showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+        });
+    }
+
+    // Translate Firebase Auth error codes kanka!
+    function getFirebaseAuthErrorMessage(err) {
+      if (!err || !err.code) return "Bilinmeyen bir hata oluştu kanka.";
+      switch (err.code) {
+        case "auth/operation-not-allowed":
+          return "Firebase Console'da bu giriş yöntemi aktif edilmemiş kanka! Ayarlardan açmalısın. ⚙️";
+        case "auth/invalid-email":
+          return "Geçersiz bir e-posta adresi girdin kanka. 📧";
+        case "auth/user-disabled":
+          return "Bu kullanıcı hesabı askıya alınmış kanka. 🚫";
+        case "auth/user-not-found":
+          return "Bu e-posta ile kayıtlı bir kullanıcı bulunamadı kanka. 🔍";
+        case "auth/wrong-password":
+          return "Hatalı şifre girdin kanka! Tekrar dene. 🔑";
+        case "auth/email-already-in-use":
+          return "Bu e-posta adresi zaten kullanımda kanka! 📧";
+        case "auth/weak-password":
+          return "Şifreniz çok zayıf kanka, en az 6 karakter olmalı! 🔒";
+        case "auth/popup-blocked":
+          return "Giriş penceresi tarayıcı tarafından engellendi. 🛑";
+        case "auth/unauthorized-domain":
+          return "Bu web sitesi adresi Firebase yetkili alan adlarında (Authorized Domains) ekli değil kanka! 🌐";
+        default:
+          return err.message;
+      }
+    }
+
     function signInWithGoogleUser() {
       const provider = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithPopup(provider).then((result) => {
@@ -1501,7 +1683,7 @@
             firebase.auth().signInWithRedirect(provider);
           }, 1000);
         } else {
-          showWebToast("Giriş başarısız oldu! ❌");
+          showWebToast(`Giriş başarısız oldu: ${getFirebaseAuthErrorMessage(err)} ❌`);
         }
       });
     }
