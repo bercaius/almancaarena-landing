@@ -565,6 +565,7 @@
                 <button class="tkt-tab-btn" id="btn-adm-feedbacks" onclick="switchTab('feedbacks')">💬 Yorumlar</button>
                 <button class="tkt-tab-btn" id="btn-adm-tickets" onclick="switchTab('tickets')">🎫 Destek</button>
                 <button class="tkt-tab-btn" id="btn-adm-roles" onclick="switchTab('roles')">🔐 Yetkiler</button>
+                <button class="tkt-tab-btn" id="btn-adm-bans" onclick="switchTab('bans')">🚫 Banlar</button>
                 <button class="tkt-tab-btn" id="btn-adm-portals" onclick="switchTab('portals')">🚀 Portallar</button>
             </div>
 
@@ -578,6 +579,7 @@
                     <button class="sidebar-nav-btn" id="btn-nav-feedbacks" onclick="switchTab('feedbacks')">💬 Yorumlar & Görüşler</button>
                     <button class="sidebar-nav-btn" id="btn-nav-tickets" onclick="switchTab('tickets')">🎫 Destek Talepleri</button>
                     <button class="sidebar-nav-btn" id="btn-nav-roles" onclick="switchTab('roles')">🔐 Yetki Yönetimi</button>
+                    <button class="sidebar-nav-btn" id="btn-nav-bans" onclick="switchTab('bans')">🚫 Ban Yönetimi</button>
                     <button class="sidebar-nav-btn" id="btn-nav-portals" onclick="switchTab('portals')">🚀 Portallar & Konsollar</button>
                     
                     <!-- CSV/JSON Export center in sidebar kanka! -->
@@ -724,16 +726,17 @@
                                 <!-- Chat input -->
                                 <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                                     <input type="text" id="adm-chat-input" placeholder="Cevabınızı yazın kanka..." style="flex-grow: 1; font-size: 12px; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4); color: #fff; outline: none;">
-                                    <button class="btn" style="width: auto; margin-top: 0; padding: 8px 16px; font-size: 11px; font-weight: bold; background: var(--color-gold); color: #000; border-radius: 8px;" onclick="sendAdminTicketMessage()">Gönder</button>
+                                    <button class="btn" id="adm-chat-send-btn" style="width: auto; margin-top: 0; padding: 8px 16px; font-size: 11px; font-weight: bold; background: var(--color-gold); color: #000; border-radius: 8px;" onclick="sendAdminTicketMessage()">Gönder</button>
                                 </div>
                                 
                                 <!-- Status actions -->
                                 <div style="display: flex; gap: 8px; justify-content: space-between;">
                                     <div style="display: flex; gap: 6px;">
-                                        <button class="btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 10px; font-weight: bold; background: var(--alert-green); color: #fff; border-radius: 6px; border: none;" onclick="updateTicketStatus('cevaplandı')">Cevaplandı</button>
-                                        <button class="btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 10px; font-weight: bold; background: var(--text-muted); color: #fff; border-radius: 6px; border: none;" onclick="updateTicketStatus('kapatıldı')">Bileti Kapat</button>
+                                        <button class="btn" id="adm-chat-answered-btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 10px; font-weight: bold; background: var(--alert-green); color: #fff; border-radius: 6px; border: none;" onclick="updateTicketStatus('cevaplandı')">Cevaplandı</button>
+                                        <button class="btn" id="adm-chat-close-btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 10px; font-weight: bold; background: var(--text-muted); color: #fff; border-radius: 6px; border: none;" onclick="updateTicketStatus('kapatıldı')">Bileti Kapat</button>
+                                        <button class="btn" id="adm-chat-unban-btn" style="display: none; width: auto; margin-top: 0; padding: 6px 12px; font-size: 10px; font-weight: bold; background: #9b51e0; color: #fff; border-radius: 6px; border: none;" onclick="approveBanAppeal()">Affet & Banı Aç 🔓</button>
                                     </div>
-                                    <button class="btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 10px; font-weight: bold; background: var(--alert-red); color: #fff; border-radius: 6px; border: none;" onclick="deleteTicket()">Sil</button>
+                                    <button class="btn" id="adm-chat-delete-btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 10px; font-weight: bold; background: var(--alert-red); color: #fff; border-radius: 6px; border: none;" onclick="deleteTicket()">Sil</button>
                                 </div>
                             </div>
                         </div>
@@ -743,6 +746,51 @@
                     <div id="sec-roles" style="display: none;">
                         <h3 style="font-size: 15px; font-weight: 800; color: var(--secondary-accent); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;">🔐 Rol & Yetki Yönetimi</h3>
                         
+                        <!-- Bilet Yetki Matrisi kanka! Sadece kurucu ayarlayabilir -->
+                        <div class="kurucu-only-section" id="perm-matrix-card" style="display: none; background: rgba(212,175,55,0.02); border: 1.5px solid rgba(212,175,55,0.15); padding: 18px; border-radius: 16px; margin-bottom: 20px; text-align: left;">
+                            <h4 style="font-size: 13px; color: var(--color-gold); margin-bottom: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center;">
+                                <span>🎫 Bilet Yetki Matrisi</span>
+                                <span style="font-size: 8px; color: var(--alert-green); background: rgba(76, 175, 80, 0.1); padding: 2px 6px; border-radius: 4px;">Kurucu Özel</span>
+                            </h4>
+                            <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4;">Destek Yetkilisi ve Moderatör rollerinin destek taleplerindeki yetkilerini buradan sınırla kanka.</p>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <!-- Destek Yetkilisi Rolü İzinleri -->
+                                <div style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
+                                    <strong style="font-size: 11px; color: var(--secondary-accent); display: block; margin-bottom: 8px;">Destek Yetkilisi İzinleri</strong>
+                                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                                        <label style="display: flex; align-items: center; gap: 6px; font-size: 11px; color:#fff; cursor:pointer;">
+                                            <input type="checkbox" id="perm-support-msg" checked style="accent-color: var(--color-gold);"> Mesaj Gönder
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 6px; font-size: 11px; color:#fff; cursor:pointer;">
+                                            <input type="checkbox" id="perm-support-status" checked style="accent-color: var(--color-gold);"> Durum Güncelle
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 6px; font-size: 11px; color:#fff; cursor:pointer;">
+                                            <input type="checkbox" id="perm-support-delete" style="accent-color: var(--color-gold);"> Bilet Sil
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- Moderatör Rolü İzinleri -->
+                                <div>
+                                    <strong style="font-size: 11px; color: var(--color-gold); display: block; margin-bottom: 8px;">Moderatör İzinleri</strong>
+                                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                                        <label style="display: flex; align-items: center; gap: 6px; font-size: 11px; color:#fff; cursor:pointer;">
+                                            <input type="checkbox" id="perm-mod-msg" style="accent-color: var(--color-gold);"> Mesaj Gönder
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 6px; font-size: 11px; color:#fff; cursor:pointer;">
+                                            <input type="checkbox" id="perm-mod-status" style="accent-color: var(--color-gold);"> Durum Güncelle
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 6px; font-size: 11px; color:#fff; cursor:pointer;">
+                                            <input type="checkbox" id="perm-mod-delete" style="accent-color: var(--color-gold);"> Bilet Sil
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-accent" style="margin-top: 15px; padding: 8px 12px; font-size: 11px;" onclick="saveRolePermissions()">Matrisi Kaydet kanka ⚡</button>
+                        </div>
+
                         <!-- Role Assign Form -->
                         <div style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 14px; margin-bottom: 20px; text-align: left;">
                             <h4 style="font-size: 12px; color: var(--color-gold); margin-bottom: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Yeni Yetkili Ekle</h4>
@@ -767,6 +815,16 @@
                         <!-- Active Roles List -->
                         <h4 style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Mevcut Yetkili Listesi</h4>
                         <div id="admin-roles-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px;">
+                            <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">Yükleniyor...</div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5.5: BAN MANAGEMENT kanka! -->
+                    <div id="sec-bans" style="display: none;">
+                        <h3 style="font-size: 15px; font-weight: 800; color: var(--alert-red); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;">🚫 Ban Yönetim Paneli</h3>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">Kuralları ihlal ettiği için sistem tarafından veya manuel olarak banlanmış kullanıcıları buradan yönet kanka.</p>
+                        
+                        <div id="admin-bans-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 5px;">
                             <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">Yükleniyor...</div>
                         </div>
                     </div>
@@ -969,6 +1027,7 @@
             const btnFeedbacks = document.getElementById("btn-nav-feedbacks");
             const btnTickets = document.getElementById("btn-nav-tickets");
             const btnRoles = document.getElementById("btn-nav-roles");
+            const btnBans = document.getElementById("btn-nav-bans");
             const btnPortals = document.getElementById("btn-nav-portals");
 
             const mobileBtnSettings = document.getElementById("btn-adm-settings");
@@ -976,24 +1035,30 @@
             const mobileBtnFeedbacks = document.getElementById("btn-adm-feedbacks");
             const mobileBtnTickets = document.getElementById("btn-adm-tickets");
             const mobileBtnRoles = document.getElementById("btn-adm-roles");
+            const mobileBtnBans = document.getElementById("btn-adm-bans");
             const mobileBtnPortals = document.getElementById("btn-adm-portals");
             
-            const allBtns = [btnSettings, btnUsers, btnFeedbacks, btnTickets, btnRoles, btnPortals, 
-                             mobileBtnSettings, mobileBtnUsers, mobileBtnFeedbacks, mobileBtnTickets, mobileBtnRoles, mobileBtnPortals];
+            const allBtns = [btnSettings, btnUsers, btnFeedbacks, btnTickets, btnRoles, btnBans, btnPortals, 
+                             mobileBtnSettings, mobileBtnUsers, mobileBtnFeedbacks, mobileBtnTickets, mobileBtnRoles, mobileBtnBans, mobileBtnPortals];
             
             allBtns.forEach(btn => { if(btn) btn.style.display = "flex"; });
 
+            const matrixCard = document.getElementById("perm-matrix-card");
+            if (matrixCard) {
+                matrixCard.style.display = isSuperAdmin ? "block" : "none";
+            }
+
             if (role === "moderator") {
                 // Sadece yorumlar sekmesine erişim kanka!
-                [btnSettings, btnUsers, btnTickets, btnRoles, btnPortals, 
-                 mobileBtnSettings, mobileBtnUsers, mobileBtnTickets, mobileBtnRoles, mobileBtnPortals].forEach(btn => {
+                [btnSettings, btnUsers, btnTickets, btnRoles, btnBans, btnPortals, 
+                 mobileBtnSettings, mobileBtnUsers, mobileBtnTickets, mobileBtnRoles, mobileBtnBans, mobileBtnPortals].forEach(btn => {
                     if (btn) btn.style.display = "none";
                 });
                 switchTab('feedbacks');
             } else if (role === "support") {
                 // Sadece bilet sekmesine erişim kanka!
-                [btnSettings, btnUsers, btnFeedbacks, btnRoles, btnPortals, 
-                 mobileBtnSettings, mobileBtnUsers, mobileBtnFeedbacks, mobileBtnRoles, mobileBtnPortals].forEach(btn => {
+                [btnSettings, btnUsers, btnFeedbacks, btnRoles, btnBans, btnPortals, 
+                 mobileBtnSettings, mobileBtnUsers, mobileBtnFeedbacks, mobileBtnRoles, mobileBtnBans, mobileBtnPortals].forEach(btn => {
                     if (btn) btn.style.display = "none";
                 });
                 switchTab('tickets');
@@ -1029,6 +1094,8 @@
             listenToTickets();
             listenToUsers();
             listenToRoles();
+            listenToBannedUsers();
+            loadRolePermissions();
             loadScratchpad();
         }
 
@@ -1086,6 +1153,7 @@
                 feedbacks: document.getElementById("sec-feedbacks"),
                 tickets: document.getElementById("sec-tickets"),
                 roles: document.getElementById("sec-roles"),
+                bans: document.getElementById("sec-bans"),
                 portals: document.getElementById("sec-portals")
             };
 
@@ -1095,6 +1163,7 @@
                 feedbacks: document.getElementById("btn-nav-feedbacks"),
                 tickets: document.getElementById("btn-nav-tickets"),
                 roles: document.getElementById("btn-nav-roles"),
+                bans: document.getElementById("btn-nav-bans"),
                 portals: document.getElementById("btn-nav-portals")
             };
 
@@ -1104,6 +1173,7 @@
                 feedbacks: document.getElementById("btn-adm-feedbacks"),
                 tickets: document.getElementById("btn-adm-tickets"),
                 roles: document.getElementById("btn-adm-roles"),
+                bans: document.getElementById("btn-adm-bans"),
                 portals: document.getElementById("btn-adm-portals")
             };
 
@@ -1614,6 +1684,47 @@
             });
 
             chatMessagesList.scrollTop = chatMessagesList.scrollHeight;
+
+            // --- Bilet Yetki Kontrolleri Modülü kanka! ---
+            const sendBtn = document.getElementById("adm-chat-send-btn");
+            const answeredBtn = document.getElementById("adm-chat-answered-btn");
+            const closeBtn = document.getElementById("adm-chat-close-btn");
+            const deleteBtn = document.getElementById("adm-chat-delete-btn");
+            const unbanBtn = document.getElementById("adm-chat-unban-btn");
+            const chatInput = document.getElementById("adm-chat-input");
+
+            // Kurucu / Super Admin her şeye yetkilidir kanka!
+            let canSend = isSuperAdmin;
+            let canStatus = isSuperAdmin;
+            let canDelete = isSuperAdmin;
+
+            if (!isSuperAdmin) {
+                // Destek veya Mod ise izin matrisini sorgula kanka!
+                const role = currentAdminRole;
+                if (rolePermissions[role]) {
+                    canSend = !!rolePermissions[role].msg;
+                    canStatus = !!rolePermissions[role].status;
+                    canDelete = !!rolePermissions[role].delete;
+                }
+            }
+
+            // İzin durumuna göre butonları göster/gizle ve inputları aktif/pasif et kanka!
+            if (sendBtn) sendBtn.style.display = canSend ? "block" : "none";
+            if (chatInput) chatInput.disabled = !canSend;
+            
+            if (answeredBtn) answeredBtn.style.display = canStatus ? "block" : "none";
+            if (closeBtn) closeBtn.style.display = canStatus ? "block" : "none";
+            
+            if (deleteBtn) deleteBtn.style.display = canDelete ? "block" : "none";
+
+            // Ban Af Talepleri için özel affetme butonu kanka!
+            if (unbanBtn) {
+                if (ticket.subject === "Ban Af Talebi" && canStatus) {
+                    unbanBtn.style.display = "block";
+                } else {
+                    unbanBtn.style.display = "none";
+                }
+            }
         }
 
         function sendAdminTicketMessage() {
@@ -1888,6 +1999,184 @@
             if (role === "moderator") return "Moderatör";
             if (role === "support") return "Destek";
             return role;
+        }
+
+        // --- BAN MANAGEMENT & ROLE PERMISSIONS MATRIX kanka! ---
+        let bannedUsersListener = null;
+        let rawBannedUsers = [];
+        let rolePermissions = {
+            support: { msg: true, status: true, delete: false },
+            moderator: { msg: false, status: false, delete: false }
+        };
+
+        function listenToBannedUsers() {
+            if (bannedUsersListener) bannedUsersListener();
+            bannedUsersListener = db.collection("banned_users").orderBy("bannedAt", "desc").onSnapshot((snapshot) => {
+                trackRead(snapshot.size);
+                rawBannedUsers = [];
+                snapshot.forEach(doc => {
+                    rawBannedUsers.push({ id: doc.id, ...doc.data() });
+                });
+                renderBannedUsersLocal();
+            }, (error) => {
+                console.error("Ban listesi okuma hatası:", error);
+            });
+        }
+
+        function renderBannedUsersLocal() {
+            const list = document.getElementById("admin-bans-list");
+            if (!list) return;
+            list.innerHTML = "";
+
+            if (rawBannedUsers.length === 0) {
+                list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 12px; padding: 20px;">Banlanmış üye bulunmamaktadır kanka.</div>`;
+                return;
+            }
+
+            rawBannedUsers.forEach(u => {
+                const card = document.createElement("div");
+                card.style.cssText = "display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 12px; margin-bottom: 8px; text-align: left; flex-wrap: wrap; gap: 8px;";
+                const time = new Date(u.bannedAt || 0).toLocaleString('tr-TR');
+
+                card.innerHTML = `
+                    <div>
+                        <div style="font-size: 13px; font-weight: bold; color: var(--alert-red);">${escapeHtml(u.email || u.id)}</div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Sebep: ${escapeHtml(u.reason || "Belirtilmemiş")}</div>
+                        <div style="font-size: 9px; color: var(--color-gold); margin-top: 2px;">Tarih: ${time}</div>
+                    </div>
+                    <button class="btn" style="width: auto; margin-top: 0; padding: 6px 12px; font-size: 10px; background: rgba(76,175,80,0.15); border-color:#4caf50; color:#4caf50; border-radius: 6px;" onclick="removeBanLocal('${escapeJsString(u.id)}')">Banı Aç 🔓</button>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function removeBanLocal(email) {
+            if (!confirm(`${email} kullanıcısının banını açmak istediğine emin misin kanka? 🐾`)) return;
+
+            db.collection("banned_users").doc(email.toLowerCase().trim()).delete()
+                .then(() => {
+                    trackWrite(1);
+                    showToast("Kullanıcı banı başarıyla açıldı kanka! 🔓");
+                    addSystemLog(`Ban kaldırıldı: ${email}`);
+                })
+                .catch(err => {
+                    console.error("Ban kaldırma hatası:", err);
+                    showToast("Ban kaldırılamadı! ❌");
+                });
+        }
+
+        function saveRolePermissions() {
+            if (!isSuperAdmin) {
+                showToast("Bu işlemi sadece Kurucu yapabilir! ❌");
+                return;
+            }
+
+            const sMsg = document.getElementById("perm-support-msg").checked;
+            const sStatus = document.getElementById("perm-support-status").checked;
+            const sDelete = document.getElementById("perm-support-delete").checked;
+            const mMsg = document.getElementById("perm-mod-msg").checked;
+            const mStatus = document.getElementById("perm-mod-status").checked;
+            const mDelete = document.getElementById("perm-mod-delete").checked;
+
+            const newPerms = {
+                support: {
+                    msg: sMsg,
+                    status: sStatus,
+                    delete: sDelete
+                },
+                moderator: {
+                    msg: mMsg,
+                    status: mStatus,
+                    delete: mDelete
+                }
+            };
+
+            db.collection("system_config").doc("permissions").set(newPerms)
+                .then(() => {
+                    trackWrite(1);
+                    rolePermissions = newPerms;
+                    showToast("İzin matrisi başarıyla güncellendi! ⚡");
+                    addSystemLog("Yetki matrisi güncellendi.");
+                    if (activeAdminTicketId) {
+                        refreshAdminChatPanelLocal();
+                    }
+                })
+                .catch(err => {
+                    console.error("Error saving permissions:", err);
+                    showToast("İzin matrisi kaydedilemedi! ❌");
+                });
+        }
+
+        function loadRolePermissions() {
+            db.collection("system_config").doc("permissions").get().then((doc) => {
+                trackRead(1);
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (data.support) rolePermissions.support = data.support;
+                    if (data.moderator) rolePermissions.moderator = data.moderator;
+                }
+
+                const sMsg = document.getElementById("perm-support-msg");
+                const sStatus = document.getElementById("perm-support-status");
+                const sDelete = document.getElementById("perm-support-delete");
+                const mMsg = document.getElementById("perm-mod-msg");
+                const mStatus = document.getElementById("perm-mod-status");
+                const mDelete = document.getElementById("perm-mod-delete");
+
+                if (sMsg) sMsg.checked = !!rolePermissions.support.msg;
+                if (sStatus) sStatus.checked = !!rolePermissions.support.status;
+                if (sDelete) sDelete.checked = !!rolePermissions.support.delete;
+
+                if (mMsg) mMsg.checked = !!rolePermissions.moderator.msg;
+                if (mStatus) mStatus.checked = !!rolePermissions.moderator.status;
+                if (mDelete) mDelete.checked = !!rolePermissions.moderator.delete;
+
+                if (activeAdminTicketId) {
+                    refreshAdminChatPanelLocal();
+                }
+            }).catch(err => {
+                console.error("Error loading permissions matrix:", err);
+            });
+        }
+
+        function approveBanAppeal() {
+            const ticket = rawTickets.find(t => t.id === activeAdminTicketId);
+            if (!ticket) return;
+
+            if (!confirm(`${ticket.userName} kullanıcısının ban af talebini onaylamak ve banını kaldırmak istediğine emin misin kanka? 🐾`)) return;
+
+            db.collection("tickets").doc(activeAdminTicketId).update({
+                unbanned: true,
+                status: "kapatıldı",
+                lastUpdated: Date.now(),
+                messages: firebase.firestore.FieldValue.arrayUnion({
+                    sender: "TurcoDevelop",
+                    text: "Özür ve açıklama talebiniz kabul edilmiştir kanka. Banınız kaldırıldı! Keyifli Almanca Arena düelloları dileriz. 🐾",
+                    timestamp: Date.now()
+                })
+            }).then(() => {
+                trackWrite(1);
+
+                const email = (ticket.email || "").toLowerCase().trim();
+                if (email && !email.startsWith("guest-")) {
+                    db.collection("banned_users").doc(email).delete()
+                        .then(() => {
+                            trackWrite(1);
+                            showToast("Kullanıcı banı ve af talebi onaylandı! 🔓");
+                            addSystemLog(`Ban af talebi onaylandı: ${email}`);
+                        })
+                        .catch(err => {
+                            console.error("Ban listesinden silme hatası:", err);
+                            showToast("Bilet kapatıldı ancak banned_users listesinden silinemedi! ❌");
+                        });
+                } else {
+                    showToast("Misafir af talebi onaylandı! Banı istemci tarafından otomatik kalkacak. 🔓");
+                    addSystemLog(`Misafir ban af talebi onaylandı: ${ticket.userName}`);
+                }
+            }).catch(err => {
+                console.error("Af bilet onaylama hatası:", err);
+                showToast("Af talebi onaylanırken hata oluştu! ❌");
+            });
         }
 
         // --- OFFLINE EXPORT LOGIC ---

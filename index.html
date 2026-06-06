@@ -243,6 +243,51 @@
     </div>
   </div>
 
+  <!-- Premium Ban Screen (Hidden by default) -->
+  <div id="banned-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, #260d0d 0%, #0c0303 100%); z-index: 9998; overflow-y: auto; overflow-x: hidden; padding: 40px 15px; box-sizing: border-box; align-items: center; justify-content: center;">
+    <div class="neon-blob" style="position: absolute; width: 650px; height: 650px; border-radius: 50%; filter: blur(140px); opacity: 0.14; z-index: 1; pointer-events: none; background: radial-gradient(circle, var(--alert-red) 0%, rgba(229, 57, 53, 0) 70%); top: -200px; left: -200px; animation: floatBlob1 22s infinite alternate ease-in-out;"></div>
+    <div class="neon-blob" style="position: absolute; width: 650px; height: 650px; border-radius: 50%; filter: blur(140px); opacity: 0.14; z-index: 1; pointer-events: none; background: radial-gradient(circle, #5f00ff 0%, rgba(95, 0, 255, 0) 70%); bottom: -250px; right: -200px; animation: floatBlob2 18s infinite alternate ease-in-out; animation-delay: -6s;"></div>
+    
+    <div class="maintenance-container glass-card" style="border-color: rgba(229, 57, 53, 0.3); box-shadow: 0 30px 70px rgba(0,0,0,0.9), 0 0 40px rgba(229, 57, 53, 0.05); text-align: center; max-width: 580px; width: 100%; padding: 35px 24px; border-radius: 32px; backdrop-filter: blur(45px); -webkit-backdrop-filter: blur(45px);">
+      <div class="maintenance-logo" style="display: flex; justify-content: center; align-items: center; margin-bottom: 35px;">
+        <img src="assets/app_logo.png" alt="Logo" class="logo-img-maint" style="width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--alert-red); margin-right: 8px;">
+        <span class="logo-text-maint" style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800; color: #fff;">Almanca<span style="color: var(--alert-red);">Arena</span></span>
+      </div>
+      
+      <div class="maintenance-mascot-container" style="background: radial-gradient(circle, rgba(229, 57, 53, 0.1) 0%, rgba(95, 0, 255, 0.04) 50%, rgba(0,0,0,0) 72%); position: relative; width: 200px; height: 200px; margin: 40px auto 25px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">
+        <img src="assets/bello_sleeping.png" alt="Bello Kizgin" class="mascot-sleeping" style="filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(3); width: 85%; height: 85%; object-fit: contain; animation: breathing 4s infinite ease-in-out;">
+      </div>
+      
+      <h1 class="maintenance-title" style="font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; background: linear-gradient(90deg, #fff 30%, var(--alert-red) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Bello Seni Banladı! 🐾</h1>
+      <p class="maintenance-desc" id="ban-reason-text" style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6; margin-bottom: 35px;">Yapıcı olmayan kötü geri bildirim gönderimi sebebiyle bu cihaza/hesaba erişim engellenmiştir kanka.</p>
+      
+      <!-- Af Talebi Formu -->
+      <div id="ban-af-form-container" style="text-align: left; margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+        <p class="social-title-maint" style="color: var(--alert-red); font-size: 0.85rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">🐾 Tek Seferlik Af Talebi</p>
+        <p style="font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;">
+          Eğer bir yanlış anlaşılma olduğunu düşünüyorsan veya özür dilemek istiyorsan, yöneticilere iletilmek üzere tek seferlik bir af talebi yazabilirsin kanka.
+        </p>
+        <form onsubmit="submitAfRequest(event)" class="feedback-form" id="ban-af-form" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+          <textarea id="ban-af-msg" placeholder="Özür veya açıklama mesajınızı buraya yazın..." required class="maint-input maint-textarea" style="height: 80px;"></textarea>
+          <button class="store-code-btn" type="submit" style="background: rgba(229, 57, 53, 0.1); border-color: var(--alert-red); color: var(--alert-red); margin-top: 8px;">Af Talebi Gönder 🐾</button>
+        </form>
+        <div id="ban-af-success-msg" style="display: none; color: #4caf50; font-size: 0.76rem; font-weight: bold; text-align: center; padding: 10px; background: rgba(76, 175, 80, 0.08); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 12px; margin-top: 10px;">
+          Af talebiniz başarıyla iletildi kanka! Değerlendirildikten sonra banınız açılabilir. 🐾
+        </div>
+        <div id="ban-af-responses" style="display: none; margin-top: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 12px; border-radius: 12px;">
+          <p style="color: var(--color-gold); font-size: 0.76rem; font-weight: bold; margin-bottom: 8px;">🏢 TurcoDevelop Cevapları:</p>
+          <div id="ban-af-messages-list" style="display: flex; flex-direction: column; gap: 6px; max-height: 150px; overflow-y: auto;">
+             <!-- Messages will load here -->
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 25px; display: flex; gap: 10px; justify-content: center;">
+        <button class="google-logout-btn" onclick="signOutGoogleUser()" style="width: auto; padding: 8px 20px;">Güvenli Çıkış Yap 👋</button>
+      </div>
+    </div>
+  </div>
+
   <div id="web-toast" class="web-toast">Kod kopyalandı!</div>
 
   <!-- Main Landing Content (Hidden initially to prevent leaks) -->
@@ -815,6 +860,196 @@
       return hashHex;
     }
 
+    function hidePreloader() {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 400);
+      }
+    }
+
+    function checkUserBanStatus(user) {
+      const isLocalBanned = localStorage.getItem("banned_user") === "true";
+      const bannedScreen = document.getElementById("banned-screen");
+      const landingContent = document.getElementById("landing-content");
+      const maintScreen = document.getElementById("maintenance-screen");
+      const afTicketId = localStorage.getItem("sent_af_ticket_id");
+
+      if (user) {
+        const emailLower = user.email.toLowerCase().trim();
+        db.collection("banned_users").doc(emailLower).get().then((doc) => {
+          trackRead(1);
+          if (doc.exists) {
+            const data = doc.data();
+            showBanScreen(data.reason || "Kural ihlali nedeniyle erişiminiz engellendi kanka.");
+            checkAppealStatusLocal(afTicketId, emailLower);
+          } else {
+            // No ban in Firestore for this Google user, so they are unbanned!
+            if (isLocalBanned) {
+              localStorage.removeItem("banned_user");
+              localStorage.removeItem("sent_af_request");
+              localStorage.removeItem("sent_af_ticket_id");
+              showWebToast("Banınız kaldırıldı kanka! Hoş geldiniz. 🎉");
+            }
+            if (bannedScreen) bannedScreen.style.display = "none";
+            // Check maintenance to show page
+            if (currentConfig && !currentConfig.isUnderMaintenance) {
+              if (landingContent) landingContent.style.display = "block";
+            }
+          }
+        }).catch(err => {
+          console.error("Ban check error:", err);
+        });
+      } else {
+        // Guest user
+        if (isLocalBanned) {
+          showBanScreen("Yapıcı olmayan kötü geri bildirim gönderimi sebebiyle banlandınız kanka.");
+          checkAppealStatusLocal(afTicketId, null);
+        } else {
+          if (bannedScreen) bannedScreen.style.display = "none";
+        }
+      }
+    }
+
+    function checkAppealStatusLocal(afTicketId, emailLower) {
+      if (!afTicketId && emailLower) {
+        // Find if they have an appeal ticket by email
+        db.collection("tickets")
+          .where("email", "==", emailLower)
+          .where("subject", "==", "Ban Af Talebi")
+          .get()
+          .then((snapshot) => {
+            trackRead(snapshot.size);
+            if (!snapshot.empty) {
+              let latestTicket = null;
+              snapshot.forEach(doc => {
+                const data = doc.data();
+                data.id = doc.id;
+                if (!latestTicket || data.createdAt > latestTicket.createdAt) {
+                  latestTicket = data;
+                }
+              });
+              if (latestTicket) {
+                localStorage.setItem("sent_af_request", "true");
+                localStorage.setItem("sent_af_ticket_id", latestTicket.id);
+                processAppealTicketData(latestTicket);
+              }
+            }
+          }).catch(err => console.error("Error looking up appeal ticket by email:", err));
+      } else if (afTicketId) {
+        db.collection("tickets").doc(afTicketId).get().then((doc) => {
+          trackRead(1);
+          if (doc.exists) {
+            const data = doc.data();
+            data.id = doc.id;
+            processAppealTicketData(data);
+          }
+        }).catch(err => console.error("Error loading appeal ticket:", err));
+      }
+    }
+
+    function processAppealTicketData(ticket) {
+      if (ticket.unbanned === true) {
+        // The admin approved the appeal kanka!
+        localStorage.removeItem("banned_user");
+        localStorage.removeItem("sent_af_request");
+        localStorage.removeItem("sent_af_ticket_id");
+        showWebToast("Af talebiniz kabul edildi! Banınız kaldırıldı kanka! 🎉");
+        setTimeout(() => {
+          location.reload();
+        }, 1500);
+        return;
+      }
+
+      const afForm = document.getElementById("ban-af-form");
+      const afSuccess = document.getElementById("ban-af-success-msg");
+      if (afForm) afForm.style.display = "none";
+      if (afSuccess) afSuccess.style.display = "block";
+
+      const adminMessages = (ticket.messages || []).filter(m => m.sender === "TurcoDevelop");
+      const responsesDiv = document.getElementById("ban-af-responses");
+      const messagesList = document.getElementById("ban-af-messages-list");
+
+      if (adminMessages.length > 0 && responsesDiv && messagesList) {
+        responsesDiv.style.display = "block";
+        messagesList.innerHTML = "";
+        adminMessages.forEach(msg => {
+          const msgDiv = document.createElement("div");
+          msgDiv.style.cssText = "background: rgba(212, 175, 55, 0.05); border-left: 2px solid var(--color-gold); padding: 6px 10px; border-radius: 4px; font-size: 10px; color: #fff; text-align: left; margin-bottom: 4px; word-break: break-word;";
+          msgDiv.innerHTML = `<strong>🏢 TurcoDevelop:</strong> ${escapeHtml(msg.text)}`;
+          messagesList.appendChild(msgDiv);
+        });
+        messagesList.scrollTop = messagesList.scrollHeight;
+      }
+    }
+
+    function showBanScreen(reason) {
+      const bannedScreen = document.getElementById("banned-screen");
+      const landingContent = document.getElementById("landing-content");
+      const maintScreen = document.getElementById("maintenance-screen");
+      const preloader = document.getElementById("preloader");
+      const reasonText = document.getElementById("ban-reason-text");
+
+      if (preloader) preloader.style.display = "none";
+      if (landingContent) landingContent.style.display = "none";
+      if (maintScreen) maintScreen.style.display = "none";
+      
+      if (bannedScreen) {
+        bannedScreen.style.display = "flex";
+        if (reasonText) reasonText.innerText = reason;
+      }
+
+      const afForm = document.getElementById("ban-af-form");
+      const afSuccess = document.getElementById("ban-af-success-msg");
+      if (localStorage.getItem("sent_af_request") === "true") {
+        if (afForm) afForm.style.display = "none";
+        if (afSuccess) afSuccess.style.display = "block";
+      }
+    }
+
+    function submitAfRequest(event) {
+      event.preventDefault();
+      const msgInput = document.getElementById("ban-af-msg");
+      const msgText = msgInput.value.trim();
+      
+      if (!msgText) return;
+      
+      const email = currentUser ? currentUser.email : "guest-" + generateTicketCode();
+      const userName = currentUser ? currentUser.displayName : "Banlı Misafir kanka";
+      const afTicketCode = "AF-" + generateTicketCode().replace("TURCO-", "");
+      
+      const now = Date.now();
+      const afTicket = {
+        ticketId: afTicketCode,
+        userName: userName,
+        email: email,
+        subject: "Ban Af Talebi",
+        status: "açık",
+        createdAt: now,
+        lastUpdated: now,
+        messages: [
+          {
+            sender: "user",
+            text: msgText,
+            timestamp: now
+          }
+        ]
+      };
+
+      db.collection("tickets").doc(afTicketCode).set(afTicket).then(() => {
+        localStorage.setItem("sent_af_request", "true");
+        localStorage.setItem("sent_af_ticket_id", afTicketCode);
+        document.getElementById("ban-af-form").style.display = "none";
+        document.getElementById("ban-af-success-msg").style.display = "block";
+        showWebToast("Af talebiniz iletildi kanka! 🐾");
+      }).catch(err => {
+        console.error("Af ticket error:", err);
+        showWebToast("Af talebi gönderilirken hata oluştu! ❌");
+      });
+    }
+
     // Timeout fallback (5 seconds) to hide preloader if Firestore fails
     const fallbackTimeout = setTimeout(() => {
       hidePreloader();
@@ -1181,6 +1416,7 @@
     // Auth state listener
     firebase.auth().onAuthStateChanged((user) => {
       currentUser = user;
+      checkUserBanStatus(user);
       const authContainer = document.getElementById("user-google-auth-container");
       const navAuthContainer = document.getElementById("nav-auth-container");
       
@@ -1548,6 +1784,151 @@
         .replace(/'/g, "&#039;");
     }
 
+    // --- Akıllı Filtreleme ve Gen-Z Dönüşüm Motoru kanka ---
+    const conversionDictionary = {
+      "aq": "valla Bello'nun yalancısıyım",
+      "amk": "Der-Die-Das kafamı uçurdu resmen",
+      "amq": "almanca kelime ezberlemekten beynim eridi sanırım",
+      "oç": "Bello'ya mama vermeyen vicdansız",
+      "sg": "Tschüss dedim gitti",
+      "siktir": "Tschüss canım yolun açık olsun",
+      "hasiktir": "Ach du meine Güte! Şoktayım",
+      "piç": "Almancayı anadili gibi konuşan gizli deha",
+      "orospu": "Arena'nın en popüler Almanca öğretmeni",
+      "göt": "Bello'nun en sevdiği oyuncak",
+      "meme": "Bello'nun kulakları",
+      "sik": "Bello'nun favori kemiği",
+      "yarrak": "Goethe Enstitüsü giriş kapısı",
+      "am": "gül bahçesi",
+      "yavşak": "Bello'ya gizlice sosis veren sempatik insan",
+      "gavat": "geniş yürekli ve sakin Almanca partnerim",
+      "pezevenk": "Almanca Arena lig birincisi",
+      "ibne": "rengarenk Almanca kelime kartı",
+      "puşt": "Arena'da gizlice liderlik tablosunu zorlayan hırslı çocuk",
+      "sürtük": "Almanca Arena'da lig lig gezen aktif Almanca aşığı",
+      "bok": "A1 seviye Almanca bilgim",
+      "boku": "kırık dökük Almancamı",
+      "boktan": "A0.5 Almancam kadar karmaşık",
+      "salak": "artikelleri ezberleyemeyen tatlış",
+      "aptal": "Bello'yu görünce tüm Almancayı unutan aşık",
+      "gerizekalı": "Der-Die-Das arasında kaybolmuş masum köylü",
+      "mal": "Almanca Arena bağımlısı",
+      "gerzek": "Goethe'nin kayıp öğrencisi",
+      "it": "Bello'nun oyun arkadaşı",
+      "köpek": "dünyanın en tatlı canlısı Bello",
+      "şerefsiz": "bütün testleri 100 yapan o hırslı çocuk",
+      "haysiyetsiz": "kelime kartlarını çalmaya çalışan rakip",
+      "karaktersiz": "ismin -i halini henüz öğrenememiş dostumuz",
+      "salakça": "A1 seviyesi bir yaklaşımla",
+      "aptalca": "Bello'nun bile şaşıracağı bir yöntemle",
+      "bok herif": "Bello'nun tüylü arkadaşı",
+      "bela": "Bello'nun pati izi",
+      "belanı": "en güzel Almanca kelimeleri",
+      "sikik": "parıldayan yıldız gibi",
+      "sikiş": "Arena'da amansız Almanca düellosu",
+      "sokuk": "akılalmaz",
+      "sokam": " Almanca kelime fırlatayım",
+      "sokayım": "Bello ile Almanca düellosu yapayım",
+      "sikeyim": "Goethe Enstitüsü'nde şov yapayım",
+      "amcık": "Bello'nun ödül maması",
+      "kaltak": "hızlı Almanca konuşan havalı kız",
+      "yosma": "alımlı ve Almanca bilen biri",
+      "götveren": "cömert puan dağıtan sistem",
+      "götlek": "Bello'nun havlamasından korkan masum",
+      "götünü": "özünü",
+      "götün": "almanca bilgin",
+      "kahpe": "bizi yarı yolda bırakan düzensiz fiiller",
+      "taşak": "Almanca Arena'da lig atlama cesareti",
+      "orospu çocuğu": "Bello'nun en sevdiği sadık Almanca öğrencisi",
+      "o.çocuğu": "Bello'yla her gün antrenman yapan disiplinli insan",
+      "ananı": "saygıdeğer ve asil anneni",
+      "bacını": "Almanca çalışan tatlı kız kardeşini",
+      "avradını": "değerli Almanca çalışma partnerini",
+      "sülaleni": "Almanca öğrenen tüm asil sülaleni",
+      "siktiğimin": "muhteşem ve zorlayıcı",
+      "amına": "dünyasına",
+      "amına koyayım": "Bello'ya sarılıp ağlayayım artık zorluktan",
+      "amına koyayım.": "Bello'ya sarılıp ağlayayım artık.",
+      "amınakoyim": "Bello beni kurtar",
+      "amina koyayim": "Almanca öğrenmek bunu gerektirir",
+      "kodumun": "nadir bulunan dahi",
+      "koyduğumun": "seçkin",
+      "geber": "sonsuza dek Almanca konuş",
+      "pislik": "Bello'nun tüylerindeki tatlı toz parçası",
+      "yavşama": "aşırı cana yakın davranma",
+      "kaşar": "Almanca gramerini yutmuş eskitme peynir tadında usta",
+      "lan": "kankam",
+      "ulan": "Bello reis",
+      "gerzekler": "artikel kurbanları",
+      "itler": "sadık Almanca kulübü üyeleri",
+      "mallar": "liderlik tablosundaki rakiplerim",
+      "salaklar": "Bello fan club üyeleri",
+      "çöp": "gelişmeye aç ve potansiyeli yüksek",
+      "leş": "Bello'nun esnediği an kadar tatlı",
+      "rezalet": "Goethe görse gözleri yaşarır o derece",
+      "bok gibi": "A1 seviye gramerim gibi",
+      "çalışmıyor": "Bello şu an şekerleme yapıyor galiba ama uyanacak",
+      "berbat": "Bello'nun dişlediği eski terliğim kadar sempatik",
+      "siktirin gidin": "Tschüss o zaman, biz Bello ile kaçtık",
+      "amk sitesi": "Almanca Arena'nın mükemmelliği",
+      "sikicem": "şimdi oturup Almanca çalışacağım",
+      "sikerim": "Almanca gramer kurallarını altüst ederim",
+      "göt herif": "havalı Bello fanı",
+      "piç kurusu": "Almancayı su gibi içmiş dahi çocuk"
+    };
+
+    const bypassMap = {
+      '4': 'a', '@': 'a',
+      '1': 'i', '!': 'i', 'ı': 'i',
+      '0': 'o',
+      '3': 'e', '€': 'e',
+      '5': 's', '$': 's',
+      'w': 'v'
+    };
+
+    const situationalImas = [
+      { pattern: /bu ne bi[cç]im uygulama/gi, replacement: "Bello ile Almanca Arena'da vizyon sınırlarını zorluyoruz sanırım" },
+      { pattern: /hata dolu,? siliniyor/gi, replacement: "Bello'nun kemiğini sakladığı yeri bulmaya çalışırken küçük bir bug'a bastım galiba" },
+      { pattern: /para tuza[gğ]ı/gi, replacement: "Bello'ya daha fazla sosis alabilmemiz için tasarlanmış premium bir destek" },
+      { pattern: /[cç]ok zor yapamam bunu/gi, replacement: "Almanca şu an bana 'Wunderbar' demiyor ama Bello ile pes etmek yok" },
+      { pattern: /tasarım i[gğ]ren[cç]/gi, replacement: "Bello'nun minimal estetik algısına henüz tam alışamadım sanırım" }
+    ];
+
+    function normalizeText(text) {
+      let normalized = text.toLowerCase();
+      for (let char in bypassMap) {
+        const regex = new RegExp(escapeRegExp(char), 'g');
+        normalized = normalized.replace(regex, bypassMap[char]);
+      }
+      return normalized;
+    }
+
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function transformFeedback(originalText) {
+      let transformedText = originalText;
+      for (let ima of situationalImas) {
+        transformedText = transformedText.replace(ima.pattern, ima.replacement);
+      }
+      const sortedKeys = Object.keys(conversionDictionary).sort((a, b) => b.length - a.length);
+      for (let badWord of sortedKeys) {
+        const politeReplacement = conversionDictionary[badWord];
+        const regexPattern = badWord
+          .split('')
+          .map(char => {
+            const bypassChars = Object.keys(bypassMap).filter(k => bypassMap[k] === char);
+            const charOptions = [char, ...bypassChars].map(escapeRegExp).join('|');
+            return `(?:${charOptions})+[\\W_]*`;
+          })
+          .join('');
+        const regex = new RegExp(regexPattern, 'gi');
+        transformedText = transformedText.replace(regex, " " + politeReplacement + " ");
+      }
+      return transformedText.replace(/\s+/g, ' ').trim();
+    }
+
     // --- Feedback Submit Handler ---
     function submitFeedback(event) {
       event.preventDefault();
@@ -1573,18 +1954,44 @@
         showWebToast(`Çok hızlı gidiyorsun kanka! 🐾 Lütfen ${remainingSec} saniye bekle.`);
         return;
       }
-      
+
+      // Akıllı argo tespiti ve dönüştürme kanka
+      const cleanedComment = transformFeedback(comment);
+      // Orijinal yorum ile temizlenmiş yorum arasındaki harf dışı farkları atıp karşılaştırıyoruz
+      const isBad = (comment.toLowerCase().replace(/[\s\W_]/g, '') !== cleanedComment.toLowerCase().replace(/[\s\W_]/g, ''));
+
       db.collection("feedbacks").add({
         userName: userName,
         category: category,
-        comment: comment,
+        comment: cleanedComment, // Dönüştürülmüş iyi yorum
         timestamp: now,
         reply: "",
         replyTimestamp: 0
       }).then(() => {
-        showWebToast("Geri bildirimin başarıyla gönderildi kanka! 🐾");
-        commentInput.value = "";
-        localStorage.setItem("last_feedback_submit_time", String(now));
+        if (isBad) {
+          localStorage.setItem("banned_user", "true");
+          showWebToast("Bello kurallarını ihlal ettiğin için banlandın kanka! 🐾");
+          
+          if (currentUser) {
+            const emailLower = currentUser.email.toLowerCase().trim();
+            db.collection("banned_users").doc(emailLower).set({
+              email: currentUser.email,
+              bannedAt: now,
+              reason: "Geri bildirimde yapıcı olmayan/kaba ifadeler kullanılması."
+            }).then(() => {
+              checkUserBanStatus(currentUser);
+            }).catch(err => {
+              console.error("Ban save error:", err);
+              checkUserBanStatus(currentUser);
+            });
+          } else {
+            checkUserBanStatus(null);
+          }
+        } else {
+          showWebToast("Geri bildirimin başarıyla gönderildi kanka! 🐾");
+          commentInput.value = "";
+          localStorage.setItem("last_feedback_submit_time", String(now));
+        }
       }).catch((error) => {
         console.error("Yorum gönderme hatası:", error);
         showWebToast("Gönderilemedi! Firebase izin hatası olabilir. ❌");
