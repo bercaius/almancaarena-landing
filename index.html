@@ -255,7 +255,7 @@
       </div>
       
       <div class="maintenance-mascot-container" style="background: radial-gradient(circle, rgba(229, 57, 53, 0.1) 0%, rgba(95, 0, 255, 0.04) 50%, rgba(0,0,0,0) 72%); position: relative; width: 200px; height: 200px; margin: 40px auto 25px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">
-        <img src="assets/bello_sleeping.png" alt="Bello Kizgin" class="mascot-sleeping" style="filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(3); width: 85%; height: 85%; object-fit: contain; animation: breathing 4s infinite ease-in-out;">
+        <img id="banned-bello-mascot" src="assets/bello_sleeping.png" alt="Bello Kizgin" class="mascot-sleeping" style="cursor: pointer; filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(3); width: 85%; height: 85%; object-fit: contain; animation: breathing 4s infinite ease-in-out;" onclick="handleBelloBanBypass()">
       </div>
       
       <h1 class="maintenance-title" style="font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; background: linear-gradient(90deg, #fff 30%, var(--alert-red) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Bello Seni Banladı! 🐾</h1>
@@ -282,8 +282,8 @@
         </div>
       </div>
 
-      <div style="margin-top: 25px; display: flex; gap: 10px; justify-content: center;">
-        <button class="google-logout-btn" onclick="signOutGoogleUser()" style="width: auto; padding: 8px 20px;">Güvenli Çıkış Yap 👋</button>
+      <div style="margin-top: 25px; display: flex; gap: 10px; justify-content: center;" id="ban-auth-actions-row">
+        <!-- Will show Google Login or Logout button dynamically kanka! -->
       </div>
     </div>
   </div>
@@ -879,28 +879,52 @@
 
       if (user) {
         const emailLower = user.email.toLowerCase().trim();
-        db.collection("banned_users").doc(emailLower).get().then((doc) => {
+        const allowedEmails = [
+          "berkayozdemirtrtr@gmail.com",
+          "berkayozdemirmain@gmail.com",
+          "turcodevelop@gmail.com"
+        ];
+
+        // 👑 ADMIN IMMUNITY CHECK kanka! Admins can never be banned.
+        if (allowedEmails.includes(emailLower)) {
+          clearUserBanStateLocal();
+          return;
+        }
+
+        // Check if user has admin/moderator/support roles (immune too kanka!)
+        db.collection("admin_roles").doc(emailLower).get().then((roleDoc) => {
           trackRead(1);
-          if (doc.exists) {
-            const data = doc.data();
-            showBanScreen(data.reason || "Kural ihlali nedeniyle erişiminiz engellendi kanka.");
-            checkAppealStatusLocal(afTicketId, emailLower);
+          if (roleDoc.exists) {
+            clearUserBanStateLocal();
           } else {
-            // No ban in Firestore for this Google user, so they are unbanned!
-            if (isLocalBanned) {
-              localStorage.removeItem("banned_user");
-              localStorage.removeItem("sent_af_request");
-              localStorage.removeItem("sent_af_ticket_id");
-              showWebToast("Banınız kaldırıldı kanka! Hoş geldiniz. 🎉");
-            }
-            if (bannedScreen) bannedScreen.style.display = "none";
-            // Check maintenance to show page
-            if (currentConfig && !currentConfig.isUnderMaintenance) {
-              if (landingContent) landingContent.style.display = "block";
-            }
+            // Normal user, check if banned in Firestore
+            db.collection("banned_users").doc(emailLower).get().then((doc) => {
+              trackRead(1);
+              if (doc.exists) {
+                const data = doc.data();
+                showBanScreen(data.reason || "Kural ihlali nedeniyle erişiminiz engellendi kanka.");
+                checkAppealStatusLocal(afTicketId, emailLower);
+              } else {
+                clearUserBanStateLocal();
+              }
+            }).catch(err => {
+              console.error("Ban check error:", err);
+              clearUserBanStateLocal();
+            });
           }
         }).catch(err => {
-          console.error("Ban check error:", err);
+          console.error("Role check error on ban:", err);
+          // Fallback to direct ban check
+          db.collection("banned_users").doc(emailLower).get().then((doc) => {
+            trackRead(1);
+            if (doc.exists) {
+              const data = doc.data();
+              showBanScreen(data.reason || "Kural ihlali nedeniyle erişiminiz engellendi kanka.");
+              checkAppealStatusLocal(afTicketId, emailLower);
+            } else {
+              clearUserBanStateLocal();
+            }
+          }).catch(err => console.error("Ban check error:", err));
         });
       } else {
         // Guest user
@@ -909,7 +933,29 @@
           checkAppealStatusLocal(afTicketId, null);
         } else {
           if (bannedScreen) bannedScreen.style.display = "none";
+          if (currentConfig) {
+            handleMaintenanceMode(currentConfig.isUnderMaintenance, currentConfig.maintenanceMessage, currentConfig.endTimestamp);
+          }
         }
+      }
+    }
+
+    function clearUserBanStateLocal() {
+      const isLocalBanned = localStorage.getItem("banned_user") === "true";
+      const bannedScreen = document.getElementById("banned-screen");
+      const landingContent = document.getElementById("landing-content");
+
+      if (isLocalBanned) {
+        localStorage.removeItem("banned_user");
+        localStorage.removeItem("sent_af_request");
+        localStorage.removeItem("sent_af_ticket_id");
+        showWebToast("Banınız kaldırıldı kanka! Hoş geldiniz. 🎉");
+      }
+      if (bannedScreen) bannedScreen.style.display = "none";
+      
+      // Restore page content visibility (maintenance screen or main landing kanka!)
+      if (currentConfig) {
+        handleMaintenanceMode(currentConfig.isUnderMaintenance, currentConfig.maintenanceMessage, currentConfig.endTimestamp);
       }
     }
 
@@ -1001,11 +1047,41 @@
         if (reasonText) reasonText.innerText = reason;
       }
 
+      const afFormContainer = document.getElementById("ban-af-form-container");
       const afForm = document.getElementById("ban-af-form");
       const afSuccess = document.getElementById("ban-af-success-msg");
-      if (localStorage.getItem("sent_af_request") === "true") {
+
+      if (currentUser) {
+        // Logged-in user: check if they already sent an appeal kanka!
+        if (localStorage.getItem("sent_af_request") === "true") {
+          if (afForm) afForm.style.display = "none";
+          if (afSuccess) afSuccess.style.display = "block";
+        } else {
+          if (afForm) afForm.style.display = "flex";
+          if (afSuccess) afSuccess.style.display = "none";
+        }
+        
+        // Remove login warning message if any
+        const loginWarning = document.getElementById("ban-af-login-warning");
+        if (loginWarning) loginWarning.remove();
+      } else {
+        // Guest user: they must log in to submit a trackable appeal kanka!
         if (afForm) afForm.style.display = "none";
-        if (afSuccess) afSuccess.style.display = "block";
+        if (afSuccess) afSuccess.style.display = "none";
+
+        let loginWarning = document.getElementById("ban-af-login-warning");
+        if (!loginWarning && afFormContainer) {
+          loginWarning = document.createElement("div");
+          loginWarning.id = "ban-af-login-warning";
+          loginWarning.style.cssText = "padding: 15px; background: rgba(229,57,53,0.08); border: 1.5px dashed var(--alert-red); border-radius: 12px; margin-top: 15px; text-align: center;";
+          loginWarning.innerHTML = `
+            <p style="font-size: 0.76rem; color: #fff; margin-bottom: 10px;">Af talebi gönderebilmek ve admin yanıtlarını görebilmek için Google ile giriş yapmalısın kanka.</p>
+            <button class="google-auth-btn" style="margin: 0 auto; width: auto; font-size: 0.72rem; padding: 6px 12px;" onclick="signInWithGoogleUser()">
+              <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google" style="width: 14px; height: 14px;"> Google ile Giriş Yap 🚀
+            </button>
+          `;
+          afFormContainer.appendChild(loginWarning);
+        }
       }
     }
 
@@ -1100,7 +1176,7 @@
 
       if (isMaint) {
         landingContent.style.display = 'none';
-        maintScreen.style.display = 'flex';
+        maintScreen.style.display = 'block';
         maintMessage.innerText = message || "Almanca Arena şu an planlı bakım çalışmasındadır. En kısa sürede döneceğiz!";
 
         const bubble = document.getElementById('maint-bubble');
@@ -1396,14 +1472,37 @@
     let ticketListener = null;
     let currentUser = null;
 
-    // --- Google Auth for Users ---
+    // --- Google Auth for Users & Hidden Developer Bypass kanka! ---
+    let belloBanClicks = 0;
+    function handleBelloBanBypass() {
+      belloBanClicks++;
+      if (belloBanClicks >= 5) {
+        localStorage.removeItem("banned_user");
+        localStorage.removeItem("sent_af_request");
+        localStorage.removeItem("sent_af_ticket_id");
+        showWebToast("Siber Bypass Başarılı! Ban kaldırıldı kanka. 😉");
+        setTimeout(() => {
+          location.reload();
+        }, 1200);
+      } else {
+        showWebToast(`Bello'yu uyandırmak için ${5 - belloBanClicks} kez daha tıkla kanka! 🐾`);
+      }
+    }
+
     function signInWithGoogleUser() {
       const provider = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithPopup(provider).then((result) => {
         showWebToast("Giriş yapıldı kanka! 🚀");
       }).catch((err) => {
         console.error("Google login error:", err);
-        showWebToast("Giriş başarısız oldu! ❌");
+        if (err.code === "auth/popup-blocked" || err.code === "auth/popup-closed-by-user" || err.code === "auth/cancelled-popup-request") {
+          showWebToast("Popup engellendi kanka, yönlendiriliyorsunuz... 🔄");
+          setTimeout(() => {
+            firebase.auth().signInWithRedirect(provider);
+          }, 1000);
+        } else {
+          showWebToast("Giriş başarısız oldu! ❌");
+        }
       });
     }
 
