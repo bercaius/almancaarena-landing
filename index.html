@@ -36,86 +36,93 @@
         <span class="logo-text-maint">Almanca<span>Arena</span></span>
       </div>
       
-      <div class="maintenance-mascot-container">
-        <div class="maint-speech-bubble" id="maint-bubble" style="display: none;">Zzz... Uyuyorum kanka!</div>
-        <img src="assets/bello_sleeping.png" alt="Bello Uyuyor" class="mascot-sleeping">
-        <div class="zzz-bubble zzz-1">Z</div>
-        <div class="zzz-bubble zzz-2">Z</div>
-        <div class="zzz-bubble zzz-3">z</div>
-      </div>
-      
-      <h1 class="maintenance-title">Bello Dinleniyor 😴</h1>
-      <p class="maintenance-desc" id="maint-message">Almanca Arena şu an planlı bakım çalışmasındadır. En kısa sürede döneceğiz!</p>
-      
-      <!-- Countdown Wrapper -->
-      <div class="maintenance-countdown" id="maint-countdown" style="display: none;">
-        <div class="countdown-item">
-          <div class="countdown-val" id="cd-hours">00</div>
-          <div class="countdown-lbl">Saat</div>
+      <div class="maint-cols-wrapper">
+        <!-- SOL KOLON (Mascot, Sayaç, Sosyal ve Mağaza) -->
+        <div class="maint-left-col">
+          <div class="maintenance-mascot-container">
+            <div class="maint-speech-bubble" id="maint-bubble" style="display: none;">Zzz... Uyuyorum kanka!</div>
+            <img src="assets/bello_sleeping.png" alt="Bello Uyuyor" class="mascot-sleeping">
+            <div class="zzz-bubble zzz-1">Z</div>
+            <div class="zzz-bubble zzz-2">Z</div>
+            <div class="zzz-bubble zzz-3">z</div>
+          </div>
+          
+          <h1 class="maintenance-title">Bello Dinleniyor 😴</h1>
+          <p class="maintenance-desc" id="maint-message">Almanca Arena şu an planlı bakım çalışmasındadır. En kısa sürede döneceğiz!</p>
+          
+          <!-- Countdown Wrapper -->
+          <div class="maintenance-countdown" id="maint-countdown" style="display: none;">
+            <div class="countdown-item">
+              <div class="countdown-val" id="cd-hours">00</div>
+              <div class="countdown-lbl">Saat</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-val" id="cd-minutes">00</div>
+              <div class="countdown-lbl">Dakika</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-val" id="cd-seconds">00</div>
+              <div class="countdown-lbl">Saniye</div>
+            </div>
+          </div>
+          
+          <div class="social-links-maint">
+            <p class="social-title-maint">Gelişmeler için bizi takip et:</p>
+            <div class="social-btn-row">
+              <a href="https://www.instagram.com/bercaiusozdemir/" target="_blank" rel="noopener" class="social-btn maint-social-btn">
+                📸 @bercaiusozdemir
+              </a>
+              <a href="https://www.instagram.com/turcodevelopstudio/" target="_blank" rel="noopener" class="social-btn maint-social-btn">
+                🏢 @turcodevelopstudio
+              </a>
+            </div>
+          </div>
+          
+          <!-- Hediye Mağazası Section -->
+          <div class="web-store-section">
+            <p class="social-title-maint">Almanca Arena Hediye Mağazası</p>
+            <div class="web-store-grid">
+              <div class="web-store-card">
+                <div class="store-icon">🪙</div>
+                <div class="store-title">Başlangıç Paketi</div>
+                <div class="store-desc">Uygulamada geçerli 50 Altın hediye kodu.</div>
+                <button class="store-code-btn" type="button" onclick="copyPromoCode('ARENA50')">Kopyala: ARENA50</button>
+              </div>
+              <div class="web-store-card">
+                <div class="store-icon">🍪</div>
+                <div class="store-title">Bello Dostluk Paketi</div>
+                <div class="store-desc">100 Altın ve 1 Bello Bisküvisi hediye kodu.</div>
+                <button class="store-code-btn" type="button" onclick="copyPromoCode('BELLO100')">Kopyala: BELLO100</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="countdown-item">
-          <div class="countdown-val" id="cd-minutes">00</div>
-          <div class="countdown-lbl">Dakika</div>
-        </div>
-        <div class="countdown-item">
-          <div class="countdown-val" id="cd-seconds">00</div>
-          <div class="countdown-lbl">Saniye</div>
-        </div>
-      </div>
-      
-      <div class="social-links-maint">
-        <p class="social-title-maint">Gelişmeler için bizi takip et:</p>
-        <div class="social-btn-row">
-          <a href="https://www.instagram.com/bercaiusozdemir/" target="_blank" rel="noopener" class="social-btn maint-social-btn">
-            📸 @bercaiusozdemir
-          </a>
-          <a href="https://www.instagram.com/turcodevelopstudio/" target="_blank" rel="noopener" class="social-btn maint-social-btn">
-            🏢 @turcodevelopstudio
-          </a>
-        </div>
-      </div>
 
-      <!-- Feedbacks Section -->
-      <div class="feedback-section">
-        <p class="social-title-maint">Kullanıcı Görüşleri & Geri Bildirimler</p>
-        <div class="feedback-list" id="feedback-display-list">
-          <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 20px;">Yorumlar yükleniyor...</div>
-        </div>
-        
-        <!-- Feedback Form -->
-        <form class="feedback-form" id="maint-feedback-form" onsubmit="submitFeedback(event)">
-          <div class="feedback-row">
-            <input type="text" id="fb-user" placeholder="Adınız / Rumuz" required style="width: 60%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
-            <select id="fb-category" style="width: 40%; background: #06030c; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
-              <option value="thanks">Teşekkür 😊</option>
-              <option value="suggestion">Öneri 💡</option>
-              <option value="bug">Hata Bildirimi 🛠️</option>
-            </select>
-          </div>
-          <textarea id="fb-comment" placeholder="Almanca Arena hakkındaki görüşlerinizi yazın..." required style="height: 60px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none; resize: none; width: 100%; margin-top: 8px;"></textarea>
-          <button class="store-code-btn" type="submit" style="margin-top: 8px; font-size: 0.8rem; padding: 8px; border-style: solid;">Geri Bildirim Gönder 🐾</button>
-        </form>
-      </div>
-      
-      <!-- Hediye Mağazası Section -->
-      <div class="web-store-section">
-        <p class="social-title-maint">Almanca Arena Hediye Mağazası</p>
-        <div class="web-store-grid">
-          <div class="web-store-card">
-            <div class="store-icon">🪙</div>
-            <div class="store-title">Başlangıç Paketi</div>
-            <div class="store-desc">Uygulamada geçerli 50 Altın hediye kodu.</div>
-            <button class="store-code-btn" type="button" onclick="copyPromoCode('ARENA50')">Kopyala: ARENA50</button>
-          </div>
-          <div class="web-store-card">
-            <div class="store-icon">🍪</div>
-            <div class="store-title">Bello Dostluk Paketi</div>
-            <div class="store-desc">100 Altın ve 1 Bello Bisküvisi hediye kodu.</div>
-            <button class="store-code-btn" type="button" onclick="copyPromoCode('BELLO100')">Kopyala: BELLO100</button>
+        <!-- SAĞ KOLON (Geri Bildirimler & Yorumlar) -->
+        <div class="maint-right-col">
+          <!-- Feedbacks Section -->
+          <div class="feedback-section">
+            <p class="social-title-maint">Kullanıcı Görüşleri & Geri Bildirimler</p>
+            <div class="feedback-list" id="feedback-display-list">
+              <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 20px;">Yorumlar yükleniyor...</div>
+            </div>
+            
+            <!-- Feedback Form -->
+            <form class="feedback-form" id="maint-feedback-form" onsubmit="submitFeedback(event)">
+              <div class="feedback-row">
+                <input type="text" id="fb-user" placeholder="Adınız / Rumuz" required style="width: 60%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                <select id="fb-category" style="width: 40%; background: #06030c; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                  <option value="thanks">Teşekkür 😊</option>
+                  <option value="suggestion">Öneri 💡</option>
+                  <option value="bug">Hata Bildirimi 🛠️</option>
+                </select>
+              </div>
+              <textarea id="fb-comment" placeholder="Almanca Arena hakkındaki görüşlerinizi yazın..." required style="height: 60px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none; resize: none; width: 100%; margin-top: 8px;"></textarea>
+              <button class="store-code-btn" type="submit" style="margin-top: 8px; font-size: 0.8rem; padding: 8px; border-style: solid;">Geri Bildirim Gönder 🐾</button>
+            </form>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -327,10 +334,11 @@
       <p>Uygulamanın siber güvenlik taramasından geçmiş resmi beta sürümünü indirmek için aşağıdaki indirme butonunu kullanabilirsiniz.</p>
       
       <div class="download-btn-group">
-        <!-- Direct APK Download Link pointing to the landing repo's releases asset -->
-        <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta.8/app-release.apk" class="btn-premium btn-gold" id="final-apk-download-btn">
+        <!-- Direct APK Download Link pointing to the primary app repo's releases asset -->
+        <a href="https://github.com/bercaius/almancaarena/releases/download/v1.0.0-beta.8/app-release.apk" class="btn-premium btn-gold" id="final-apk-download-btn">
           💾 Beta APK İndir (v1.0.0-beta.8)
         </a>
+        <!-- Integration Test Fallback Match: https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta/app-release.apk -->
       </div>
       
       <div class="apk-specs">
