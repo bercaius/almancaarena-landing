@@ -29,6 +29,7 @@
   <div id="maintenance-screen">
     <div class="neon-blob neon-blob-1"></div>
     <div class="neon-blob neon-blob-2"></div>
+    <div class="neon-blob neon-blob-3"></div>
     
     <div class="maintenance-container glass-card">
       <div class="maintenance-logo">
@@ -117,15 +118,15 @@
             <!-- Feedback Form -->
             <form class="feedback-form" id="maint-feedback-form" onsubmit="submitFeedback(event)">
               <div class="feedback-row">
-                <input type="text" id="fb-user" placeholder="Adınız / Rumuz" required style="flex: 3; min-width: 0; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
-                <select id="fb-category" style="flex: 2; min-width: 0; background: #06030c; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                <input type="text" id="fb-user" placeholder="Adınız / Rumuz" required class="maint-input maint-flex-3">
+                <select id="fb-category" class="maint-input maint-flex-2">
                   <option value="thanks">Teşekkür 😊</option>
                   <option value="suggestion">Öneri 💡</option>
                   <option value="bug">Hata Bildirimi 🛠️</option>
                 </select>
               </div>
-              <textarea id="fb-comment" placeholder="Almanca Arena hakkındaki görüşlerinizi yazın..." required style="height: 60px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none; resize: none; width: 100%; margin-top: 8px;"></textarea>
-              <button class="store-code-btn" type="submit" style="margin-top: 8px; font-size: 0.8rem; padding: 8px; border-style: solid;">Geri Bildirim Gönder 🐾</button>
+              <textarea id="fb-comment" placeholder="Almanca Arena hakkındaki görüşlerinizi yazın..." required class="maint-input maint-textarea maint-mt-8"></textarea>
+              <button class="store-code-btn maint-mt-8" type="submit" style="font-size: 0.8rem; padding: 8px; border-style: solid;">Geri Bildirim Gönder 🐾</button>
             </form>
           </div>
 
@@ -152,11 +153,11 @@
             <div id="ticket-create-box" class="ticket-box">
               <form onsubmit="createTicket(event)" class="feedback-form">
                 <div class="feedback-row">
-                  <input type="text" id="tkt-name" placeholder="Adınız" required style="flex: 1; min-width: 0; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
-                  <input type="email" id="tkt-email" placeholder="E-posta" required style="flex: 1; min-width: 0; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                  <input type="text" id="tkt-name" placeholder="Adınız" required class="maint-input maint-flex-1">
+                  <input type="email" id="tkt-email" placeholder="E-posta" required class="maint-input maint-flex-1">
                 </div>
-                <input type="text" id="tkt-subject" placeholder="Konu (Örn: Altın Transferi)" required style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none; width: 100%;">
-                <textarea id="tkt-msg" placeholder="Lütfen mesajınızı detaylıca yazın..." required style="height: 65px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none; resize: none; width: 100%;"></textarea>
+                <input type="text" id="tkt-subject" placeholder="Konu (Örn: Altın Transferi)" required class="maint-input">
+                <textarea id="tkt-msg" placeholder="Lütfen mesajınızı detaylıca yazın..." required class="maint-input maint-textarea"></textarea>
                 <button class="store-code-btn" type="submit" style="font-size: 0.8rem; padding: 8px; border-style: solid;">Destek Talebi Oluştur 🐾</button>
               </form>
             </div>
@@ -164,8 +165,8 @@
             <!-- Query Ticket Box -->
             <div id="ticket-query-box" class="ticket-box" style="display: none;">
               <div class="feedback-row" style="margin-bottom: 12px;">
-                <input type="text" id="tkt-code-input" placeholder="Destek Kodu (Örn: TURCO-1234)" style="flex: 7; min-width: 0; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
-                <button class="store-code-btn" type="button" style="flex: 3; min-width: 0; font-size: 0.8rem; padding: 8px; border-style: solid;" onclick="queryTicket()">Sorgula</button>
+                <input type="text" id="tkt-code-input" placeholder="Destek Kodu (Örn: TURCO-1234)" class="maint-input maint-flex-7">
+                <button class="store-code-btn maint-flex-3" type="button" style="font-size: 0.8rem; padding: 8px; border-style: solid;" onclick="queryTicket()">Sorgula</button>
               </div>
               <div id="my-tickets-section" style="display: none; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; text-align: left;">
                 <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 8px; font-weight: bold; letter-spacing: 0.3px;">🎫 Aktif Destek Taleplerin kanka:</p>
@@ -185,7 +186,7 @@
                 <!-- Messages load here -->
               </div>
               <div class="chat-input-row" style="display: flex; gap: 8px; margin-top: 10px;">
-                <input type="text" id="chat-input-text" placeholder="Mesajınızı yazın kanka..." style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                <input type="text" id="chat-input-text" placeholder="Mesajınızı yazın kanka..." class="maint-input maint-flex-1">
                 <button class="store-code-btn" style="width: auto; padding: 8px 16px; border-style: solid;" onclick="sendTicketMessage()">Gönder</button>
               </div>
               <button class="store-code-btn" style="margin-top: 10px; border-style: dashed; font-size: 0.72rem; padding: 4px;" onclick="openQueryTicketTab()">Sohbetten Çık</button>
