@@ -117,8 +117,8 @@
             <!-- Feedback Form -->
             <form class="feedback-form" id="maint-feedback-form" onsubmit="submitFeedback(event)">
               <div class="feedback-row">
-                <input type="text" id="fb-user" placeholder="Adınız / Rumuz" required style="width: 60%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
-                <select id="fb-category" style="width: 40%; background: #06030c; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                <input type="text" id="fb-user" placeholder="Adınız / Rumuz" required style="flex: 3; min-width: 0; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                <select id="fb-category" style="flex: 2; min-width: 0; background: #06030c; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
                   <option value="thanks">Teşekkür 😊</option>
                   <option value="suggestion">Öneri 💡</option>
                   <option value="bug">Hata Bildirimi 🛠️</option>
@@ -152,8 +152,8 @@
             <div id="ticket-create-box" class="ticket-box">
               <form onsubmit="createTicket(event)" class="feedback-form">
                 <div class="feedback-row">
-                  <input type="text" id="tkt-name" placeholder="Adınız" required style="width: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
-                  <input type="email" id="tkt-email" placeholder="E-posta" required style="width: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                  <input type="text" id="tkt-name" placeholder="Adınız" required style="flex: 1; min-width: 0; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                  <input type="email" id="tkt-email" placeholder="E-posta" required style="flex: 1; min-width: 0; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
                 </div>
                 <input type="text" id="tkt-subject" placeholder="Konu (Örn: Altın Transferi)" required style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none; width: 100%;">
                 <textarea id="tkt-msg" placeholder="Lütfen mesajınızı detaylıca yazın..." required style="height: 65px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none; resize: none; width: 100%;"></textarea>
@@ -164,8 +164,8 @@
             <!-- Query Ticket Box -->
             <div id="ticket-query-box" class="ticket-box" style="display: none;">
               <div class="feedback-row" style="margin-bottom: 12px;">
-                <input type="text" id="tkt-code-input" placeholder="Destek Kodu (Örn: TURCO-1234)" style="width: 70%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
-                <button class="store-code-btn" type="button" style="width: 30%; font-size: 0.8rem; padding: 8px; border-style: solid;" onclick="queryTicket()">Sorgula</button>
+                <input type="text" id="tkt-code-input" placeholder="Destek Kodu (Örn: TURCO-1234)" style="flex: 7; min-width: 0; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
+                <button class="store-code-btn" type="button" style="flex: 3; min-width: 0; font-size: 0.8rem; padding: 8px; border-style: solid;" onclick="queryTicket()">Sorgula</button>
               </div>
               <div id="my-tickets-section" style="display: none; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; text-align: left;">
                 <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 8px; font-weight: bold; letter-spacing: 0.3px;">🎫 Aktif Destek Taleplerin kanka:</p>
@@ -927,7 +927,7 @@
         if (data.reply) {
           replyHtml = `
             <div class="feedback-reply-box">
-              <div class="feedback-reply-title">🏢 TurcoDevelop Cevabı:</div>
+              <div class="feedback-reply-title">🏢 TurcoDevelop Admin:</div>
               <div>${data.reply}</div>
             </div>
           `;
@@ -1055,6 +1055,15 @@
             <button class="google-logout-btn" onclick="signOutGoogleUser()">Çıkış Yap</button>
           </div>
         `;
+
+        // Save/Sync user registration details on Firestore users collection kanka!
+        db.collection("users").doc(user.email.toLowerCase().trim()).set({
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL || "",
+          lastActive: "Web Sitesi",
+          timestamp: Date.now()
+        }, { merge: true }).catch(err => console.error("Error saving user profile:", err));
 
         if (tktName) {
           tktName.value = user.displayName;

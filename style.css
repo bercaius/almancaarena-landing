@@ -1643,7 +1643,9 @@ footer {
   top: -55px;
   left: 50%;
   transform: translateX(-50%);
-  width: 190px;
+  width: 220px;
+  min-width: 220px;
+  max-width: 90vw;
   white-space: normal;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 15px rgba(223, 186, 115, 0.2);
   z-index: 10;

@@ -534,11 +534,9 @@
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 const allowedEmails = [
-                    "turcodevelop@gmail.com",
-                    "bercaiusozdemir@gmail.com",
-                    "ayberk.dev@gmail.com",
-                    "ayberk.ozdemir@gmail.com",
-                    "ayberk@gmail.com"
+                    "berkayozdemirtrtr@gmail.com",
+                    "berkayozdemirmain@gmail.com",
+                    "turcodevelop@gmail.com"
                 ];
                 if (allowedEmails.includes(user.email.toLowerCase())) {
                     showAdminPanel(`🏢 ${user.displayName || 'Admin'}`, user.photoURL || '');
