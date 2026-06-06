@@ -39,9 +39,10 @@
       
       <!-- Mobil Cihazlar İçin Sekmeli Navigasyon Çubuğu -->
       <div class="maint-mobile-tabs">
-        <button class="maint-tab-btn active" id="btn-tab-bello" onclick="switchMobileTab('bello')">🐾 Bello & Mağaza</button>
+        <button class="maint-tab-btn active" id="btn-tab-bello" onclick="switchMobileTab('bello')">🐾 Bello</button>
         <button class="maint-tab-btn" id="btn-tab-feedbacks" onclick="switchMobileTab('feedbacks')">💬 Görüşler</button>
-        <button class="maint-tab-btn" id="btn-tab-support" onclick="switchMobileTab('support')">🎫 Canlı Destek</button>
+        <button class="maint-tab-btn" id="btn-tab-support" onclick="switchMobileTab('support')">🎫 Destek</button>
+        <button class="maint-tab-btn" id="btn-tab-settings" onclick="switchMobileTab('settings')">⚙️ Ayarlar</button>
       </div>
       
       <div class="maint-cols-wrapper">
@@ -190,6 +191,51 @@
                 <button class="store-code-btn" style="width: auto; padding: 8px 16px; border-style: solid;" onclick="sendTicketMessage()">Gönder</button>
               </div>
               <button class="store-code-btn" style="margin-top: 10px; border-style: dashed; font-size: 0.72rem; padding: 4px;" onclick="openQueryTicketTab()">Sohbetten Çık</button>
+            </div>
+          </div>
+
+          <!-- Ayarlar Sekmesi Bölümü -->
+          <div class="settings-section" id="maint-mobile-sec-settings" style="margin-top: 35px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 25px;">
+            <p class="social-title-maint">⚙️ Kullanıcı Deneyim Ayarları</p>
+            <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4; text-align: left;">
+              Arayüz deneyiminizi buradan kişiselleştirebilirsiniz kanka. Değişiklikler anında cihazınıza kaydedilir.
+            </p>
+            
+            <div class="settings-card glass-card" style="padding: 15px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; display: flex; flex-direction: column; gap: 12px; text-align: left; box-shadow: 0 8px 30px rgba(0,0,0,0.3);">
+              
+              <!-- Sound Effects Toggle -->
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">Retro Klik Sesleri</span>
+                <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                  <input type="checkbox" id="user-sound-toggle" onchange="toggleUserSound(this.checked)" checked style="opacity: 0; width: 0; height: 0;">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <!-- Performance Mode (Blobs toggle) -->
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">Neon Küre Efektleri (Blob)</span>
+                <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                  <input type="checkbox" id="user-blobs-toggle" onchange="toggleUserBlobs(this.checked)" checked style="opacity: 0; width: 0; height: 0;">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <!-- Theme Selector -->
+              <div style="display: flex; flex-direction: column; gap: 6px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 850; text-transform: uppercase;">Arayüz Tema Rengi</label>
+                <select id="user-theme-select" onchange="changeUserTheme(this.value)" style="width: 100%; font-size: 0.8rem; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.3); color: #fff; outline: none;">
+                  <option value="default">Şampanya Altını 🪙</option>
+                  <option value="cyber">Siber Neon Pembe 💖</option>
+                  <option value="matrix">Matrix Yeşili 🟢</option>
+                  <option value="abyss">Derin Obsidyen 🌌</option>
+                </select>
+              </div>
+
+              <!-- Clear Ticket History -->
+              <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                <button class="store-code-btn" style="background: rgba(229, 57, 53, 0.05); border-color: rgba(229, 57, 53, 0.25); color: #e53935; font-size: 0.72rem;" onclick="clearBiletHistory()">Bilet Geçmişini Sıfırla 🗑️</button>
+              </div>
             </div>
           </div>
         </div>
@@ -951,40 +997,138 @@
 
     // Mobil Sekme Geçişi
     function switchMobileTab(tabName) {
+      playClickSound(); // Klik sesi çal kanka!
+      
       const secBello = document.getElementById("maint-mobile-sec-bello");
       const secFeedbacks = document.getElementById("maint-mobile-sec-feedbacks");
       const secSupport = document.getElementById("maint-mobile-sec-support");
+      const secSettings = document.getElementById("maint-mobile-sec-settings");
       
       const btnBello = document.getElementById("btn-tab-bello");
       const btnFeedbacks = document.getElementById("btn-tab-feedbacks");
       const btnSupport = document.getElementById("btn-tab-support");
+      const btnSettings = document.getElementById("btn-tab-settings");
+
+      // Önce tümünü gizle
+      [secBello, secFeedbacks, secSupport, secSettings].forEach(el => { if(el) el.style.display = "none"; });
+      [btnBello, btnFeedbacks, btnSupport, btnSettings].forEach(el => { if(el) el.classList.remove("active"); });
 
       if (tabName === "bello") {
-        secBello.style.display = "block";
-        secFeedbacks.style.display = "none";
-        secSupport.style.display = "none";
-        
-        btnBello.classList.add("active");
-        btnFeedbacks.classList.remove("active");
-        btnSupport.classList.remove("active");
+        if (secBello) secBello.style.display = "block";
+        if (btnBello) btnBello.classList.add("active");
       } else if (tabName === "feedbacks") {
-        secBello.style.display = "none";
-        secFeedbacks.style.display = "block";
-        secSupport.style.display = "none";
-        
-        btnBello.classList.remove("active");
-        btnFeedbacks.classList.add("active");
-        btnSupport.classList.remove("active");
+        if (secFeedbacks) secFeedbacks.style.display = "block";
+        if (btnFeedbacks) btnFeedbacks.classList.add("active");
       } else if (tabName === "support") {
-        secBello.style.display = "none";
-        secFeedbacks.style.display = "none";
-        secSupport.style.display = "block";
-        
-        btnBello.classList.remove("active");
-        btnFeedbacks.classList.remove("active");
-        btnSupport.classList.add("active");
+        if (secSupport) secSupport.style.display = "block";
+        if (btnSupport) btnSupport.classList.add("active");
+      } else if (tabName === "settings") {
+        if (secSettings) secSettings.style.display = "block";
+        if (btnSettings) btnSettings.classList.add("active");
       }
     }
+
+    // --- Kullanıcı Deneyim Ayarları Mantığı kanka! ---
+    function initUserSettings() {
+      // Ses Efektleri
+      const sound = localStorage.getItem("settings_sound") !== "off";
+      const soundToggle = document.getElementById("user-sound-toggle");
+      if (soundToggle) soundToggle.checked = sound;
+
+      // Blob Efektleri (Performans Modu)
+      const blobs = localStorage.getItem("settings_blobs") !== "off";
+      const blobsToggle = document.getElementById("user-blobs-toggle");
+      if (blobsToggle) blobsToggle.checked = blobs;
+      applyBlobsState(blobs);
+
+      // Tema Ayarları
+      const theme = localStorage.getItem("settings_theme") || "default";
+      const themeSelect = document.getElementById("user-theme-select");
+      if (themeSelect) themeSelect.value = theme;
+      applyUserTheme(theme);
+    }
+
+    function toggleUserSound(enabled) {
+      localStorage.setItem("settings_sound", enabled ? "on" : "off");
+      playClickSound();
+    }
+
+    function toggleUserBlobs(enabled) {
+      localStorage.setItem("settings_blobs", enabled ? "on" : "off");
+      applyBlobsState(enabled);
+      playClickSound();
+    }
+
+    function applyBlobsState(enabled) {
+      const blobs = document.querySelectorAll(".neon-blob");
+      blobs.forEach(blob => {
+        if (enabled) {
+          blob.style.display = "block";
+        } else {
+          blob.style.display = "none";
+        }
+      });
+    }
+
+    function changeUserTheme(val) {
+      localStorage.setItem("settings_theme", val);
+      applyUserTheme(val);
+      playClickSound();
+    }
+
+    function applyUserTheme(theme) {
+      const root = document.documentElement;
+      if (theme === "cyber") {
+        root.style.setProperty("--color-gold", "#ff007f");
+        root.style.setProperty("--color-gold-hover", "#ff3399");
+        root.style.setProperty("--bg-obsidian-dark", "#0c0214");
+      } else if (theme === "matrix") {
+        root.style.setProperty("--color-gold", "#39ff14");
+        root.style.setProperty("--color-gold-hover", "#66ff66");
+        root.style.setProperty("--bg-obsidian-dark", "#010802");
+      } else if (theme === "abyss") {
+        root.style.setProperty("--color-gold", "#00f0ff");
+        root.style.setProperty("--color-gold-hover", "#33f5ff");
+        root.style.setProperty("--bg-obsidian-dark", "#020714");
+      } else {
+        // Varsayılan
+        root.style.setProperty("--color-gold", "#dfba73");
+        root.style.setProperty("--color-gold-hover", "#e6c88f");
+        root.style.setProperty("--bg-obsidian-dark", "#06030c");
+      }
+    }
+
+    function clearBiletHistory() {
+      if (confirm("Yerel bilet sorgulama geçmişinizi silmek istediğinize emin misiniz kanka? 🐾")) {
+        localStorage.removeItem("my_tickets");
+        showWebToast("Bilet geçmişiniz sıfırlandı! 🗑️");
+        loadMyTicketsList();
+        playClickSound();
+      }
+    }
+
+    function playClickSound() {
+      if (localStorage.getItem("settings_sound") === "off") return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.15);
+      } catch (e) {
+        console.log("Audio play blocked");
+      }
+    }
+
+    // İlk yüklemede ayarları çalıştır
+    setTimeout(initUserSettings, 100);
 
     // --- TICKET SYSTEM ---
     function openNewTicketTab() {

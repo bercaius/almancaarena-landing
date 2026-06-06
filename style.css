@@ -1957,9 +1957,13 @@ footer {
     width: 98% !important;
     max-width: 100% !important;
     margin: 0 auto !important;
-    padding: 28px 18px !important;
-    border-radius: 28px !important;
+    padding: 35px 24px !important; /* Daha ferah padding kanka! */
+    border-radius: 32px !important;
     box-sizing: border-box !important;
+  }
+  .maint-left-col, .maint-right-col {
+    width: 100% !important;
+    padding: 0 !important;
   }
 
   .maint-mobile-tabs {
@@ -2005,7 +2009,7 @@ footer {
   .maintenance-mascot-container {
     width: 200px !important;
     height: 200px !important;
-    margin: 80px auto 25px !important;
+    margin: 110px auto 25px !important; /* Üst marjı 110px yaparak rüya balonunun tabları kapatmasını engelledik kanka! */
   }
   
   .maintenance-mascot-container::before {
@@ -2261,14 +2265,24 @@ footer {
   word-break: break-word;
 }
 
-/* Google Sign-in and Profile Styles */
+/* Google Sign-in and Profile Styles - Premium Siber-Gold */
 .google-auth-container {
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: 16px;
-  padding: 15px;
+  background: rgba(10, 5, 22, 0.45);
+  border: 1px solid rgba(223, 186, 115, 0.25);
+  border-radius: 20px;
+  padding: 20px 15px;
   text-align: center;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 25px rgba(223, 186, 115, 0.03);
+  transition: var(--transition-luxury);
+}
+
+.google-auth-container:hover {
+  border-color: var(--color-gold);
+  background: rgba(10, 5, 22, 0.65);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.55), 0 0 35px rgba(223, 186, 115, 0.06);
 }
 
 .google-auth-btn {
@@ -2276,27 +2290,30 @@ footer {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: #fff;
-  color: #1f1f1f;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 700;
+  background: rgba(255, 255, 255, 0.02);
+  color: #fff;
+  border: 1px solid rgba(223, 186, 115, 0.35);
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-size: 0.85rem;
+  font-weight: 750;
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   width: 100%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .google-auth-btn:hover {
-  background: #f1f1f1;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  background: var(--color-gold);
+  color: #06030c;
+  border-color: var(--color-gold);
+  box-shadow: 0 8px 25px rgba(223, 186, 115, 0.35);
   transform: translateY(-1px);
 }
 
 .google-auth-btn img {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .google-profile-card {
@@ -2359,9 +2376,91 @@ footer {
   }
 }
 
-/* Maintenance Google Login Hide kanka! */
+/* Maintenance Google Login Visible kanka! */
 #user-google-auth-container {
-  display: none !important;
+  display: block !important;
+}
+
+/* Custom Switch Toggle in User Settings */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(255, 255, 255, 0.12);
+  transition: .4s;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+input:checked + .slider {
+  background-color: var(--color-gold);
+}
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Premium Chat Window Styling Düzeltmeleri */
+.chat-messages {
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.user-msg {
+  background: rgba(0, 240, 255, 0.04) !important;
+  border: 1px solid rgba(0, 240, 255, 0.18) !important;
+  border-radius: 16px 16px 16px 4px !important;
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.03) !important;
+}
+
+.studio-msg {
+  background: rgba(212, 175, 55, 0.06) !important;
+  border: 1px solid rgba(212, 175, 55, 0.25) !important;
+  border-radius: 16px 16px 4px 16px !important;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.03) !important;
+}
+
+.maint-mobile-tabs {
+  z-index: 100 !important;
+  position: relative !important;
+}
+
+/* Mascot Sleep Speech Bubble positioning fixes for Mobile kanka! */
+@media (max-width: 991px) {
+  .maint-speech-bubble {
+    top: -55px !important; /* Mobilde de baloncuğu yukarı aldık kanka! */
+    bottom: auto !important;
+    font-size: 0.72rem !important;
+    padding: 8px 12px !important;
+  }
+  .maint-speech-bubble::after {
+    top: auto !important;
+    bottom: -8px !important; /* Oku aşağı bakacak şekilde konumlandırdık */
+    transform: translateX(-50%) rotate(180deg) !important;
+  }
 }
 
 /* Premium Form Inputs for Maintenance Screen */
