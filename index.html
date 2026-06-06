@@ -136,6 +136,13 @@
               Bizimle özel olarak mesajlaşabilirsin kanka. Talepler yoğunluğa göre geç yanıtlanabilir. Acil durumlarda doğrudan <strong>turcodevelop@gmail.com</strong> adresine yazabilirsin.
             </p>
             
+            <!-- Google Login Panel -->
+            <div class="google-auth-container" id="user-google-auth-container" style="margin-bottom: 15px;">
+              <button class="google-auth-btn" onclick="signInWithGoogleUser()">
+                <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google"> Google ile Giriş Yap kanka 🚀
+              </button>
+            </div>
+
             <div class="ticket-nav-tabs">
               <button class="tkt-tab-btn active" id="tab-new-tkt" onclick="openNewTicketTab()">Yeni Talep</button>
               <button class="tkt-tab-btn" id="tab-query-tkt" onclick="openQueryTicketTab()">Talep Sorgula</button>
@@ -156,9 +163,15 @@
 
             <!-- Query Ticket Box -->
             <div id="ticket-query-box" class="ticket-box" style="display: none;">
-              <div class="feedback-row">
+              <div class="feedback-row" style="margin-bottom: 12px;">
                 <input type="text" id="tkt-code-input" placeholder="Destek Kodu (Örn: TURCO-1234)" style="width: 70%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
                 <button class="store-code-btn" type="button" style="width: 30%; font-size: 0.8rem; padding: 8px; border-style: solid;" onclick="queryTicket()">Sorgula</button>
+              </div>
+              <div id="my-tickets-section" style="display: none; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; text-align: left;">
+                <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 8px; font-weight: bold; letter-spacing: 0.3px;">🎫 Aktif Destek Taleplerin kanka:</p>
+                <div id="my-tickets-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; padding-right: 5px;">
+                  <!-- List load here -->
+                </div>
               </div>
             </div>
 
@@ -620,6 +633,7 @@
 
   <!-- Firebase Compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
   <script>
@@ -999,6 +1013,180 @@
 
     let activeTicketId = null;
     let ticketListener = null;
+    let currentUser = null;
+
+    // --- Google Auth for Users ---
+    function signInWithGoogleUser() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).then((result) => {
+        showWebToast("Giriş yapıldı kanka! 🚀");
+      }).catch((err) => {
+        console.error("Google login error:", err);
+        showWebToast("Giriş başarısız oldu! ❌");
+      });
+    }
+
+    function signOutGoogleUser() {
+      firebase.auth().signOut().then(() => {
+        showWebToast("Çıkış yapıldı kanka! 👋");
+      });
+    }
+
+    // Auth state listener
+    firebase.auth().onAuthStateChanged((user) => {
+      currentUser = user;
+      const authContainer = document.getElementById("user-google-auth-container");
+      
+      const tktName = document.getElementById("tkt-name");
+      const tktEmail = document.getElementById("tkt-email");
+      const fbUser = document.getElementById("fb-user");
+
+      if (user) {
+        // Logged in
+        authContainer.innerHTML = `
+          <div class="google-profile-card">
+            <div class="google-profile-info">
+              <img src="${user.photoURL || 'assets/app_logo.png'}" alt="Avatar" class="google-avatar">
+              <div>
+                <div class="google-name">${escapeHtml(user.displayName)}</div>
+                <div class="google-email">${escapeHtml(user.email)}</div>
+              </div>
+            </div>
+            <button class="google-logout-btn" onclick="signOutGoogleUser()">Çıkış Yap</button>
+          </div>
+        `;
+
+        if (tktName) {
+          tktName.value = user.displayName;
+          tktName.disabled = true;
+        }
+        if (tktEmail) {
+          tktEmail.value = user.email;
+          tktEmail.disabled = true;
+        }
+        if (fbUser) {
+          fbUser.value = user.displayName;
+          fbUser.disabled = true;
+        }
+      } else {
+        // Logged out
+        authContainer.innerHTML = `
+          <button class="google-auth-btn" onclick="signInWithGoogleUser()">
+            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;"> Google ile Giriş Yap kanka 🚀
+          </button>
+        `;
+
+        if (tktName) {
+          tktName.value = "";
+          tktName.disabled = false;
+        }
+        if (tktEmail) {
+          tktEmail.value = "";
+          tktEmail.disabled = false;
+        }
+        if (fbUser) {
+          fbUser.value = "";
+          fbUser.disabled = false;
+        }
+      }
+
+      // Load tickets list automatically
+      loadMyTicketsList();
+    });
+
+    function loadMyTicketsList() {
+      const ticketsSection = document.getElementById("my-tickets-section");
+      const ticketsList = document.getElementById("my-tickets-list");
+      if (!ticketsList || !ticketsSection) return;
+
+      ticketsList.innerHTML = "";
+
+      if (currentUser) {
+        // Fetch from Firestore
+        db.collection("tickets")
+          .where("email", "==", currentUser.email)
+          .get()
+          .then((snapshot) => {
+            renderTicketsToQueryList(snapshot, ticketsSection, ticketsList);
+          })
+          .catch((err) => {
+            console.error("Firestore tickets load error:", err);
+            loadTicketsFromLocalStorage(ticketsSection, ticketsList);
+          });
+      } else {
+        // Fetch from Local Storage
+        loadTicketsFromLocalStorage(ticketsSection, ticketsList);
+      }
+    }
+
+    function renderTicketsToQueryList(snapshot, ticketsSection, ticketsList) {
+      if (snapshot.empty) {
+        ticketsSection.style.display = "none";
+        return;
+      }
+
+      ticketsSection.style.display = "block";
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const item = document.createElement("div");
+        item.style.background = "rgba(255,255,255,0.02)";
+        item.style.border = "1px solid rgba(255,255,255,0.06)";
+        item.style.padding = "8px 12px";
+        item.style.borderRadius = "8px";
+        item.style.cursor = "pointer";
+        item.style.display = "flex";
+        item.style.justifyContent = "space-between";
+        item.style.alignItems = "center";
+        item.onclick = () => {
+          activeTicketId = data.ticketId;
+          openTicketChat(data.ticketId);
+        };
+
+        const statusColor = data.status === 'açık' ? 'var(--color-gold)' : (data.status === 'cevaplandı' ? '#4caf50' : 'var(--text-muted)');
+        item.innerHTML = `
+          <div style="text-align: left;">
+            <div style="font-size: 0.76rem; font-weight: 700; color: #fff;">${escapeHtml(data.subject)}</div>
+            <div style="font-size: 0.64rem; color: var(--text-muted);">${data.ticketId}</div>
+          </div>
+          <span style="font-size: 0.64rem; font-weight: 800; color: ${statusColor}; text-transform: uppercase;">${data.status}</span>
+        `;
+        ticketsList.appendChild(item);
+      });
+    }
+
+    function loadTicketsFromLocalStorage(ticketsSection, ticketsList) {
+      const myTickets = JSON.parse(localStorage.getItem("my_tickets") || "[]");
+      if (myTickets.length === 0) {
+        ticketsSection.style.display = "none";
+        return;
+      }
+
+      ticketsSection.style.display = "block";
+      myTickets.forEach((tkt) => {
+        const item = document.createElement("div");
+        item.style.background = "rgba(255,255,255,0.02)";
+        item.style.border = "1px solid rgba(255,255,255,0.06)";
+        item.style.padding = "8px 12px";
+        item.style.borderRadius = "8px";
+        item.style.cursor = "pointer";
+        item.style.display = "flex";
+        item.style.justifyContent = "space-between";
+        item.style.alignItems = "center";
+        item.onclick = () => {
+          activeTicketId = tkt.ticketId;
+          openTicketChat(tkt.ticketId);
+        };
+
+        item.innerHTML = `
+          <div style="text-align: left;">
+            <div style="font-size: 0.76rem; font-weight: 700; color: #fff;">${escapeHtml(tkt.subject || 'Destek Talebi')}</div>
+            <div style="font-size: 0.64rem; color: var(--text-muted);">${tkt.ticketId}</div>
+          </div>
+          <span style="font-size: 0.64rem; font-weight: 800; color: var(--color-gold); text-transform: uppercase;">Git</span>
+        `;
+        ticketsList.appendChild(item);
+      });
+    }
 
     // Create Ticket
     function createTicket(event) {
@@ -1016,7 +1204,7 @@
       const ticketCode = generateTicketCode();
       const now = Date.now();
 
-      db.collection("tickets").doc(ticketCode).set({
+      const ticketDoc = {
         ticketId: ticketCode,
         userName: name,
         email: email,
@@ -1031,17 +1219,35 @@
             timestamp: now
           }
         ]
-      }).then(() => {
+      };
+
+      if (currentUser) {
+        ticketDoc.userUid = currentUser.uid;
+        ticketDoc.userEmail = currentUser.email;
+      }
+
+      db.collection("tickets").doc(ticketCode).set(ticketDoc).then(() => {
+        // Save to Local Storage
+        let myTickets = JSON.parse(localStorage.getItem("my_tickets") || "[]");
+        myTickets.push({ ticketId: ticketCode, subject: subject, timestamp: now });
+        localStorage.setItem("my_tickets", JSON.stringify(myTickets));
+
         showWebToast("Destek talebin oluşturuldu kanka! 🐾");
+        
         document.getElementById("ticket-create-box").innerHTML = `
           <div class="ticket-success-card">
             <h4 style="color: #4caf50; font-size: 0.95rem; margin-bottom: 10px;">Destek Talebi Başarıyla Oluşturuldu! 🎉</h4>
             <p style="font-size: 0.78rem; color: #fff;">Talebinizin yanıtlarını takip etmek için lütfen aşağıdaki destek kodunu kaydedin:</p>
-            <div class="ticket-code-display">${ticketCode}</div>
+            <div class="ticket-code-display" style="position: relative; padding: 15px 12px;">
+              ${ticketCode}
+              <button class="store-code-btn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: auto; padding: 4px 10px; font-size: 0.65rem;" onclick="copyPromoCode('${ticketCode}')">Kopyala 📋</button>
+            </div>
             <p class="ticket-warn-txt">⚠️ Önemli: Yoğunluğa bağlı olarak yanıt süremiz uzayabilir. Acil konularda doğrudan <strong>turcodevelop@gmail.com</strong> adresine e-posta atabilirsiniz.</p>
             <button class="store-code-btn" style="margin-top: 15px; width: auto; padding: 6px 20px; border-style: solid;" onclick="location.reload()">Tamam</button>
           </div>
         `;
+
+        loadMyTicketsList();
       }).catch((err) => {
         console.error("Ticket oluşturma hatası:", err);
         showWebToast("Hata: Talep oluşturulamadı. ❌");
@@ -1085,6 +1291,30 @@
         const statusBadge = document.getElementById("chat-status-badge");
         statusBadge.innerText = data.status.toUpperCase();
         statusBadge.className = `status-badge status-${data.status === 'açık' ? 'on' : 'off'}`;
+
+        // Support Lockout Check
+        const chatInputText = document.getElementById("chat-input-text");
+        const sendBtn = chatInputText.nextElementSibling;
+        
+        // Remove existing closed banner if any
+        const existingBanner = document.getElementById("closed-tkt-msg-banner");
+        if (existingBanner) existingBanner.remove();
+
+        if (data.status === 'kapatıldı') {
+          chatInputText.disabled = true;
+          chatInputText.placeholder = "Bu destek talebi kapatılmıştır kanka.";
+          if (sendBtn) sendBtn.style.display = "none";
+
+          const banner = document.createElement("div");
+          banner.id = "closed-tkt-msg-banner";
+          banner.style.cssText = "color: #e53935; text-align: center; font-size: 0.76rem; padding: 10px; border: 1.5px solid rgba(229, 57, 53, 0.2); border-radius: 12px; margin-top: 10px; font-weight: bold; background: rgba(229, 57, 53, 0.04);";
+          banner.innerText = "Bu destek talebi kapatılmıştır kanka. Yeni bir talep oluşturabilirsin. 🔒";
+          document.getElementById("ticket-chat-box").appendChild(banner);
+        } else {
+          chatInputText.disabled = false;
+          chatInputText.placeholder = "Mesajınızı yazın kanka...";
+          if (sendBtn) sendBtn.style.display = "block";
+        }
 
         const chatList = document.getElementById("chat-messages-list");
         chatList.innerHTML = "";

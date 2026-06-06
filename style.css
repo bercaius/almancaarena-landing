@@ -1405,7 +1405,7 @@ footer {
   position: relative;
   width: 240px;
   height: 240px;
-  margin: 0 auto 30px;
+  margin: 60px auto 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1600,7 +1600,7 @@ footer {
   }
   
   .maintenance-mascot-container {
-    margin: 0 0 20px 0 !important;
+    margin: 55px 0 20px 0 !important;
   }
   
   .maintenance-title {
@@ -1630,33 +1630,35 @@ footer {
   }
 }
 
-/* Bello Sleep Speech Bubble (Repositioned to the right of Bello, smaller & stable) */
+/* Bello Sleep Speech Bubble (Centered above Bello's head for absolute stability on both desktop & mobile) */
 .maint-speech-bubble {
   position: absolute;
-  background: rgba(27, 15, 48, 0.85);
+  background: rgba(27, 15, 48, 0.92);
   border: 1.5px solid var(--color-gold);
   color: var(--text-primary);
-  padding: 8px 12px;
-  border-radius: 14px;
-  font-size: 0.72rem;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 0.76rem;
   font-weight: 600;
-  top: 15px;
-  right: -115px;
-  width: 130px;
+  top: -55px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 190px;
   white-space: normal;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 10px rgba(223, 186, 115, 0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 15px rgba(223, 186, 115, 0.2);
   z-index: 10;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  text-align: left;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-align: center;
 }
 
 .maint-speech-bubble::after {
   content: '';
   position: absolute;
-  left: -8px;
-  top: 50%;
-  transform: translateY(-50%) rotate(90deg);
+  left: 50%;
+  top: auto;
+  bottom: -8px;
+  transform: translateX(-50%) rotate(180deg);
   border-width: 8px 8px 0;
   border-style: solid;
   border-color: var(--color-gold) transparent;
@@ -1857,25 +1859,6 @@ footer {
     border-radius: 24px !important;
     box-sizing: border-box !important;
   }
-
-  /* Konuşma balonunu mobilde Bello'nun üstünde ortalıyoruz (Yatay taşmayı çözdü) */
-  .maint-speech-bubble {
-    top: -50px !important;
-    right: auto !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 170px !important;
-    text-align: center !important;
-  }
-
-  .maint-speech-bubble::after {
-    left: 50% !important;
-    top: auto !important;
-    bottom: -8px !important;
-    transform: translateX(-50%) rotate(180deg) !important;
-    border-width: 8px 8px 0 !important;
-    border-color: var(--color-gold) transparent !important;
-  }
 }
 
 
@@ -2044,5 +2027,110 @@ footer {
   color: var(--text-muted);
   text-align: right;
   margin-top: 4px;
+}
+
+.feedback-comment,
+.feedback-reply-box,
+.chat-msg,
+.msg-text {
+  word-break: break-word;
+}
+
+/* Google Sign-in and Profile Styles */
+.google-auth-container {
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  padding: 15px;
+  text-align: center;
+}
+
+.google-auth-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #fff;
+  color: #1f1f1f;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  width: 100%;
+}
+
+.google-auth-btn:hover {
+  background: #f1f1f1;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.google-auth-btn img {
+  width: 18px;
+  height: 18px;
+}
+
+.google-profile-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(212, 175, 55, 0.04);
+  border: 1.5px solid rgba(212, 175, 55, 0.15);
+  padding: 10px 14px;
+  border-radius: 14px;
+}
+
+.google-profile-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.google-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--color-gold);
+}
+
+.google-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: left;
+}
+
+.google-email {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-align: left;
+}
+
+.google-logout-btn {
+  background: transparent;
+  border: 1px solid rgba(229, 57, 53, 0.3);
+  color: #e53935;
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.google-logout-btn:hover {
+  background: rgba(229, 57, 53, 0.1);
+  border-color: #e53935;
+}
+
+/* Mobile Web Store Grid Column Fallback */
+@media (max-width: 480px) {
+  .web-store-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
