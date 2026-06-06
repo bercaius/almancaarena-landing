@@ -1647,9 +1647,10 @@
     // Translate Firebase Auth error codes kanka!
     function getFirebaseAuthErrorMessage(err) {
       if (!err || !err.code) return "Bilinmeyen bir hata oluştu kanka.";
+      console.warn("Firebase Auth Error Detail:", err); // Developer can inspect here
       switch (err.code) {
         case "auth/operation-not-allowed":
-          return "Firebase Console'da bu giriş yöntemi aktif edilmemiş kanka! Ayarlardan açmalısın. ⚙️";
+          return "Giriş yöntemi şu an aktif değil kanka! Diğer giriş yöntemlerini (E-posta vb.) deneyebilir veya destek ekibine danışabilirsin. 🐾";
         case "auth/invalid-email":
           return "Geçersiz bir e-posta adresi girdin kanka. 📧";
         case "auth/user-disabled":
@@ -1665,7 +1666,7 @@
         case "auth/popup-blocked":
           return "Giriş penceresi tarayıcı tarafından engellendi. 🛑";
         case "auth/unauthorized-domain":
-          return "Bu web sitesi adresi Firebase yetkili alan adlarında (Authorized Domains) ekli değil kanka! 🌐";
+          return "Bu adres yetkilendirilmemiş kanka! Lütfen admin paneli ayarlarından alan adını doğrulayın veya destek ile iletişime geçin. 🌐";
         default:
           return err.message;
       }
