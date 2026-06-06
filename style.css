@@ -1945,15 +1945,32 @@ footer {
 }
 
 @media (max-width: 991px) {
+  #maintenance-screen {
+    padding: 20px 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+  }
+
+  .maintenance-container {
+    width: 98% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 28px 18px !important;
+    border-radius: 28px !important;
+    box-sizing: border-box !important;
+  }
+
   .maint-mobile-tabs {
     display: flex;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
+    background: rgba(10, 5, 22, 0.6);
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    border-radius: 20px;
     padding: 4px;
     margin-bottom: 25px;
-    gap: 5px;
+    gap: 4px;
     width: 100%;
     box-sizing: border-box;
   }
@@ -1963,29 +1980,109 @@ footer {
     background: transparent;
     border: none;
     color: var(--text-muted);
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    padding: 10px 5px;
-    border-radius: 12px;
+    padding: 8px 4px;
+    border-radius: 16px;
     cursor: pointer;
     transition: var(--transition-fast);
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .maint-tab-btn.active {
     background: var(--color-gold);
-    color: #000;
-    box-shadow: 0 4px 15px rgba(223, 186, 115, 0.2);
+    color: #06030c;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
   }
 
   #maint-mobile-sec-feedbacks, #maint-mobile-sec-support {
     display: none;
   }
 
-  .maintenance-container {
-    padding: 30px 16px !important;
-    border-radius: 24px !important;
-    box-sizing: border-box !important;
+  /* Offset mascot container to avoid speech bubble overlapping tabs kanka! */
+  .maintenance-mascot-container {
+    width: 200px !important;
+    height: 200px !important;
+    margin: 80px auto 25px !important;
+  }
+  
+  .maintenance-mascot-container::before {
+    width: 160px !important;
+    height: 160px !important;
+  }
+  
+  .maintenance-mascot-container::after {
+    width: 185px !important;
+    height: 185px !important;
+  }
+
+  /* Responsive Font Sizes kanka! */
+  .maintenance-title {
+    font-size: 1.7rem !important;
+    text-align: center !important;
+  }
+
+  .maintenance-desc {
+    font-size: 0.88rem !important;
+    text-align: center !important;
+    margin-bottom: 25px !important;
+    padding: 0 10px;
+  }
+
+  /* Responsive Countdown */
+  .maintenance-countdown {
+    justify-content: center !important;
+    margin: 20px 0 !important;
+    gap: 10px !important;
+  }
+  
+  .countdown-item {
+    min-width: 78px !important;
+    padding: 10px 12px !important;
+    border-radius: 14px !important;
+  }
+  
+  .countdown-val {
+    font-size: 1.8rem !important;
+  }
+  
+  .countdown-lbl {
+    font-size: 0.65rem !important;
+  }
+
+  /* Social Links Mobile */
+  .social-links-maint {
+    margin-top: 25px !important;
+    padding-top: 25px !important;
+  }
+
+  .social-title-maint {
+    text-align: center !important;
+    font-size: 0.78rem !important;
+  }
+
+  .social-btn-row {
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  .maint-social-btn {
+    padding: 8px 14px !important;
+    font-size: 0.72rem !important;
+  }
+
+  /* Web Store Mobile - Stack them to breathe kanka! */
+  .web-store-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+    max-width: 380px;
+    margin: 15px auto 0 !important;
+  }
+  
+  .web-store-card {
+    padding: 18px 16px !important;
   }
 }
 
