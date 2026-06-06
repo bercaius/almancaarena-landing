@@ -485,12 +485,16 @@
         document.getElementById('coach-cta-download'),
         document.getElementById('link-download-btn')
       ];
+      const mascotHeroImg = document.getElementById('mascot-hero-img');
 
       // Remove existing banner if any
       const oldBanner = document.getElementById('maint-banner');
       if (oldBanner) oldBanner.remove();
 
       if (isMaint) {
+        // Change mascot image to sleeping
+        if (mascotHeroImg) mascotHeroImg.src = 'assets/bello_sleeping.png';
+
         // Create premium alert banner
         const banner = document.createElement('div');
         banner.id = 'maint-banner';
@@ -527,6 +531,9 @@
           }
         });
       } else {
+        // Change mascot image back to normal
+        if (mascotHeroImg) mascotHeroImg.src = 'assets/bello_premium_idle2.png';
+
         // Reset download buttons
         downloadBtns.forEach(btn => {
           if (btn) {
