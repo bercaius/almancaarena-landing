@@ -266,6 +266,58 @@
     </div>
   </footer>
 
+  <!-- ==========================================================================
+       INSTALLATION GUIDE MODAL OVERLAY
+       ========================================================================== -->
+  <div class="modal-overlay" id="install-modal-overlay" aria-modal="true" role="dialog">
+    <div class="modal-card glass-card">
+      <button class="modal-close-btn" id="modal-close-btn" aria-label="Kapat">&times;</button>
+      
+      <div class="modal-header">
+        <div class="modal-title-wrapper">
+          <span class="modal-icon">📥</span>
+          <h3>Kurulum Kılavuzu</h3>
+        </div>
+        <p class="modal-subtitle">Uygulamanın sorunsuz kurulabilmesi için aşağıdaki 3 adımı takip edin:</p>
+      </div>
+      
+      <div class="modal-steps">
+        <!-- Step 1: Samsung Auto Blocker -->
+        <div class="modal-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Samsung Otomatik Engelleyici (Varsa)</h4>
+            <p>Samsung Android 14+ cihazlarda dışarıdan yüklemeler engellenebilir. Kapatmak için: <code>Ayarlar -> Güvenlik ve Gizlilik -> Otomatik Engelleyici</code> menüsünden özelliği geçici olarak kapatın.</p>
+          </div>
+        </div>
+        
+        <!-- Step 2: Unknown Sources -->
+        <div class="modal-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Bilinmeyen Kaynaklara İzin Verin</h4>
+            <p>Tarayıcınız veya Dosya Yöneticiniz yükleme izni isterse çıkan uyarıda <strong>Ayarlar</strong>'a dokunup <strong>"Bu kaynaktan izin ver"</strong> seçeneğini açın.</p>
+          </div>
+        </div>
+        
+        <!-- Step 3: Play Protect -->
+        <div class="modal-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Google Play Protect Uyarısı</h4>
+            <p>Yükleme esnasında "Bu geliştiriciyi tanımıyor" uyarısı çıkarsa, alttaki <strong>"Daha fazla ayrıntı"</strong> (veya ok) yazısına dokunarak açılan menüden <strong>"Yine de yükle"</strong> deyin.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-action">
+        <button class="btn-premium btn-gold modal-btn-confirm" id="modal-btn-confirm">
+          Anladım, Bello Arenaya Hazırım! 🐾
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Core Scripts for Interactions -->
   <script>
     // Header scrolled behavior
@@ -361,6 +413,39 @@
 
       currentWordIndex = (currentWordIndex + 1) % quizWords.length;
       setTimeout(loadWord, 1800);
+    }
+
+    // Modal Trigger and Close Logic
+    const finalDownloadBtn = document.getElementById('final-apk-download-btn');
+    const modalOverlay = document.getElementById('install-modal-overlay');
+    const modalClose = document.getElementById('modal-close-btn');
+    const modalConfirm = document.getElementById('modal-btn-confirm');
+
+    if (finalDownloadBtn && modalOverlay) {
+      finalDownloadBtn.addEventListener('click', function() {
+        // Show the modal overlay immediately when download starts
+        modalOverlay.classList.add('active');
+      });
+    }
+
+    function closeModal() {
+      if (modalOverlay) {
+        modalOverlay.classList.remove('active');
+      }
+    }
+
+    if (modalClose) {
+      modalClose.addEventListener('click', closeModal);
+    }
+    if (modalConfirm) {
+      modalConfirm.addEventListener('click', closeModal);
+    }
+    if (modalOverlay) {
+      modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+          closeModal();
+        }
+      });
     }
   </script>
 </body>
