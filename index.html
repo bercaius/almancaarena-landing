@@ -214,6 +214,7 @@
           <li><a href="#playground" id="link-playground">Mini Oyun</a></li>
           <li><a href="#gamification" id="link-gamification">Başarılar</a></li>
           <li><a href="#download" class="btn-premium btn-gold" id="link-download-btn">Hemen İndir</a></li>
+          <li id="nav-auth-container" style="display: inline-flex; align-items: center;"></li>
         </ul>
       </nav>
     </div>
@@ -405,7 +406,7 @@
       
       <div class="download-btn-group">
         <!-- Direct APK Download Link pointing to the primary app repo's releases asset -->
-        <a href="https://github.com/bercaius/almancaarena/releases/download/v1.0.0-beta.8/app-release.apk" class="btn-premium btn-gold" id="final-apk-download-btn">
+        <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta.8/app-release.apk" class="btn-premium btn-gold" id="final-apk-download-btn">
           💾 Beta APK İndir (v1.0.0-beta.8)
         </a>
         <!-- Integration Test Fallback Match: https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta/app-release.apk -->
@@ -1036,6 +1037,7 @@
     firebase.auth().onAuthStateChanged((user) => {
       currentUser = user;
       const authContainer = document.getElementById("user-google-auth-container");
+      const navAuthContainer = document.getElementById("nav-auth-container");
       
       const tktName = document.getElementById("tkt-name");
       const tktEmail = document.getElementById("tkt-email");
@@ -1043,18 +1045,30 @@
 
       if (user) {
         // Logged in
-        authContainer.innerHTML = `
-          <div class="google-profile-card">
-            <div class="google-profile-info">
-              <img src="${user.photoURL || 'assets/app_logo.png'}" alt="Avatar" class="google-avatar">
-              <div>
-                <div class="google-name">${escapeHtml(user.displayName)}</div>
-                <div class="google-email">${escapeHtml(user.email)}</div>
+        if (authContainer) {
+          authContainer.innerHTML = `
+            <div class="google-profile-card">
+              <div class="google-profile-info">
+                <img src="${user.photoURL || 'assets/app_logo.png'}" alt="Avatar" class="google-avatar">
+                <div>
+                  <div class="google-name">${escapeHtml(user.displayName)}</div>
+                  <div class="google-email">${escapeHtml(user.email)}</div>
+                </div>
               </div>
+              <button class="google-logout-btn" onclick="signOutGoogleUser()">Çıkış Yap</button>
             </div>
-            <button class="google-logout-btn" onclick="signOutGoogleUser()">Çıkış Yap</button>
-          </div>
-        `;
+          `;
+        }
+
+        if (navAuthContainer) {
+          navAuthContainer.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(223, 186, 115, 0.15); padding: 4px 10px; border-radius: 50px;">
+              <img src="${user.photoURL || 'assets/app_logo.png'}" alt="Avatar" style="width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--color-gold);">
+              <span style="font-size: 0.72rem; color: #fff; font-weight: 700; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(user.displayName.split(' ')[0])}</span>
+              <button class="google-logout-btn" onclick="signOutGoogleUser()" style="padding: 2px 6px; font-size: 0.62rem; margin-left: 4px; border: 1px solid rgba(229,57,53,0.3); color: #e53935; background: transparent; border-radius: 4px; cursor: pointer; transition: 0.2s;">Çıkış</button>
+            </div>
+          `;
+        }
 
         // Save/Sync user registration details on Firestore users collection kanka!
         db.collection("users").doc(user.email.toLowerCase().trim()).set({
@@ -1079,11 +1093,21 @@
         }
       } else {
         // Logged out
-        authContainer.innerHTML = `
-          <button class="google-auth-btn" onclick="signInWithGoogleUser()">
-            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;"> Google ile Giriş Yap kanka 🚀
-          </button>
-        `;
+        if (authContainer) {
+          authContainer.innerHTML = `
+            <button class="google-auth-btn" onclick="signInWithGoogleUser()">
+              <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;"> Google ile Giriş Yap kanka 🚀
+            </button>
+          `;
+        }
+
+        if (navAuthContainer) {
+          navAuthContainer.innerHTML = `
+            <button class="google-auth-btn" onclick="signInWithGoogleUser()" style="padding: 6px 12px; font-size: 0.7rem; display: flex; align-items: center; gap: 6px; width: auto; background: var(--color-gold); color: #000; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s;">
+              <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google" style="width: 14px; height: 14px;"> Giriş Yap
+            </button>
+          `;
+        }
 
         if (tktName) {
           tktName.value = "";
