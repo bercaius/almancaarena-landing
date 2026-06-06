@@ -17,10 +17,69 @@
 </head>
 <body>
 
-  <!-- ==========================================================================
-       HEADER & NAVIGATION BAR (ELITE GLASSMORPHIC)
-       ========================================================================== -->
-  <header id="main-header">
+  <!-- Preloader (Visible by default to prevent 1s UI leak) -->
+  <div id="preloader">
+    <div class="preloader-content">
+      <div class="spinner"></div>
+      <div class="preloader-text">BELLO YÜKLENİYOR...</div>
+    </div>
+  </div>
+
+  <!-- Premium Maintenance Screen (Hidden by default) -->
+  <div id="maintenance-screen">
+    <div class="neon-blob neon-blob-1"></div>
+    <div class="neon-blob neon-blob-2"></div>
+    
+    <div class="maintenance-container glass-card">
+      <div class="maintenance-logo">
+        <img src="assets/app_logo.png" alt="Logo" class="logo-img-maint">
+        <span class="logo-text-maint">Almanca<span>Arena</span></span>
+      </div>
+      
+      <div class="maintenance-mascot-container">
+        <div class="maint-speech-bubble" id="maint-bubble" style="display: none;">Zzz... Uyuyorum kanka!</div>
+        <img src="assets/bello_sleeping.png" alt="Bello Uyuyor" class="mascot-sleeping">
+        <div class="zzz-bubble zzz-1">Z</div>
+        <div class="zzz-bubble zzz-2">Z</div>
+        <div class="zzz-bubble zzz-3">z</div>
+      </div>
+      
+      <h1 class="maintenance-title">Bello Dinleniyor 😴</h1>
+      <p class="maintenance-desc" id="maint-message">Almanca Arena şu an planlı bakım çalışmasındadır. En kısa sürede döneceğiz!</p>
+      
+      <!-- Countdown Wrapper -->
+      <div class="maintenance-countdown" id="maint-countdown" style="display: none;">
+        <div class="countdown-item">
+          <div class="countdown-val" id="cd-hours">00</div>
+          <div class="countdown-lbl">Saat</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-val" id="cd-minutes">00</div>
+          <div class="countdown-lbl">Dakika</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-val" id="cd-seconds">00</div>
+          <div class="countdown-lbl">Saniye</div>
+        </div>
+      </div>
+      
+      <div class="social-links-maint">
+        <p class="social-title-maint">Gelişmeler için bizi takip et:</p>
+        <div class="social-btn-row">
+          <a href="https://www.instagram.com/bercaiusozdemir/" target="_blank" rel="noopener" class="social-btn maint-social-btn">
+            📸 @bercaiusozdemir
+          </a>
+          <a href="https://www.instagram.com/turcodevelopstudio/" target="_blank" rel="noopener" class="social-btn maint-social-btn">
+            🏢 @turcodevelopstudio
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Landing Content (Hidden initially to prevent leaks) -->
+  <div id="landing-content" style="display: none;">
+    <header id="main-header">
     <div class="nav-container">
       <a href="#" class="logo-area" id="nav-logo-link">
         <img src="assets/app_logo.png" alt="Almanca Arena Logo" class="logo-img">
@@ -317,6 +376,7 @@
       </div>
     </div>
   </div>
+  </div> <!-- end of #landing-content -->
 
   <!-- Core Scripts for Interactions -->
   <script>
@@ -470,90 +530,123 @@
     }
     const db = firebase.firestore();
 
+    let countdownInterval = null;
+    let dreamInterval = null;
+
+    const belloDreams = [
+      "Şşşt, veritabanını süpürüyorum gürültü yapma kanka! 🧹",
+      "Bello rüyasında Almanca artikeller heceliyor... Zzz... 🐾",
+      "Zırhımı cilalıyorum, az sonra arenaya döneceğiz! 🛡️",
+      "Sunucu odası çok sıcak, vantilatör getirin kanka! 💨",
+      "Zzz... Bir sonraki güncellemede harika sürprizler var! 🎁"
+    ];
+
+    // Timeout fallback (5 seconds) to hide preloader if Firestore fails
+    const fallbackTimeout = setTimeout(() => {
+      hidePreloader();
+      document.getElementById('landing-content').style.display = 'block';
+    }, 5000);
+
     // Listen to maintenance config
     db.collection("system_config").doc("maintenance").onSnapshot((doc) => {
+      clearTimeout(fallbackTimeout);
       if (doc.exists) {
         const data = doc.data();
-        handleMaintenanceMode(data.isUnderMaintenance, data.maintenanceMessage);
+        handleMaintenanceMode(data.isUnderMaintenance, data.maintenanceMessage, data.endTimestamp || 0);
+      } else {
+        hidePreloader();
+        document.getElementById('landing-content').style.display = 'block';
       }
+    }, (error) => {
+      console.error("Firestore connection error:", error);
+      clearTimeout(fallbackTimeout);
+      hidePreloader();
+      document.getElementById('landing-content').style.display = 'block';
     });
 
-    function handleMaintenanceMode(isMaint, message) {
-      const downloadBtns = [
-        document.getElementById('final-apk-download-btn'),
-        document.getElementById('hero-primary-download'),
-        document.getElementById('coach-cta-download'),
-        document.getElementById('link-download-btn')
-      ];
-      const mascotHeroImg = document.getElementById('mascot-hero-img');
+    function hidePreloader() {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 400);
+      }
+    }
 
-      // Remove existing banner if any
-      const oldBanner = document.getElementById('maint-banner');
-      if (oldBanner) oldBanner.remove();
+    function handleMaintenanceMode(isMaint, message, endTimestamp) {
+      const landingContent = document.getElementById('landing-content');
+      const maintScreen = document.getElementById('maintenance-screen');
+      const maintMessage = document.getElementById('maint-message');
+      const countdownWrapper = document.getElementById('maint-countdown');
+
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
+      if (dreamInterval) {
+        clearInterval(dreamInterval);
+        dreamInterval = null;
+      }
 
       if (isMaint) {
-        // Change mascot image to sleeping
-        if (mascotHeroImg) mascotHeroImg.src = 'assets/bello_sleeping.png';
+        landingContent.style.display = 'none';
+        maintScreen.style.display = 'flex';
+        maintMessage.innerText = message || "Almanca Arena şu an planlı bakım çalışmasındadır. En kısa sürede döneceğiz!";
 
-        // Create premium alert banner
-        const banner = document.createElement('div');
-        banner.id = 'maint-banner';
-        banner.style.position = 'fixed';
-        banner.style.top = '70px'; // Below header
-        banner.style.left = '0';
-        banner.style.width = '100%';
-        banner.style.background = 'rgba(229, 57, 53, 0.9)';
-        banner.style.color = '#fff';
-        banner.style.textAlign = 'center';
-        banner.style.padding = '12px 20px';
-        banner.style.fontSize = '14px';
-        banner.style.fontWeight = '800';
-        banner.style.zIndex = '999';
-        banner.style.backdropFilter = 'blur(10px)';
-        banner.style.borderBottom = '1px solid rgba(255,255,255,0.2)';
-        banner.style.boxShadow = '0 5px 15px rgba(229,57,53,0.3)';
-        banner.innerText = "🛠️ BAKIM MODU: " + message;
-        document.body.appendChild(banner);
+        const bubble = document.getElementById('maint-bubble');
+        if (bubble) {
+          bubble.style.display = 'block';
+          bubble.innerText = belloDreams[Math.floor(Math.random() * belloDreams.length)];
+          dreamInterval = setInterval(() => {
+            bubble.innerText = belloDreams[Math.floor(Math.random() * belloDreams.length)];
+          }, 6000);
+        }
 
-        // Update download buttons
-        downloadBtns.forEach(btn => {
-          if (btn) {
-            btn.style.pointerEvents = 'none';
-            btn.style.opacity = '0.5';
-            btn.style.background = '#e53935';
-            btn.style.color = '#fff';
-            btn.style.border = 'none';
-            if (btn.id === 'final-apk-download-btn') {
-              btn.innerText = "🛠️ Sunucu Bakımdadır (İndirilemez)";
-            } else {
-              btn.innerText = "Bakımda";
-            }
-          }
-        });
+        if (endTimestamp > Date.now()) {
+          countdownWrapper.style.display = 'flex';
+          updateCountdown(endTimestamp);
+          countdownInterval = setInterval(() => {
+            updateCountdown(endTimestamp);
+          }, 1000);
+        } else {
+          countdownWrapper.style.display = 'none';
+        }
       } else {
-        // Change mascot image back to normal
-        if (mascotHeroImg) mascotHeroImg.src = 'assets/bello_premium_idle2.png';
-
-        // Reset download buttons
-        downloadBtns.forEach(btn => {
-          if (btn) {
-            btn.style.pointerEvents = 'auto';
-            btn.style.opacity = '1';
-            btn.style.background = ''; // reset to CSS defaults
-            btn.style.color = '';
-            btn.style.border = '';
-            if (btn.id === 'final-apk-download-btn') {
-              btn.innerText = "💾 Beta APK İndir (v1.0.0-beta.8)";
-            } else if (btn.id === 'hero-primary-download') {
-              btn.innerText = "Beta APK İndir";
-            } else if (btn.id === 'coach-cta-download') {
-              btn.innerText = "AI Koçu Test Et";
-            } else if (btn.id === 'link-download-btn') {
-              btn.innerText = "Hemen İndir";
-            }
-          }
-        });
+        maintScreen.style.display = 'none';
+        landingContent.style.display = 'block';
+        const bubble = document.getElementById('maint-bubble');
+        if (bubble) bubble.style.display = 'none';
       }
+
+      hidePreloader();
+    }
+
+    function updateCountdown(endTimestamp) {
+      const hoursVal = document.getElementById('cd-hours');
+      const minsVal = document.getElementById('cd-minutes');
+      const secsVal = document.getElementById('cd-seconds');
+      const countdownWrapper = document.getElementById('maint-countdown');
+
+      const remaining = endTimestamp - Date.now();
+
+      if (remaining <= 0) {
+        if (countdownInterval) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+        }
+        countdownWrapper.style.display = 'none';
+        return;
+      }
+
+      const totalSeconds = Math.floor(remaining / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      hoursVal.innerText = String(hours).padStart(2, '0');
+      minsVal.innerText = String(minutes).padStart(2, '0');
+      secsVal.innerText = String(seconds).padStart(2, '0');
     }
   </script>
 </body>

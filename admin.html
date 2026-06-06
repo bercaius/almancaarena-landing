@@ -79,7 +79,7 @@
             letter-spacing: 0.5px;
         }
 
-        input[type="password"], textarea {
+        input[type="password"], textarea, select {
             width: 100%;
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -91,7 +91,12 @@
             transition: all 0.3s ease;
         }
 
-        input[type="password"]:focus, textarea:focus {
+        select option {
+            background-color: var(--bg-color);
+            color: #fff;
+        }
+
+        input[type="password"]:focus, textarea:focus, select:focus {
             border-color: var(--secondary-accent);
             box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
         }
@@ -265,6 +270,19 @@
                 </label>
             </div>
 
+            <!-- Geri Sayım Süre Seçici -->
+            <div class="form-group" id="duration-group">
+                <label for="duration-select">Bakım Süresi (Geri Sayım)</label>
+                <select id="duration-select">
+                    <option value="0">Süre Belirtme (Sadece Bakım)</option>
+                    <option value="15">15 Dakika</option>
+                    <option value="30">30 Dakika</option>
+                    <option value="60">1 Saat</option>
+                    <option value="120">2 Saat</option>
+                    <option value="300">5 Saat</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="msg">Bakım Mesajı</label>
                 <textarea id="msg" placeholder="Kullanıcılara gösterilecek bakım açıklamasını yazın..."></textarea>
@@ -300,13 +318,26 @@
 
         let currentConfig = {
             isUnderMaintenance: false,
-            maintenanceMessage: "Almanca Arena şu an planlı bakım çalışmasındadır. En kısa sürede döneceğiz!"
+            maintenanceMessage: "Almanca Arena şu an planlı bakım çalışmasındadır. En kısa sürede döneceğiz!",
+            endTimestamp: 0
         };
 
-        // Check Admin PIN
-        function checkPin() {
+        // SHA-256 Hash Helper
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+
+        // Check Admin PIN using SHA-256 Hash
+        async function checkPin() {
             const pinVal = document.getElementById("pin").value;
-            if (pinVal === "turco2026") {
+            const hash = await sha256(pinVal);
+            
+            // a68e5cc2878cafd38c927705a3bc825bbb1031b3694e83bb6dfd573c7efa5d79 is the SHA-256 hash of "turco2026"
+            if (hash === "a68e5cc2878cafd38c927705a3bc825bbb1031b3694e83bb6dfd573c7efa5d79") {
                 document.getElementById("login-form").style.display = "none";
                 document.getElementById("panel-content").style.display = "block";
                 loadCurrentConfig();
@@ -344,13 +375,16 @@
             const toggle = document.getElementById("maintenance-toggle");
             const msgInput = document.getElementById("msg");
             const badge = document.getElementById("status-display");
+            const durationSelect = document.getElementById("duration-select");
 
             toggle.checked = currentConfig.isUnderMaintenance;
             msgInput.value = currentConfig.maintenanceMessage;
 
-            if (currentConfig.isUnderMaintenance) {
+            // Restoring remaining minutes if countdown is active
+            if (currentConfig.isUnderMaintenance && currentConfig.endTimestamp > Date.now()) {
                 badge.innerText = "Sistem Bakımda 🛠️";
                 badge.className = "status-badge status-on";
+                document.getElementById("duration-group").style.display = "block";
             } else {
                 badge.innerText = "Sistem Aktif (Bakım Kapalı) 🟢";
                 badge.className = "status-badge status-off";
@@ -361,18 +395,35 @@
         function toggleMaintenance(isChecked) {
             currentConfig.isUnderMaintenance = isChecked;
             const badge = document.getElementById("status-display");
+            const durationGroup = document.getElementById("duration-group");
+            
             if (isChecked) {
                 badge.innerText = "Sistem Bakımda 🛠️";
                 badge.className = "status-badge status-on";
+                durationGroup.style.display = "block";
             } else {
                 badge.innerText = "Sistem Aktif (Bakım Kapalı) 🟢";
                 badge.className = "status-badge status-off";
+                durationGroup.style.display = "none";
+                document.getElementById("duration-select").value = "0";
+                currentConfig.endTimestamp = 0;
             }
         }
 
         // Save updated settings to Firestore
         function saveConfig() {
             currentConfig.maintenanceMessage = document.getElementById("msg").value;
+            const durationVal = parseInt(document.getElementById("duration-select").value);
+            
+            if (currentConfig.isUnderMaintenance) {
+                if (durationVal > 0) {
+                    currentConfig.endTimestamp = Date.now() + (durationVal * 60 * 1000);
+                } else {
+                    currentConfig.endTimestamp = 0; // Permanent maintenance until disabled
+                }
+            } else {
+                currentConfig.endTimestamp = 0;
+            }
             
             configRef.set(currentConfig)
                 .then(() => {
