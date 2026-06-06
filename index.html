@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Bello Almanca Arena — 10 Milyon parametreli çevrimdışı yapay sinir ağı, siber-punk tasarımları ve AI Coach entegrasyonuyla donatılmış premium Almanca öğrenme ve oyunlaştırma uygulaması.">
+  <meta name="description" content="Bello Almanca Arena — 10 Milyon parametreli çevrimdışı yapay sinir ağı, lüks fırçalanmış altın tasarımları ve AI Coach entegrasyonuyla donatılmış premium Almanca öğrenme arenası.">
   <meta name="keywords" content="Almanca öğrenme, Almanca oyunu, Android Almanca, Bello Almanca Arena, TurcoDevelop, bercaius, Almanca öğrenme uygulaması, yapay zeka Almanca">
   <meta name="author" content="TurcoDevelop">
   
   <title>Bello Almanca Arena — Yapay Zeka Destekli Premium Almanca Öğrenme Arenası</title>
   
-  <!-- Favicon placeholder (Uses Logo) -->
+  <!-- Favicon (Uses App Logo) -->
   <link rel="icon" type="image/png" href="assets/app_logo.png">
   
   <!-- Custom CSS Style Sheet -->
@@ -18,7 +18,7 @@
 <body>
 
   <!-- ==========================================================================
-       HEADER & NAVIGATION BAR (GLASSMORPHIC)
+       HEADER & NAVIGATION BAR (ELITE GLASSMORPHIC)
        ========================================================================== -->
   <header id="main-header">
     <div class="nav-container">
@@ -31,15 +31,16 @@
         <ul id="nav-links">
           <li><a href="#features" id="link-features">Özellikler</a></li>
           <li><a href="#ai-coach" id="link-coach">AI Koç</a></li>
+          <li><a href="#playground" id="link-playground">Mini Oyun</a></li>
           <li><a href="#gamification" id="link-gamification">Başarılar</a></li>
-          <li><a href="#download" class="btn-premium btn-cyan" id="link-download-btn">Hemen İndir</a></li>
+          <li><a href="#download" class="btn-premium btn-gold" id="link-download-btn">Hemen İndir</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <!-- ==========================================================================
-       HERO SECTION (INTRODUCTION & Mascot)
+       HERO SECTION (INTRODUCTION & 3D MASCOT DISPLAY)
        ========================================================================== -->
   <section class="hero" id="home">
     <div class="container">
@@ -47,17 +48,17 @@
         <div class="hero-content">
           <div class="hero-badge-container">
             <span class="hero-badge-pulse"></span>
-            <span>Yeni Kararlı Sürüm v1.0.0-beta Yayında!</span>
+            <span>Sürüm v1.0.0-beta Yayında!</span>
           </div>
           <h1>
             Almanca Öğrenmenin <br>
-            <span class="text-gradient">Siber Boyutunu</span> Keşfet
+            <span class="text-gradient">En Elit Sürümü</span>
           </h1>
           <p class="hero-subtitle">
-            Bello Almanca Arena, tamamen cihazında çevrimdışı çalışan 10 Milyon parametreli yerel yapay zeka motoru ve elit cam kart tasarımlarıyla Almanca öğrenmeyi bağımlılık yapıcı bir arenaya dönüştürüyor.
+            Bello Almanca Arena, cihazınızda tamamen çevrimdışı çalışan 10 Milyon parametreli yerel yapay zeka motoru ve fırçalanmış şampanya altını tasarımlarıyla Almanca dil eğitimini premium bir deneyime dönüştürüyor.
           </p>
           <div class="hero-actions">
-            <a href="#download" class="btn-premium btn-cyan" id="hero-primary-download">
+            <a href="#download" class="btn-premium btn-gold" id="hero-primary-download">
               Beta APK İndir
             </a>
             <a href="#features" class="btn-premium btn-outline" id="hero-secondary-learn">
@@ -66,21 +67,23 @@
           </div>
         </div>
         
-        <div class="hero-image-wrapper">
+        <div class="hero-image-wrapper" id="hero-tilt-container">
           <div class="hero-glow-ring"></div>
-          <img src="assets/bello_premium_idle2.png" alt="Bello Premium Tahtında" class="hero-mascot-img" id="mascot-hero-img">
+          <div class="tilt-card" id="hero-tilt-card">
+            <img src="assets/bello_premium_idle2.png" alt="Bello Premium Tahtında" class="hero-mascot-img" id="mascot-hero-img">
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ==========================================================================
-       FEATURES SECTION (HIGHLIGHTS)
+       FEATURES SECTION (CAPABILITIES)
        ========================================================================== -->
   <section class="container" id="features">
     <div class="section-header">
-      <h2>Siber Seviye Eğitim Teknolojileri</h2>
-      <p>Bello Almanca Arena, sıradan dil uygulamalarının ötesine geçerek öğrenme sürecini bilimsel algoritmalar ve güçlü güvenlik motorlarıyla optimize eder.</p>
+      <h2>İleri Seviye Eğitim Teknolojileri</h2>
+      <p>Sıradan dil uygulamalarını bir kenara bırakın. Bello Almanca Arena, öğrenme sürecini bilimsel algoritmalar ve güçlü güvenlik motorlarıyla donatır.</p>
     </div>
     
     <div class="features-grid">
@@ -115,7 +118,6 @@
       <div class="coach-grid">
         <div class="coach-display-card">
           <div class="coach-display-inner">
-            <div class="coach-glow-line"></div>
             <img src="assets/coach_environment.png" alt="Bello AI Coach Ekranı" class="coach-banner-img" id="coach-banner-view">
           </div>
         </div>
@@ -126,7 +128,7 @@
             AI Coach, Gemini 1.5 Flash API sarmalı sayesinde konuşma ve yazma telaffuzunu anlık olarak analiz eder. Hatalarını jilet gibi tespit ederek sana yapıcı geri bildirimler sunar.
           </p>
           <p>
-            Gizlilik-öncelikli mimari sayesinde kendi Gemini API anahtarını tanımlayarak, kişisel verilerini hiçbir bulut sunucusuna göndermeden, tamamen kendi kontrolünde yapay zekayı kullanabilirsin.
+            Gizlilik-öncelikli mimari sayesinde kendi Gemini API anahtarınızı tanımlayarak, kişisel verilerinizi hiçbir bulut sunucusuna göndermeden, tamamen kendi kontrolünüzde yapay zekayı kullanabilirsiniz.
           </p>
           
           <div class="badge-row">
@@ -136,51 +138,9 @@
             <span class="badge-item">AES-256-GCM Şifreli Anahtar Kaydı</span>
           </div>
           
-          <a href="#download" class="btn-premium btn-cyan" id="coach-cta-download">AI Koçu Test Et</a>
+          <a href="#download" class="btn-premium btn-gold" id="coach-cta-download">AI Koçu Test Et</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       GAMIFICATION & MEDALS SECTION (REWARDS)
-       ========================================================================== -->
-  <section class="container" id="gamification">
-    <div class="section-header">
-      <h2>Arenada Savaş, Madalyaları Kazan!</h2>
-      <p>Öğrenme yolunda ilerledikçe kilitleri açılan başarılar sayesinde camdan altına uzanan elit madalyaların sahibi ol.</p>
-    </div>
-    
-    <div class="medals-grid">
-      <!-- Medal Card 1 -->
-      <article class="glass-card medal-card" id="medal-glass">
-        <div class="medal-img-wrapper">
-          <div class="medal-glow"></div>
-          <img src="assets/glass_medal.png" alt="Cam Madalya" class="medal-img">
-        </div>
-        <h3>Cam Madalya</h3>
-        <p class="medal-desc">A1 ve başlangıç seviyesindeki görevleri tamamlayarak bu ilk prestijli cam nişanı kazan.</p>
-      </article>
-
-      <!-- Medal Card 2 -->
-      <article class="glass-card medal-card" id="medal-silver">
-        <div class="medal-img-wrapper">
-          <div class="medal-glow" style="background: hsla(210, 10%, 70%, 0.15)"></div>
-          <img src="assets/silver_medal.png" alt="Gümüş Madalya" class="medal-img">
-        </div>
-        <h3>Gümüş Madalya</h3>
-        <p class="medal-desc">A2/B1 orta seviye gramer lablarını ve telaffuz testlerini geçerek gümüşün gücünü hisset.</p>
-      </article>
-
-      <!-- Medal Card 3 -->
-      <article class="glass-card medal-card" id="medal-gold">
-        <div class="medal-img-wrapper">
-          <div class="medal-glow"></div>
-          <img src="assets/gold_medal.png" alt="Altın Madalya" class="medal-img">
-        </div>
-        <h3>Altın Madalya</h3>
-        <p class="medal-desc">İleri seviye Almanca kelime arenalarını ve AI Coach telaffuz zorluklarını yenip zirveye yerleş.</p>
-      </article>
     </div>
   </section>
 
@@ -214,16 +174,58 @@
   </section>
 
   <!-- ==========================================================================
+       GAMIFICATION & MEDALS SECTION (REWARDS)
+       ========================================================================== -->
+  <section class="container" id="gamification">
+    <div class="section-header">
+      <h2>Arenada Savaş, Madalyaları Kazan!</h2>
+      <p>Öğrenme yolunda ilerledikçe kilitleri açılan başarılar sayesinde camdan altına uzanan elit madalyaların sahibi ol.</p>
+    </div>
+    
+    <div class="medals-grid">
+      <!-- Medal Card 1 -->
+      <article class="glass-card medal-card" id="medal-glass">
+        <div class="medal-img-wrapper">
+          <div class="medal-glow" style="background: rgba(255, 255, 255, 0.03)"></div>
+          <img src="assets/glass_medal.png" alt="Cam Madalya" class="medal-img">
+        </div>
+        <h3>Cam Madalya</h3>
+        <p class="medal-desc">A1 ve başlangıç seviyesindeki görevleri tamamlayarak bu ilk prestijli cam nişanı kazan.</p>
+      </article>
+
+      <!-- Medal Card 2 -->
+      <article class="glass-card medal-card" id="medal-silver">
+        <div class="medal-img-wrapper">
+          <div class="medal-glow" style="background: hsla(210, 10%, 70%, 0.06)"></div>
+          <img src="assets/silver_medal.png" alt="Gümüş Madalya" class="medal-img">
+        </div>
+        <h3>Gümüş Madalya</h3>
+        <p class="medal-desc">A2/B1 orta seviye gramer lablarını ve telaffuz testlerini geçerek gümüşün gücünü hisset.</p>
+      </article>
+
+      <!-- Medal Card 3 -->
+      <article class="glass-card medal-card" id="medal-gold">
+        <div class="medal-img-wrapper">
+          <div class="medal-glow"></div>
+          <img src="assets/gold_medal.png" alt="Altın Madalya" class="medal-img">
+        </div>
+        <h3>Altın Madalya</h3>
+        <p class="medal-desc">İleri seviye Almanca kelime arenalarını ve AI Coach telaffuz zorluklarını yenip zirveye yerleş.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
        DOWNLOAD & BETA CALLOUT (CALL TO ACTION)
        ========================================================================== -->
   <section class="container download-section" id="download">
     <div class="glass-card download-glass-box">
       <h2>Bello Arenasına Katıl!</h2>
-      <p>Uygulamanın siber güvenlik taramasından geçmiş resmi beta sürümünü indirmek için aşağıdaki indirme butonunu kullanabilirsin.</p>
+      <p>Uygulamanın siber güvenlik taramasından geçmiş resmi beta sürümünü indirmek için aşağıdaki indirme butonunu kullanabilirsiniz.</p>
       
       <div class="download-btn-group">
         <!-- Direct APK Download Link pointing to the landing repo's releases asset -->
-        <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta/app-release.apk" class="btn-premium btn-cyan" id="final-apk-download-btn">
+        <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta/app-release.apk" class="btn-premium btn-gold" id="final-apk-download-btn">
           💾 Beta APK İndir (v1.0.0)
         </a>
       </div>
@@ -264,8 +266,9 @@
     </div>
   </footer>
 
-  <!-- Simple JavaScript to enhance dynamic navbar background on scroll -->
+  <!-- Core Scripts for Interactions -->
   <script>
+    // Header scrolled behavior
     window.addEventListener('scroll', function() {
       const header = document.getElementById('main-header');
       if (window.scrollY > 50) {
@@ -274,6 +277,32 @@
         header.classList.remove('scrolled');
       }
     });
+
+    // 3D Perspective Tilt Effect for Hero Mascot
+    const tiltContainer = document.getElementById('hero-tilt-container');
+    const tiltCard = document.getElementById('hero-tilt-card');
+    
+    if (tiltContainer && tiltCard) {
+      tiltContainer.addEventListener('mousemove', (e) => {
+        const rect = tiltContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left; // x position inside container
+        const y = e.clientY - rect.top;  // y position inside container
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        // Tilt bounds: max 12 degrees rotate
+        const rotateX = ((y - centerY) / centerY) * -12;
+        const rotateY = ((x - centerX) / centerX) * 12;
+        
+        tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+      
+      tiltContainer.addEventListener('mouseleave', () => {
+        // Reset rotation smoothly
+        tiltCard.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      });
+    }
 
     // Interactive Quiz Logic
     const quizWords = [
