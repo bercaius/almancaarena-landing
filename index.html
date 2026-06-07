@@ -21,7 +21,7 @@
  <div id="preloader">
  <div class="preloader-content">
  <div class="spinner"></div>
- <div class="preloader-text">BELLO YÜKLENİYOR...</div>
+ <div class="preloader-text">ALMANCA ARENA YÜKLENİYOR...</div>
  </div>
  </div>
 
@@ -528,7 +528,7 @@
  
  <div class="download-btn-group">
  <!-- Direct APK Download Link pointing to the primary app repo's releases asset -->
- <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta.9/app-release.apk" class="btn-premium btn-gold" id="final-apk-download-btn">
+ <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta.9/app-release.apk" onclick="trackDownload()" id="direct-apk-download" class="btn-premium btn-gold" id="final-apk-download-btn">
  💾 Beta APK İndir (v1.0.0-beta.9)
  </a>
  <!-- Integration Test Fallback Match: https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta/app-release.apk -->
@@ -878,9 +878,164 @@
  });
  }
  
-  // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
+  // --- MANDATORY AUTH GATE & USER ACTIVITY TRACKING ---
   let isSponsorAdActive = false;
+  let isAuthGateResolved = false;
 
+  // Track session details (geolocation, activity) and write to Firestore
+  function trackUserSession(user, activityType) {
+    if (!user) return;
+    const emailLower = user.email.toLowerCase().trim();
+    const name = user.displayName || emailLower.split('@')[0];
+    const photoURL = user.photoURL || "";
+    const lastActive = new Date().toLocaleString('tr-TR');
+    const timestamp = Date.now();
+
+    // Query Geo-IP API
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+        const location = data.city && data.country_name ? `${data.city}, ${data.country_name}` : (data.country_name || "Bilinmeyen Ülke");
+        saveSessionToFirestore(emailLower, name, photoURL, location, lastActive, timestamp, activityType);
+      })
+      .catch(err => {
+        // Fallback: use browser timezone and locale
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Bilinmeyen Saat Dilimi";
+        const lang = navigator.language || "tr-TR";
+        const location = `${tz} (${lang})`;
+        saveSessionToFirestore(emailLower, name, photoURL, location, lastActive, timestamp, activityType);
+      });
+  }
+
+  function saveSessionToFirestore(email, name, photoURL, location, lastActive, timestamp, activity) {
+    db.collection("users").doc(email).set({
+      name: name,
+      email: email,
+      photoURL: photoURL,
+      location: location,
+      lastActive: lastActive,
+      timestamp: timestamp,
+      activity: activity
+    }, { merge: true }).catch(err => console.error("Error writing user activity session:", err));
+  }
+
+  function trackDownload() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      trackUserSession(user, "Uygulamayı İndirdi 🚀");
+    }
+  }
+
+  // Handle Google Sign-in on Auth Gate
+  function runGoogleAuthGate() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then((result) => {
+      showWebToast("Google Girişi Başarılı! 🐾");
+    }).catch((err) => {
+      console.error("Auth Gate Google login error:", err);
+      if (err.code === "auth/popup-blocked" || err.code === "auth/popup-closed-by-user") {
+        showWebToast("Popup engellendi, yönlendiriliyorsunuz... 🔄");
+        firebase.auth().signInWithRedirect(provider);
+      } else {
+        showWebToast(`Giriş Başarısız: ${getFirebaseAuthErrorMessage(err)} ❌`);
+      }
+    });
+  }
+
+  // Handle Email Sign-in/Sign-up on Auth Gate
+  function runEmailAuthGate(type) {
+    const email = document.getElementById("gate-email").value.trim();
+    const password = document.getElementById("gate-password").value.trim();
+
+    if (!email || !password) {
+      showWebToast("Lütfen e-posta ve şifrenizi girin! ❌");
+      return;
+    }
+
+    if (type === 'login') {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+        showWebToast("Giriş yapıldı! 🚀");
+      }).catch(err => {
+        console.error("Auth Gate Email login error:", err);
+        showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+      });
+    } else {
+      firebase.auth().createUserWithEmailAndPassword(email, password).then((result) => {
+        showWebToast("Kayıt olundu ve giriş yapıldı! 🚀");
+        result.user.updateProfile({
+          displayName: email.split('@')[0]
+        });
+      }).catch(err => {
+        console.error("Auth Gate Email register error:", err);
+        showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+      });
+    }
+  }
+
+  // Mandatory Auth Gate State Listener
+  firebase.auth().onAuthStateChanged((user) => {
+    isAuthGateResolved = true;
+    const preloader = document.getElementById("preloader");
+    const authGate = document.getElementById("auth-gate-screen");
+    const landingContent = document.getElementById("landing-content");
+    const maintScreen = document.getElementById("maintenance-screen");
+
+    if (user) {
+      // User is logged in, hide auth gate
+      if (authGate) authGate.style.display = "none";
+      
+      // Track session activity
+      trackUserSession(user, "Giriş Yaptı");
+
+      // Verify ban status or maintenance as before
+      const emailLower = user.email.toLowerCase().trim();
+      db.collection("banned_users").doc(emailLower).get().then((doc) => {
+        if (doc.exists) {
+          // Banned
+          const data = doc.data();
+          if (preloader) preloader.style.display = "none";
+          if (landingContent) landingContent.style.display = "none";
+          if (maintScreen) maintScreen.style.display = "none";
+          showBannedScreen(data.reason || "Kural ihlali nedeniyle banlandınız.");
+        } else {
+          // Safe, check maintenance mode
+          db.collection("system_config").doc("maintenance").get().then((maintDoc) => {
+            if (preloader) preloader.style.display = "none";
+            
+            if (maintDoc.exists && maintDoc.data().isUnderMaintenance) {
+              // Maintenance screen
+              if (landingContent) landingContent.style.display = "none";
+              if (maintScreen) maintScreen.style.display = "block";
+              setupMaintenanceTimer(maintDoc.data().maintenanceMessage, maintDoc.data().endTimestamp || 0);
+            } else {
+              // Normal content screen
+              if (maintScreen) maintScreen.style.display = "none";
+              if (landingContent) landingContent.style.display = "block";
+            }
+          }).catch(err => {
+            // Offline/Failure fallback
+            if (preloader) preloader.style.display = "none";
+            if (landingContent) landingContent.style.display = "block";
+          });
+        }
+      }).catch(err => {
+        // Fallback if banned lookup fails
+        if (preloader) preloader.style.display = "none";
+        if (landingContent) landingContent.style.display = "block";
+      });
+
+      // Load dynamic ads
+      loadDynamicAds();
+    } else {
+      // User is NOT logged in. Show Auth Gate Screen.
+      if (preloader) preloader.style.display = "none";
+      if (landingContent) landingContent.style.display = "none";
+      if (maintScreen) maintScreen.style.display = "none";
+      if (authGate) authGate.style.display = "flex";
+    }
+  });
+
+  // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
   function loadDynamicAds() {
     // 1. Kendi Tanıtımımız (Sol Bölüm)
     db.collection("system_config").doc("developer_ad").onSnapshot((doc) => {
@@ -970,36 +1125,182 @@
   }
 
   function openSupportTicketFormFromAd() {
-    // Web site or maintenance ticket triggering
     const ticketModal = document.getElementById("ticket-modal");
     if (ticketModal) {
-      // Main site ticket modal if exists
       ticketModal.style.display = "flex";
     } else {
-      // Maintenance screen ticket tab trigger
       const tabSupportBtn = document.getElementById("btn-tab-support");
       if (tabSupportBtn) {
         tabSupportBtn.click();
         showWebToast("Destek sekmesi açıldı. Buradan sponsorluk talebi iletebilirsiniz! 🐾");
       } else {
-        // Fallback mailto
         window.location.href = "mailto:turcodevelop@gmail.com?subject=Almanca%20Arena%20Sponsorluk%20Talebi";
       }
     }
-  }
-
-  // Load ads on init
-  if (typeof db !== 'undefined') {
-    loadDynamicAds();
   }
 
 </script>
 
  <!-- Firebase Compat SDKs -->
  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js">
-  // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
+  // --- MANDATORY AUTH GATE & USER ACTIVITY TRACKING ---
   let isSponsorAdActive = false;
+  let isAuthGateResolved = false;
 
+  // Track session details (geolocation, activity) and write to Firestore
+  function trackUserSession(user, activityType) {
+    if (!user) return;
+    const emailLower = user.email.toLowerCase().trim();
+    const name = user.displayName || emailLower.split('@')[0];
+    const photoURL = user.photoURL || "";
+    const lastActive = new Date().toLocaleString('tr-TR');
+    const timestamp = Date.now();
+
+    // Query Geo-IP API
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+        const location = data.city && data.country_name ? `${data.city}, ${data.country_name}` : (data.country_name || "Bilinmeyen Ülke");
+        saveSessionToFirestore(emailLower, name, photoURL, location, lastActive, timestamp, activityType);
+      })
+      .catch(err => {
+        // Fallback: use browser timezone and locale
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Bilinmeyen Saat Dilimi";
+        const lang = navigator.language || "tr-TR";
+        const location = `${tz} (${lang})`;
+        saveSessionToFirestore(emailLower, name, photoURL, location, lastActive, timestamp, activityType);
+      });
+  }
+
+  function saveSessionToFirestore(email, name, photoURL, location, lastActive, timestamp, activity) {
+    db.collection("users").doc(email).set({
+      name: name,
+      email: email,
+      photoURL: photoURL,
+      location: location,
+      lastActive: lastActive,
+      timestamp: timestamp,
+      activity: activity
+    }, { merge: true }).catch(err => console.error("Error writing user activity session:", err));
+  }
+
+  function trackDownload() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      trackUserSession(user, "Uygulamayı İndirdi 🚀");
+    }
+  }
+
+  // Handle Google Sign-in on Auth Gate
+  function runGoogleAuthGate() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then((result) => {
+      showWebToast("Google Girişi Başarılı! 🐾");
+    }).catch((err) => {
+      console.error("Auth Gate Google login error:", err);
+      if (err.code === "auth/popup-blocked" || err.code === "auth/popup-closed-by-user") {
+        showWebToast("Popup engellendi, yönlendiriliyorsunuz... 🔄");
+        firebase.auth().signInWithRedirect(provider);
+      } else {
+        showWebToast(`Giriş Başarısız: ${getFirebaseAuthErrorMessage(err)} ❌`);
+      }
+    });
+  }
+
+  // Handle Email Sign-in/Sign-up on Auth Gate
+  function runEmailAuthGate(type) {
+    const email = document.getElementById("gate-email").value.trim();
+    const password = document.getElementById("gate-password").value.trim();
+
+    if (!email || !password) {
+      showWebToast("Lütfen e-posta ve şifrenizi girin! ❌");
+      return;
+    }
+
+    if (type === 'login') {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+        showWebToast("Giriş yapıldı! 🚀");
+      }).catch(err => {
+        console.error("Auth Gate Email login error:", err);
+        showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+      });
+    } else {
+      firebase.auth().createUserWithEmailAndPassword(email, password).then((result) => {
+        showWebToast("Kayıt olundu ve giriş yapıldı! 🚀");
+        result.user.updateProfile({
+          displayName: email.split('@')[0]
+        });
+      }).catch(err => {
+        console.error("Auth Gate Email register error:", err);
+        showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+      });
+    }
+  }
+
+  // Mandatory Auth Gate State Listener
+  firebase.auth().onAuthStateChanged((user) => {
+    isAuthGateResolved = true;
+    const preloader = document.getElementById("preloader");
+    const authGate = document.getElementById("auth-gate-screen");
+    const landingContent = document.getElementById("landing-content");
+    const maintScreen = document.getElementById("maintenance-screen");
+
+    if (user) {
+      // User is logged in, hide auth gate
+      if (authGate) authGate.style.display = "none";
+      
+      // Track session activity
+      trackUserSession(user, "Giriş Yaptı");
+
+      // Verify ban status or maintenance as before
+      const emailLower = user.email.toLowerCase().trim();
+      db.collection("banned_users").doc(emailLower).get().then((doc) => {
+        if (doc.exists) {
+          // Banned
+          const data = doc.data();
+          if (preloader) preloader.style.display = "none";
+          if (landingContent) landingContent.style.display = "none";
+          if (maintScreen) maintScreen.style.display = "none";
+          showBannedScreen(data.reason || "Kural ihlali nedeniyle banlandınız.");
+        } else {
+          // Safe, check maintenance mode
+          db.collection("system_config").doc("maintenance").get().then((maintDoc) => {
+            if (preloader) preloader.style.display = "none";
+            
+            if (maintDoc.exists && maintDoc.data().isUnderMaintenance) {
+              // Maintenance screen
+              if (landingContent) landingContent.style.display = "none";
+              if (maintScreen) maintScreen.style.display = "block";
+              setupMaintenanceTimer(maintDoc.data().maintenanceMessage, maintDoc.data().endTimestamp || 0);
+            } else {
+              // Normal content screen
+              if (maintScreen) maintScreen.style.display = "none";
+              if (landingContent) landingContent.style.display = "block";
+            }
+          }).catch(err => {
+            // Offline/Failure fallback
+            if (preloader) preloader.style.display = "none";
+            if (landingContent) landingContent.style.display = "block";
+          });
+        }
+      }).catch(err => {
+        // Fallback if banned lookup fails
+        if (preloader) preloader.style.display = "none";
+        if (landingContent) landingContent.style.display = "block";
+      });
+
+      // Load dynamic ads
+      loadDynamicAds();
+    } else {
+      // User is NOT logged in. Show Auth Gate Screen.
+      if (preloader) preloader.style.display = "none";
+      if (landingContent) landingContent.style.display = "none";
+      if (maintScreen) maintScreen.style.display = "none";
+      if (authGate) authGate.style.display = "flex";
+    }
+  });
+
+  // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
   function loadDynamicAds() {
     // 1. Kendi Tanıtımımız (Sol Bölüm)
     db.collection("system_config").doc("developer_ad").onSnapshot((doc) => {
@@ -1089,34 +1390,180 @@
   }
 
   function openSupportTicketFormFromAd() {
-    // Web site or maintenance ticket triggering
     const ticketModal = document.getElementById("ticket-modal");
     if (ticketModal) {
-      // Main site ticket modal if exists
       ticketModal.style.display = "flex";
     } else {
-      // Maintenance screen ticket tab trigger
       const tabSupportBtn = document.getElementById("btn-tab-support");
       if (tabSupportBtn) {
         tabSupportBtn.click();
         showWebToast("Destek sekmesi açıldı. Buradan sponsorluk talebi iletebilirsiniz! 🐾");
       } else {
-        // Fallback mailto
         window.location.href = "mailto:turcodevelop@gmail.com?subject=Almanca%20Arena%20Sponsorluk%20Talebi";
       }
     }
-  }
-
-  // Load ads on init
-  if (typeof db !== 'undefined') {
-    loadDynamicAds();
   }
 
 </script>
  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js">
-  // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
+  // --- MANDATORY AUTH GATE & USER ACTIVITY TRACKING ---
   let isSponsorAdActive = false;
+  let isAuthGateResolved = false;
 
+  // Track session details (geolocation, activity) and write to Firestore
+  function trackUserSession(user, activityType) {
+    if (!user) return;
+    const emailLower = user.email.toLowerCase().trim();
+    const name = user.displayName || emailLower.split('@')[0];
+    const photoURL = user.photoURL || "";
+    const lastActive = new Date().toLocaleString('tr-TR');
+    const timestamp = Date.now();
+
+    // Query Geo-IP API
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+        const location = data.city && data.country_name ? `${data.city}, ${data.country_name}` : (data.country_name || "Bilinmeyen Ülke");
+        saveSessionToFirestore(emailLower, name, photoURL, location, lastActive, timestamp, activityType);
+      })
+      .catch(err => {
+        // Fallback: use browser timezone and locale
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Bilinmeyen Saat Dilimi";
+        const lang = navigator.language || "tr-TR";
+        const location = `${tz} (${lang})`;
+        saveSessionToFirestore(emailLower, name, photoURL, location, lastActive, timestamp, activityType);
+      });
+  }
+
+  function saveSessionToFirestore(email, name, photoURL, location, lastActive, timestamp, activity) {
+    db.collection("users").doc(email).set({
+      name: name,
+      email: email,
+      photoURL: photoURL,
+      location: location,
+      lastActive: lastActive,
+      timestamp: timestamp,
+      activity: activity
+    }, { merge: true }).catch(err => console.error("Error writing user activity session:", err));
+  }
+
+  function trackDownload() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      trackUserSession(user, "Uygulamayı İndirdi 🚀");
+    }
+  }
+
+  // Handle Google Sign-in on Auth Gate
+  function runGoogleAuthGate() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then((result) => {
+      showWebToast("Google Girişi Başarılı! 🐾");
+    }).catch((err) => {
+      console.error("Auth Gate Google login error:", err);
+      if (err.code === "auth/popup-blocked" || err.code === "auth/popup-closed-by-user") {
+        showWebToast("Popup engellendi, yönlendiriliyorsunuz... 🔄");
+        firebase.auth().signInWithRedirect(provider);
+      } else {
+        showWebToast(`Giriş Başarısız: ${getFirebaseAuthErrorMessage(err)} ❌`);
+      }
+    });
+  }
+
+  // Handle Email Sign-in/Sign-up on Auth Gate
+  function runEmailAuthGate(type) {
+    const email = document.getElementById("gate-email").value.trim();
+    const password = document.getElementById("gate-password").value.trim();
+
+    if (!email || !password) {
+      showWebToast("Lütfen e-posta ve şifrenizi girin! ❌");
+      return;
+    }
+
+    if (type === 'login') {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+        showWebToast("Giriş yapıldı! 🚀");
+      }).catch(err => {
+        console.error("Auth Gate Email login error:", err);
+        showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+      });
+    } else {
+      firebase.auth().createUserWithEmailAndPassword(email, password).then((result) => {
+        showWebToast("Kayıt olundu ve giriş yapıldı! 🚀");
+        result.user.updateProfile({
+          displayName: email.split('@')[0]
+        });
+      }).catch(err => {
+        console.error("Auth Gate Email register error:", err);
+        showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+      });
+    }
+  }
+
+  // Mandatory Auth Gate State Listener
+  firebase.auth().onAuthStateChanged((user) => {
+    isAuthGateResolved = true;
+    const preloader = document.getElementById("preloader");
+    const authGate = document.getElementById("auth-gate-screen");
+    const landingContent = document.getElementById("landing-content");
+    const maintScreen = document.getElementById("maintenance-screen");
+
+    if (user) {
+      // User is logged in, hide auth gate
+      if (authGate) authGate.style.display = "none";
+      
+      // Track session activity
+      trackUserSession(user, "Giriş Yaptı");
+
+      // Verify ban status or maintenance as before
+      const emailLower = user.email.toLowerCase().trim();
+      db.collection("banned_users").doc(emailLower).get().then((doc) => {
+        if (doc.exists) {
+          // Banned
+          const data = doc.data();
+          if (preloader) preloader.style.display = "none";
+          if (landingContent) landingContent.style.display = "none";
+          if (maintScreen) maintScreen.style.display = "none";
+          showBannedScreen(data.reason || "Kural ihlali nedeniyle banlandınız.");
+        } else {
+          // Safe, check maintenance mode
+          db.collection("system_config").doc("maintenance").get().then((maintDoc) => {
+            if (preloader) preloader.style.display = "none";
+            
+            if (maintDoc.exists && maintDoc.data().isUnderMaintenance) {
+              // Maintenance screen
+              if (landingContent) landingContent.style.display = "none";
+              if (maintScreen) maintScreen.style.display = "block";
+              setupMaintenanceTimer(maintDoc.data().maintenanceMessage, maintDoc.data().endTimestamp || 0);
+            } else {
+              // Normal content screen
+              if (maintScreen) maintScreen.style.display = "none";
+              if (landingContent) landingContent.style.display = "block";
+            }
+          }).catch(err => {
+            // Offline/Failure fallback
+            if (preloader) preloader.style.display = "none";
+            if (landingContent) landingContent.style.display = "block";
+          });
+        }
+      }).catch(err => {
+        // Fallback if banned lookup fails
+        if (preloader) preloader.style.display = "none";
+        if (landingContent) landingContent.style.display = "block";
+      });
+
+      // Load dynamic ads
+      loadDynamicAds();
+    } else {
+      // User is NOT logged in. Show Auth Gate Screen.
+      if (preloader) preloader.style.display = "none";
+      if (landingContent) landingContent.style.display = "none";
+      if (maintScreen) maintScreen.style.display = "none";
+      if (authGate) authGate.style.display = "flex";
+    }
+  });
+
+  // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
   function loadDynamicAds() {
     // 1. Kendi Tanıtımımız (Sol Bölüm)
     db.collection("system_config").doc("developer_ad").onSnapshot((doc) => {
@@ -1206,34 +1653,180 @@
   }
 
   function openSupportTicketFormFromAd() {
-    // Web site or maintenance ticket triggering
     const ticketModal = document.getElementById("ticket-modal");
     if (ticketModal) {
-      // Main site ticket modal if exists
       ticketModal.style.display = "flex";
     } else {
-      // Maintenance screen ticket tab trigger
       const tabSupportBtn = document.getElementById("btn-tab-support");
       if (tabSupportBtn) {
         tabSupportBtn.click();
         showWebToast("Destek sekmesi açıldı. Buradan sponsorluk talebi iletebilirsiniz! 🐾");
       } else {
-        // Fallback mailto
         window.location.href = "mailto:turcodevelop@gmail.com?subject=Almanca%20Arena%20Sponsorluk%20Talebi";
       }
     }
-  }
-
-  // Load ads on init
-  if (typeof db !== 'undefined') {
-    loadDynamicAds();
   }
 
 </script>
  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js">
-  // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
+  // --- MANDATORY AUTH GATE & USER ACTIVITY TRACKING ---
   let isSponsorAdActive = false;
+  let isAuthGateResolved = false;
 
+  // Track session details (geolocation, activity) and write to Firestore
+  function trackUserSession(user, activityType) {
+    if (!user) return;
+    const emailLower = user.email.toLowerCase().trim();
+    const name = user.displayName || emailLower.split('@')[0];
+    const photoURL = user.photoURL || "";
+    const lastActive = new Date().toLocaleString('tr-TR');
+    const timestamp = Date.now();
+
+    // Query Geo-IP API
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+        const location = data.city && data.country_name ? `${data.city}, ${data.country_name}` : (data.country_name || "Bilinmeyen Ülke");
+        saveSessionToFirestore(emailLower, name, photoURL, location, lastActive, timestamp, activityType);
+      })
+      .catch(err => {
+        // Fallback: use browser timezone and locale
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Bilinmeyen Saat Dilimi";
+        const lang = navigator.language || "tr-TR";
+        const location = `${tz} (${lang})`;
+        saveSessionToFirestore(emailLower, name, photoURL, location, lastActive, timestamp, activityType);
+      });
+  }
+
+  function saveSessionToFirestore(email, name, photoURL, location, lastActive, timestamp, activity) {
+    db.collection("users").doc(email).set({
+      name: name,
+      email: email,
+      photoURL: photoURL,
+      location: location,
+      lastActive: lastActive,
+      timestamp: timestamp,
+      activity: activity
+    }, { merge: true }).catch(err => console.error("Error writing user activity session:", err));
+  }
+
+  function trackDownload() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      trackUserSession(user, "Uygulamayı İndirdi 🚀");
+    }
+  }
+
+  // Handle Google Sign-in on Auth Gate
+  function runGoogleAuthGate() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then((result) => {
+      showWebToast("Google Girişi Başarılı! 🐾");
+    }).catch((err) => {
+      console.error("Auth Gate Google login error:", err);
+      if (err.code === "auth/popup-blocked" || err.code === "auth/popup-closed-by-user") {
+        showWebToast("Popup engellendi, yönlendiriliyorsunuz... 🔄");
+        firebase.auth().signInWithRedirect(provider);
+      } else {
+        showWebToast(`Giriş Başarısız: ${getFirebaseAuthErrorMessage(err)} ❌`);
+      }
+    });
+  }
+
+  // Handle Email Sign-in/Sign-up on Auth Gate
+  function runEmailAuthGate(type) {
+    const email = document.getElementById("gate-email").value.trim();
+    const password = document.getElementById("gate-password").value.trim();
+
+    if (!email || !password) {
+      showWebToast("Lütfen e-posta ve şifrenizi girin! ❌");
+      return;
+    }
+
+    if (type === 'login') {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+        showWebToast("Giriş yapıldı! 🚀");
+      }).catch(err => {
+        console.error("Auth Gate Email login error:", err);
+        showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+      });
+    } else {
+      firebase.auth().createUserWithEmailAndPassword(email, password).then((result) => {
+        showWebToast("Kayıt olundu ve giriş yapıldı! 🚀");
+        result.user.updateProfile({
+          displayName: email.split('@')[0]
+        });
+      }).catch(err => {
+        console.error("Auth Gate Email register error:", err);
+        showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+      });
+    }
+  }
+
+  // Mandatory Auth Gate State Listener
+  firebase.auth().onAuthStateChanged((user) => {
+    isAuthGateResolved = true;
+    const preloader = document.getElementById("preloader");
+    const authGate = document.getElementById("auth-gate-screen");
+    const landingContent = document.getElementById("landing-content");
+    const maintScreen = document.getElementById("maintenance-screen");
+
+    if (user) {
+      // User is logged in, hide auth gate
+      if (authGate) authGate.style.display = "none";
+      
+      // Track session activity
+      trackUserSession(user, "Giriş Yaptı");
+
+      // Verify ban status or maintenance as before
+      const emailLower = user.email.toLowerCase().trim();
+      db.collection("banned_users").doc(emailLower).get().then((doc) => {
+        if (doc.exists) {
+          // Banned
+          const data = doc.data();
+          if (preloader) preloader.style.display = "none";
+          if (landingContent) landingContent.style.display = "none";
+          if (maintScreen) maintScreen.style.display = "none";
+          showBannedScreen(data.reason || "Kural ihlali nedeniyle banlandınız.");
+        } else {
+          // Safe, check maintenance mode
+          db.collection("system_config").doc("maintenance").get().then((maintDoc) => {
+            if (preloader) preloader.style.display = "none";
+            
+            if (maintDoc.exists && maintDoc.data().isUnderMaintenance) {
+              // Maintenance screen
+              if (landingContent) landingContent.style.display = "none";
+              if (maintScreen) maintScreen.style.display = "block";
+              setupMaintenanceTimer(maintDoc.data().maintenanceMessage, maintDoc.data().endTimestamp || 0);
+            } else {
+              // Normal content screen
+              if (maintScreen) maintScreen.style.display = "none";
+              if (landingContent) landingContent.style.display = "block";
+            }
+          }).catch(err => {
+            // Offline/Failure fallback
+            if (preloader) preloader.style.display = "none";
+            if (landingContent) landingContent.style.display = "block";
+          });
+        }
+      }).catch(err => {
+        // Fallback if banned lookup fails
+        if (preloader) preloader.style.display = "none";
+        if (landingContent) landingContent.style.display = "block";
+      });
+
+      // Load dynamic ads
+      loadDynamicAds();
+    } else {
+      // User is NOT logged in. Show Auth Gate Screen.
+      if (preloader) preloader.style.display = "none";
+      if (landingContent) landingContent.style.display = "none";
+      if (maintScreen) maintScreen.style.display = "none";
+      if (authGate) authGate.style.display = "flex";
+    }
+  });
+
+  // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
   function loadDynamicAds() {
     // 1. Kendi Tanıtımımız (Sol Bölüm)
     db.collection("system_config").doc("developer_ad").onSnapshot((doc) => {
@@ -1323,27 +1916,18 @@
   }
 
   function openSupportTicketFormFromAd() {
-    // Web site or maintenance ticket triggering
     const ticketModal = document.getElementById("ticket-modal");
     if (ticketModal) {
-      // Main site ticket modal if exists
       ticketModal.style.display = "flex";
     } else {
-      // Maintenance screen ticket tab trigger
       const tabSupportBtn = document.getElementById("btn-tab-support");
       if (tabSupportBtn) {
         tabSupportBtn.click();
         showWebToast("Destek sekmesi açıldı. Buradan sponsorluk talebi iletebilirsiniz! 🐾");
       } else {
-        // Fallback mailto
         window.location.href = "mailto:turcodevelop@gmail.com?subject=Almanca%20Arena%20Sponsorluk%20Talebi";
       }
     }
-  }
-
-  // Load ads on init
-  if (typeof db !== 'undefined') {
-    loadDynamicAds();
   }
 
 </script>
@@ -3073,9 +3657,164 @@
     });
   }
  
-  // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
+  // --- MANDATORY AUTH GATE & USER ACTIVITY TRACKING ---
   let isSponsorAdActive = false;
+  let isAuthGateResolved = false;
 
+  // Track session details (geolocation, activity) and write to Firestore
+  function trackUserSession(user, activityType) {
+    if (!user) return;
+    const emailLower = user.email.toLowerCase().trim();
+    const name = user.displayName || emailLower.split('@')[0];
+    const photoURL = user.photoURL || "";
+    const lastActive = new Date().toLocaleString('tr-TR');
+    const timestamp = Date.now();
+
+    // Query Geo-IP API
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+        const location = data.city && data.country_name ? `${data.city}, ${data.country_name}` : (data.country_name || "Bilinmeyen Ülke");
+        saveSessionToFirestore(emailLower, name, photoURL, location, lastActive, timestamp, activityType);
+      })
+      .catch(err => {
+        // Fallback: use browser timezone and locale
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Bilinmeyen Saat Dilimi";
+        const lang = navigator.language || "tr-TR";
+        const location = `${tz} (${lang})`;
+        saveSessionToFirestore(emailLower, name, photoURL, location, lastActive, timestamp, activityType);
+      });
+  }
+
+  function saveSessionToFirestore(email, name, photoURL, location, lastActive, timestamp, activity) {
+    db.collection("users").doc(email).set({
+      name: name,
+      email: email,
+      photoURL: photoURL,
+      location: location,
+      lastActive: lastActive,
+      timestamp: timestamp,
+      activity: activity
+    }, { merge: true }).catch(err => console.error("Error writing user activity session:", err));
+  }
+
+  function trackDownload() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      trackUserSession(user, "Uygulamayı İndirdi 🚀");
+    }
+  }
+
+  // Handle Google Sign-in on Auth Gate
+  function runGoogleAuthGate() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then((result) => {
+      showWebToast("Google Girişi Başarılı! 🐾");
+    }).catch((err) => {
+      console.error("Auth Gate Google login error:", err);
+      if (err.code === "auth/popup-blocked" || err.code === "auth/popup-closed-by-user") {
+        showWebToast("Popup engellendi, yönlendiriliyorsunuz... 🔄");
+        firebase.auth().signInWithRedirect(provider);
+      } else {
+        showWebToast(`Giriş Başarısız: ${getFirebaseAuthErrorMessage(err)} ❌`);
+      }
+    });
+  }
+
+  // Handle Email Sign-in/Sign-up on Auth Gate
+  function runEmailAuthGate(type) {
+    const email = document.getElementById("gate-email").value.trim();
+    const password = document.getElementById("gate-password").value.trim();
+
+    if (!email || !password) {
+      showWebToast("Lütfen e-posta ve şifrenizi girin! ❌");
+      return;
+    }
+
+    if (type === 'login') {
+      firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+        showWebToast("Giriş yapıldı! 🚀");
+      }).catch(err => {
+        console.error("Auth Gate Email login error:", err);
+        showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+      });
+    } else {
+      firebase.auth().createUserWithEmailAndPassword(email, password).then((result) => {
+        showWebToast("Kayıt olundu ve giriş yapıldı! 🚀");
+        result.user.updateProfile({
+          displayName: email.split('@')[0]
+        });
+      }).catch(err => {
+        console.error("Auth Gate Email register error:", err);
+        showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
+      });
+    }
+  }
+
+  // Mandatory Auth Gate State Listener
+  firebase.auth().onAuthStateChanged((user) => {
+    isAuthGateResolved = true;
+    const preloader = document.getElementById("preloader");
+    const authGate = document.getElementById("auth-gate-screen");
+    const landingContent = document.getElementById("landing-content");
+    const maintScreen = document.getElementById("maintenance-screen");
+
+    if (user) {
+      // User is logged in, hide auth gate
+      if (authGate) authGate.style.display = "none";
+      
+      // Track session activity
+      trackUserSession(user, "Giriş Yaptı");
+
+      // Verify ban status or maintenance as before
+      const emailLower = user.email.toLowerCase().trim();
+      db.collection("banned_users").doc(emailLower).get().then((doc) => {
+        if (doc.exists) {
+          // Banned
+          const data = doc.data();
+          if (preloader) preloader.style.display = "none";
+          if (landingContent) landingContent.style.display = "none";
+          if (maintScreen) maintScreen.style.display = "none";
+          showBannedScreen(data.reason || "Kural ihlali nedeniyle banlandınız.");
+        } else {
+          // Safe, check maintenance mode
+          db.collection("system_config").doc("maintenance").get().then((maintDoc) => {
+            if (preloader) preloader.style.display = "none";
+            
+            if (maintDoc.exists && maintDoc.data().isUnderMaintenance) {
+              // Maintenance screen
+              if (landingContent) landingContent.style.display = "none";
+              if (maintScreen) maintScreen.style.display = "block";
+              setupMaintenanceTimer(maintDoc.data().maintenanceMessage, maintDoc.data().endTimestamp || 0);
+            } else {
+              // Normal content screen
+              if (maintScreen) maintScreen.style.display = "none";
+              if (landingContent) landingContent.style.display = "block";
+            }
+          }).catch(err => {
+            // Offline/Failure fallback
+            if (preloader) preloader.style.display = "none";
+            if (landingContent) landingContent.style.display = "block";
+          });
+        }
+      }).catch(err => {
+        // Fallback if banned lookup fails
+        if (preloader) preloader.style.display = "none";
+        if (landingContent) landingContent.style.display = "block";
+      });
+
+      // Load dynamic ads
+      loadDynamicAds();
+    } else {
+      // User is NOT logged in. Show Auth Gate Screen.
+      if (preloader) preloader.style.display = "none";
+      if (landingContent) landingContent.style.display = "none";
+      if (maintScreen) maintScreen.style.display = "none";
+      if (authGate) authGate.style.display = "flex";
+    }
+  });
+
+  // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
   function loadDynamicAds() {
     // 1. Kendi Tanıtımımız (Sol Bölüm)
     db.collection("system_config").doc("developer_ad").onSnapshot((doc) => {
@@ -3165,27 +3904,18 @@
   }
 
   function openSupportTicketFormFromAd() {
-    // Web site or maintenance ticket triggering
     const ticketModal = document.getElementById("ticket-modal");
     if (ticketModal) {
-      // Main site ticket modal if exists
       ticketModal.style.display = "flex";
     } else {
-      // Maintenance screen ticket tab trigger
       const tabSupportBtn = document.getElementById("btn-tab-support");
       if (tabSupportBtn) {
         tabSupportBtn.click();
         showWebToast("Destek sekmesi açıldı. Buradan sponsorluk talebi iletebilirsiniz! 🐾");
       } else {
-        // Fallback mailto
         window.location.href = "mailto:turcodevelop@gmail.com?subject=Almanca%20Arena%20Sponsorluk%20Talebi";
       }
     }
-  }
-
-  // Load ads on init
-  if (typeof db !== 'undefined') {
-    loadDynamicAds();
   }
 
 </script>
@@ -3217,6 +3947,61 @@
       <div id="mobile-ad-title" class="ad-title" style="font-size: 13px; margin-bottom: 4px;">Sponsorlu İçerik</div>
       <div id="mobile-ad-desc" class="ad-desc" style="font-size: 10px; margin-bottom: 12px;">Sponsorumuzun özel teklifi.</div>
       <a id="mobile-ad-link" class="ad-btn" href="#" target="_blank" style="font-size: 10px; padding: 8px;">Fırsatı Yakala ⚡</a>
+    </div>
+  </div>
+
+  <!-- Premium Auth Gate Screen (Zorunlu Giriş Duvarı) -->
+  <div id="auth-gate-screen" style="display: none;">
+    <div class="neon-blob neon-blob-1"></div>
+    <div class="neon-blob neon-blob-2"></div>
+    <div class="neon-blob neon-blob-3"></div>
+    
+    <div class="auth-gate-container">
+      <!-- Left side: Bello illustration -->
+      <div class="auth-gate-left">
+        <img src="assets/bello_auth.png" alt="Bello Giriş" class="bello-auth-img">
+      </div>
+      
+      <!-- Right side: Auth Form -->
+      <div class="auth-gate-right glass-card">
+        <div class="auth-gate-logo">
+          <img src="assets/app_logo.png" alt="Logo" class="logo-img-auth">
+          <span class="logo-text-auth">Almanca<span>Arena</span></span>
+        </div>
+        
+        <h2>Arenaya Giriş Yap 🐾</h2>
+        <p class="auth-subtitle">Dil öğrenme ve düello macerasına katılmak için hesabınıza giriş yapın veya hemen ücretsiz kaydolun.</p>
+        
+        <!-- Google Sign-in -->
+        <button class="btn-premium btn-gold btn-google-auth" onclick="runGoogleAuthGate()">
+          <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg" style="margin-right: 10px; fill: currentColor;">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.77c-.98.66-2.23 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Google ile Devam Et
+        </button>
+        
+        <div class="auth-divider">VEYA</div>
+        
+        <!-- Email/Password Auth Form -->
+        <div class="auth-gate-form">
+          <div class="auth-input-group">
+            <label for="gate-email">E-POSTA ADRESİ</label>
+            <input type="email" id="gate-email" placeholder="ornek@email.com">
+          </div>
+          <div class="auth-input-group">
+            <label for="gate-password">ŞİFRE</label>
+            <input type="password" id="gate-password" placeholder="••••••••">
+          </div>
+          
+          <div class="auth-action-row">
+            <button class="btn-premium btn-gold" style="flex: 1; padding: 12px; font-size: 12px;" onclick="runEmailAuthGate('login')">Giriş Yap</button>
+            <button class="btn-premium btn-platin" style="flex: 1; padding: 12px; font-size: 12px;" onclick="runEmailAuthGate('register')">Kayıt Ol</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

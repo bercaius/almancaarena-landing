@@ -2701,3 +2701,354 @@ input:checked + .slider:before {
     display: flex;
   }
 }
+
+
+/* ==========================================================================
+   Premium Advertisement & Sponsor Banners (Left, Right, and Mobile)
+   ========================================================================== */
+
+/* Side Banners Container */
+.ad-sidebar {
+  position: fixed;
+  top: 20%;
+  width: 150px;
+  z-index: 100;
+  display: none; /* Hidden on mobile/tablet */
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ad-sidebar-left {
+  left: 20px;
+}
+
+.ad-sidebar-right {
+  right: 20px;
+}
+
+/* Glass card styling for ads */
+.ad-card {
+  background: rgba(15, 8, 30, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(223, 186, 115, 0.1);
+  border-radius: 20px;
+  padding: 14px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ad-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(223, 186, 115, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.ad-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-gold);
+  box-shadow: 0 30px 60px rgba(223, 186, 115, 0.12);
+}
+
+.ad-badge {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  background: rgba(212, 175, 55, 0.1);
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.ad-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+  line-height: 1.4;
+  font-family: 'Outfit', sans-serif;
+}
+
+.ad-desc {
+  font-size: 9px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.ad-img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ad-btn {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: var(--color-gold);
+  color: #000;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+}
+
+.ad-btn:hover {
+  background: var(--color-gold-light);
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+/* Mobile Slide-Up Modal */
+.mobile-ad-modal {
+  position: fixed;
+  bottom: -400px; /* Hidden initially, slides up */
+  left: 5%;
+  width: 90%;
+  max-width: 380px;
+  z-index: 1000;
+  background: rgba(10, 5, 22, 0.95);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1.5px solid rgba(223, 186, 115, 0.15);
+  border-radius: 24px;
+  padding: 18px;
+  box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.8);
+  transition: bottom 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+
+.mobile-ad-modal.show {
+  bottom: 25px;
+}
+
+.mobile-ad-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.mobile-ad-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Show ad-sidebar only on desktop */
+@media (min-width: 1400px) {
+  .ad-sidebar {
+    display: flex;
+  }
+}
+
+/* ==========================================================================
+   Premium Mandatory Auth Gate Screen Styles
+   ========================================================================== */
+
+#auth-gate-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: var(--bg-obsidian-gradient);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.auth-gate-container {
+  display: flex;
+  width: 100%;
+  max-width: 900px;
+  align-items: center;
+  gap: 40px;
+}
+
+.auth-gate-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bello-auth-img {
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6));
+  animation: floatMascot 4s ease-in-out infinite;
+}
+
+@keyframes floatMascot {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.auth-gate-right {
+  flex: 1.2;
+  padding: 40px !important;
+  text-align: center;
+}
+
+.auth-gate-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.logo-img-auth {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--color-gold);
+}
+
+.logo-text-auth {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+
+.logo-text-auth span {
+  color: var(--color-gold);
+}
+
+.auth-gate-right h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, #fff 30%, var(--color-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-subtitle {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+.btn-google-auth {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
+}
+
+.auth-divider {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin: 20px 0;
+  position: relative;
+}
+
+.auth-divider::before, .auth-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 38%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.auth-divider::before { left: 0; }
+.auth-divider::after { right: 0; }
+
+.auth-gate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-input-group {
+  text-align: left;
+}
+
+.auth-input-group label {
+  display: block;
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+.auth-input-group input {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.auth-input-group input:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.15);
+}
+
+.auth-action-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .auth-gate-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .auth-gate-left {
+    display: none;
+  }
+  .auth-gate-right {
+    padding: 24px !important;
+  }
+}
