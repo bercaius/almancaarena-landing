@@ -1006,17 +1006,7 @@
 
  if (user) {
  const emailLower = user.email.toLowerCase().trim();
- const allowedEmails = [
- "berkayozdemirtrtr@gmail.com",
- "berkayozdemirmain@gmail.com",
- "turcodevelop@gmail.com"
- ];
-
- // 👑 ADMIN IMMUNITY CHECK! Admins can never be banned.
- if (allowedEmails.includes(emailLower)) {
- clearUserBanStateLocal();
- return;
- }
+ 
 
  // Check if user has admin/moderator/support roles (immune too!)
  db.collection("admin_roles").doc(emailLower).get().then((roleDoc) => {

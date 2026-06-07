@@ -1,86 +1,62 @@
 rules_version = '2';
 
 service cloud.firestore {
- match /databases/{database}/documents {
- 
- // 1. system_config ve admin_roles kuralları!
- match /system_config/{document} {
- allow read: if true; // Herkes okuyabilir (bakım modu durumu için)
- allow write: if request.auth!= null && 
- (request.auth.token.email in [
- "berkayozdemirtrtr@gmail.com",
- "berkayozdemirmain@gmail.com",
- "turcodevelop@gmail.com"
- ] || exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)));
- }
- 
- match /admin_roles/{email} {
- allow read: if request.auth!= null; // Giriş yapmış yetkililer okuyabilir
- allow write: if request.auth!= null && 
- request.auth.token.email in [
- "berkayozdemirtrtr@gmail.com",
- "berkayozdemirmain@gmail.com",
- "turcodevelop@gmail.com"
- ]; // Sadece Kurucular yetki atayabilir
- }
- 
- // 2. feedbacks (Geri bildirimler) kuralları!
- match /feedbacks/{documentId} {
- allow read: if true; // Yorumları herkes okuyabilir
- 
- // Yazma kuralı: Boş yorumları ve çok büyük spamleri engellemek için koruma 
- allow create: if request.resource.data.userName.size() > 0 && 
- request.resource.data.comment.size() > 0 && 
- request.resource.data.comment.size() < 1000 &&
- request.resource.data.timestamp == request.time; 
- 
- // Sadece yetkililer (Admin/Moderatör/Kurucu) yorumları düzenleyebilir veya silebilir
- allow update, delete: if request.auth!= null && 
- (request.auth.token.email in [
- "berkayozdemirtrtr@gmail.com",
- "berkayozdemirmain@gmail.com",
- "turcodevelop@gmail.com"
- ] || exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)));
- }
- 
- // 3. tickets (Destek Talepleri) kuralları!
- match /tickets/{ticketId} {
- // Bilet sorgulamayı herkes yapabilsin diye okuma açık, ancak ID bazlı erişim önerilir
- allow read: if true; 
- 
- // Yeni bilet oluşturma kuralları 
- allow create: if request.resource.data.ticketId == ticketId &&
- request.resource.data.createdAt == request.time;
- 
- // Bilet güncelleme (Mesaj ekleme)
- allow update: if true; 
- 
- // Bilet silme: Sadece Kurucular veya yetkililer silebilir
- allow delete: if request.auth!= null && 
- (request.auth.token.email in [
- "berkayozdemirtrtr@gmail.com",
- "berkayozdemirmain@gmail.com",
- "turcodevelop@gmail.com"
- ] || exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)));
- }
- 
- // 4. banned_users (Banlı Kullanıcılar) kuralları!
- match /banned_users/{email} {
- allow read: if true; // Giriş yaparken ban durumunu sorgulamak için
- 
- // Sadece yetkililer ban atabilir veya kaldırabilir!
- allow write: if request.auth!= null && 
- (request.auth.token.email in [
- "berkayozdemirtrtr@gmail.com",
- "berkayozdemirmain@gmail.com",
- "turcodevelop@gmail.com"
- ] || exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)));
- }
+  match /databases/{database}/documents {
+    
+    // Helper function to check if the user is an authenticated administrator
+    function isAdmin() {
+      return request.auth != null && 
+        exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email));
+    }
+    
+    // Helper function to check if the user is a super administrator (owner/admin role)
+    function isSuperAdmin() {
+      return request.auth != null && 
+        exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)) &&
+        get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "admin";
+    }
 
- // 5. users (Kayıtlı Üyeler) kuralları!
- match /users/{email} {
- allow read: if request.auth!= null; // Giriş yapmış yetkililer üye listesini görebilir
- allow write: if true; // Profil senkronizasyonu için
- }
- }
+    // 1. system_config rules
+    match /system_config/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // 2. admin_roles rules
+    match /admin_roles/{email} {
+      allow read: if request.auth != null;
+      allow write: if isSuperAdmin();
+    }
+    
+    // 3. feedbacks (Geri bildirimler) rules
+    match /feedbacks/{documentId} {
+      allow read: if true;
+      allow create: if request.resource.data.userName.size() > 0 && 
+                    request.resource.data.comment.size() > 0 && 
+                    request.resource.data.comment.size() < 1000 &&
+                    request.resource.data.timestamp == request.time;
+      allow update, delete: if isAdmin();
+    }
+    
+    // 4. tickets (Destek Talepleri) rules
+    match /tickets/{ticketId} {
+      allow read: if true;
+      allow create: if request.resource.data.ticketId == ticketId &&
+                    request.resource.data.createdAt == request.time;
+      allow update: if true;
+      allow delete: if isAdmin();
+    }
+    
+    // 5. banned_users (Banlı Kullanıcılar) rules
+    match /banned_users/{email} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 6. users (Kayıtlı Üyeler) rules
+    match /users/{email} {
+      allow read: if request.auth != null;
+      allow write: if true;
+    }
+  }
 }
