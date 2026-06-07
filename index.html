@@ -757,14 +757,12 @@
   <script>
     window.preloaderTimeout = setTimeout(() => {
       console.warn("Preloader stuck fallback triggered! 🚨 (Offline/CDN issue fallback)");
-      const preloader = document.getElementById('preloader');
-      if (preloader && preloader.style.display !== 'none') {
-        preloader.style.opacity = '0';
-        setTimeout(() => {
-          preloader.style.display = 'none';
-        }, 400);
-        
-        // Show landing content or maintenance as offline fallback
+      isAuthGateResolved = true;
+      if (typeof resolvePageLayout === 'function') {
+        resolvePageLayout();
+      } else {
+        const preloader = document.getElementById('preloader');
+        if (preloader) preloader.style.display = 'none';
         const landingContent = document.getElementById('landing-content');
         if (landingContent) landingContent.style.display = 'block';
       }
@@ -1485,7 +1483,89 @@
   }
 }
 
- function handleMaintenanceMode(isMaint, message, endTimestamp) {
+ 
+  // --- UNIFIED PAGE LAYOUT RESOLVER ---
+  let isCheckingBanStatus = false;
+  
+  function resolvePageLayout() {
+    const preloader = document.getElementById("preloader");
+    const bannedScreen = document.getElementById("banned-screen");
+    const maintScreen = document.getElementById("maintenance-screen");
+    const authGate = document.getElementById("auth-gate-screen");
+    const landingContent = document.getElementById("landing-content");
+
+    // Check states
+    const isLocalBanned = localStorage.getItem("banned_user") === "true";
+    const isMaint = currentConfig && currentConfig.isUnderMaintenance;
+    
+    // Check Auth User
+    let user = null;
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+      user = firebase.auth().currentUser;
+    }
+
+    // Determine target display state
+    let targetPreloader = "none";
+    let targetBanned = "none";
+    let targetMaint = "none";
+    let targetAuth = "none";
+    let targetLanding = "none";
+
+    if (isLocalBanned) {
+      targetBanned = "flex";
+    } else if (isMaint) {
+      targetMaint = "block";
+    } else if (user) {
+      // If user logged in, check ban status in Firestore if not already checking
+      const emailLower = user.email.toLowerCase().trim();
+      targetLanding = "block"; // default fallback until check completes
+      
+      if (typeof db !== 'undefined' && db && !isCheckingBanStatus) {
+        isCheckingBanStatus = true;
+        db.collection("banned_users").doc(emailLower).get().then((doc) => {
+          isCheckingBanStatus = false;
+          if (doc.exists) {
+            localStorage.setItem("banned_user", "true");
+            localStorage.setItem("ban_reason", doc.data().reason || "Kural ihlali nedeniyle banlandınız.");
+            resolvePageLayout(); // re-resolve
+          }
+        }).catch(err => {
+          isCheckingBanStatus = false;
+        });
+      }
+    } else {
+      // Not logged in, show auth gate
+      targetAuth = "flex";
+    }
+
+    // If preloader is still showing, override and hide others
+    const preloaderVisible = preloader && preloader.style.display !== "none" && !isAuthGateResolved;
+    if (preloaderVisible) {
+      // Keep preloader visible
+      if (preloader) preloader.style.display = "flex";
+    } else {
+      if (preloader) {
+        preloader.style.opacity = '0';
+        setTimeout(() => { preloader.style.display = 'none'; }, 400);
+      }
+      
+      // Set the calculated displays
+      if (bannedScreen) bannedScreen.style.display = targetBanned;
+      if (maintScreen) maintScreen.style.display = targetMaint;
+      if (authGate) authGate.style.display = targetAuth;
+      if (landingContent) landingContent.style.display = targetLanding;
+
+      if (targetMaint === "block" && currentConfig) {
+        handleMaintenanceMode(true, currentConfig.maintenanceMessage, currentConfig.endTimestamp);
+      }
+      
+      if (targetLanding === "block") {
+        loadDynamicAds();
+      }
+    }
+  }
+
+  function handleMaintenanceMode(isMaint, message, endTimestamp) {
  const landingContent = document.getElementById('landing-content');
  const maintScreen = document.getElementById('maintenance-screen');
  const maintMessage = document.getElementById('maint-message');
@@ -2901,85 +2981,14 @@
   if (typeof firebase !== 'undefined' && firebase.auth) {
     firebase.auth().onAuthStateChanged((user) => {
       isAuthGateResolved = true;
-      const preloader = document.getElementById("preloader");
-      const authGate = document.getElementById("auth-gate-screen");
-      const landingContent = document.getElementById("landing-content");
-      const maintScreen = document.getElementById("maintenance-screen");
-
       if (user) {
-        // User is logged in, hide auth gate
-        if (authGate) authGate.style.display = "none";
-        
-        // Track session activity
         trackUserSession(user, "Giriş Yaptı");
-
-        // Verify ban status or maintenance as before
-        const emailLower = user.email.toLowerCase().trim();
-        if (typeof db !== 'undefined' && db) {
-          db.collection("banned_users").doc(emailLower).get().then((doc) => {
-            if (doc.exists) {
-              // Banned
-              const data = doc.data();
-              if (preloader) preloader.style.display = "none";
-              if (landingContent) landingContent.style.display = "none";
-              if (maintScreen) maintScreen.style.display = "none";
-              showBannedScreen(data.reason || "Kural ihlali nedeniyle banlandınız.");
-            } else {
-              // Safe, check maintenance mode
-              db.collection("system_config").doc("maintenance").get().then((maintDoc) => {
-                if (preloader) preloader.style.display = "none";
-                
-                if (maintDoc.exists && maintDoc.data().isUnderMaintenance) {
-                  // Maintenance screen
-                  if (landingContent) landingContent.style.display = "none";
-                  if (maintScreen) maintScreen.style.display = "block";
-                  setupMaintenanceTimer(maintDoc.data().maintenanceMessage, maintDoc.data().endTimestamp || 0);
-                } else {
-                  // Normal content screen
-                  if (maintScreen) maintScreen.style.display = "none";
-                  if (landingContent) landingContent.style.display = "block";
-                }
-              }).catch(err => {
-                // Offline/Failure fallback
-                if (preloader) preloader.style.display = "none";
-                if (landingContent) landingContent.style.display = "block";
-              });
-            }
-          }).catch(err => {
-            // Fallback if banned lookup fails
-            if (preloader) preloader.style.display = "none";
-            if (landingContent) landingContent.style.display = "block";
-          });
-        } else {
-          // No db fallback
-          if (preloader) preloader.style.display = "none";
-          if (landingContent) landingContent.style.display = "block";
-        }
-
-        // Load dynamic ads
-        loadDynamicAds();
-      } else {
-        // User is NOT logged in. Show Auth Gate Screen.
-        if (preloader) preloader.style.display = "none";
-        if (landingContent) landingContent.style.display = "none";
-        if (maintScreen) maintScreen.style.display = "none";
-        if (authGate) authGate.style.display = "flex";
       }
+      resolvePageLayout();
     });
   } else {
-    // Offline / Firebase not loaded fallback kanka!
     isAuthGateResolved = true;
-    const preloader = document.getElementById("preloader");
-    const authGate = document.getElementById("auth-gate-screen");
-    const landingContent = document.getElementById("landing-content");
-    const maintScreen = document.getElementById("maintenance-screen");
-    
-    if (preloader) preloader.style.display = "none";
-    if (authGate) authGate.style.display = "none";
-    if (maintScreen) maintScreen.style.display = "none";
-    if (landingContent) landingContent.style.display = "block";
-    
-    loadDynamicAds();
+    resolvePageLayout();
   }
 
   // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
