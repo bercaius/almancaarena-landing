@@ -74,7 +74,7 @@ h1, h2, h3, h4, .font-display {
 /* Layout Utilities */
 .container {
   width: 90%;
-  max-width: 1100px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 100px 0;
 }
@@ -126,7 +126,7 @@ header.scrolled {
   justify-content: space-between;
   align-items: center;
   width: 90%;
-  max-width: 1100px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 10px 30px;
   background: rgba(255, 255, 255, 0.01);
@@ -634,7 +634,7 @@ nav a:hover::after {
 
 .medal-img {
   width: 90px;
-  height: 90px;
+  height: 120px;
   object-fit: contain;
   z-index: 2;
   transition: transform 0.4s ease;
@@ -1654,7 +1654,7 @@ footer {
 /* Desktop Dual Column Layout (From 992px wide) */
 @media (min-width: 992px) {
   .maintenance-container {
-    max-width: 1100px;
+    max-width: 1300px;
     width: 100%;
     margin: 50px auto !important; /* Centered horizontally with top/bottom margin kanka! */
     padding: 40px 50px;
@@ -2538,15 +2538,15 @@ input:checked + .slider:before {
    Premium Advertisement & Sponsor Banners (Left, Right, and Mobile)
    ========================================================================== */
 
-/* Side Banners Container */
+/* Side Banners Container - Luxury Spacing */
 .ad-sidebar {
   position: fixed;
-  top: 20%;
-  width: 150px;
+  top: 18%;
+  width: 220px;
   z-index: 100;
   display: none; /* Hidden on mobile/tablet */
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 .ad-sidebar-left {
@@ -2559,14 +2559,14 @@ input:checked + .slider:before {
 
 /* Glass card styling for ads */
 .ad-card {
-  background: rgba(15, 8, 30, 0.55);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1.5px solid rgba(223, 186, 115, 0.1);
-  border-radius: 20px;
-  padding: 14px;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(10, 5, 22, 0.75);
+  backdrop-filter: blur(35px);
+  -webkit-backdrop-filter: blur(35px);
+  border: 1.5px solid rgba(212, 175, 55, 0.2);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), 0 0 30px rgba(212, 175, 55, 0.02);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -2603,7 +2603,7 @@ input:checked + .slider:before {
 }
 
 .ad-title {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
   color: #fff;
   margin-bottom: 6px;
@@ -2612,7 +2612,7 @@ input:checked + .slider:before {
 }
 
 .ad-desc {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--text-secondary);
   line-height: 1.5;
   margin-bottom: 12px;
@@ -2620,7 +2620,7 @@ input:checked + .slider:before {
 
 .ad-img {
   width: 100%;
-  height: 90px;
+  height: 120px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 10px;
@@ -2696,7 +2696,7 @@ input:checked + .slider:before {
 }
 
 /* Show ad-sidebar only on desktop */
-@media (min-width: 1400px) {
+@media (min-width: 1780px) {
   .ad-sidebar {
     display: flex;
   }
@@ -2707,15 +2707,15 @@ input:checked + .slider:before {
    Premium Advertisement & Sponsor Banners (Left, Right, and Mobile)
    ========================================================================== */
 
-/* Side Banners Container */
+/* Side Banners Container - Luxury Spacing */
 .ad-sidebar {
   position: fixed;
-  top: 20%;
-  width: 150px;
+  top: 18%;
+  width: 220px;
   z-index: 100;
   display: none; /* Hidden on mobile/tablet */
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 .ad-sidebar-left {
@@ -2728,14 +2728,14 @@ input:checked + .slider:before {
 
 /* Glass card styling for ads */
 .ad-card {
-  background: rgba(15, 8, 30, 0.55);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1.5px solid rgba(223, 186, 115, 0.1);
-  border-radius: 20px;
-  padding: 14px;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(10, 5, 22, 0.75);
+  backdrop-filter: blur(35px);
+  -webkit-backdrop-filter: blur(35px);
+  border: 1.5px solid rgba(212, 175, 55, 0.2);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), 0 0 30px rgba(212, 175, 55, 0.02);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -2772,7 +2772,7 @@ input:checked + .slider:before {
 }
 
 .ad-title {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
   color: #fff;
   margin-bottom: 6px;
@@ -2781,7 +2781,7 @@ input:checked + .slider:before {
 }
 
 .ad-desc {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--text-secondary);
   line-height: 1.5;
   margin-bottom: 12px;
@@ -2789,7 +2789,7 @@ input:checked + .slider:before {
 
 .ad-img {
   width: 100%;
-  height: 90px;
+  height: 120px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 10px;
@@ -2865,7 +2865,7 @@ input:checked + .slider:before {
 }
 
 /* Show ad-sidebar only on desktop */
-@media (min-width: 1400px) {
+@media (min-width: 1780px) {
   .ad-sidebar {
     display: flex;
   }
@@ -2961,7 +2961,7 @@ input:checked + .slider:before {
 }
 
 .auth-subtitle {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.5;
   margin-bottom: 25px;
