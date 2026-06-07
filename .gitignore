@@ -13,5 +13,6 @@ Desktop.ini
 *.sln
 *.swp
 
-# Admin Panel (Local & Secret Only kanka!)
-admin.html
+
+# Private components
+private-admin/
