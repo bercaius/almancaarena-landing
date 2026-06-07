@@ -1947,7 +1947,6 @@ footer {
 @media (max-width: 991px) {
   #maintenance-screen {
     padding: 20px 8px !important;
-    display: block !important; /* Block layout to allow perfect scrolling kanka! */
   }
 
   .maintenance-container {
