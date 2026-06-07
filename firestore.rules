@@ -6,7 +6,10 @@ service cloud.firestore {
     // Helper function to check if the user is an authenticated administrator (admin/moderator/support)
     function isAdmin() {
       return request.auth != null && 
-        exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email));
+        exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)) &&
+        (get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "admin" ||
+         get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "support" ||
+         get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "moderator");
     }
     
     // Helper function to check if the user is a super administrator (owner/admin role)
@@ -83,8 +86,16 @@ service cloud.firestore {
 
     // 6. users (Kayıtlı Üyeler) rules
     match /users/{email} {
-      allow read: if request.auth != null;
-      allow write: if true;
+      allow read: if isAdmin() || (request.auth != null && request.auth.token.email.lower() == email.lower());
+      allow write: if isAdmin() || (request.auth != null && request.auth.token.email.lower() == email.lower());
+    }
+
+    // 7. admin_login_logs (Yönetici Giriş Günlüğü) rules
+    match /admin_login_logs/{logId} {
+      allow read: if isSuperAdmin();
+      allow create: if request.auth != null;
+      allow update, delete: if false;
     }
   }
 }
+
