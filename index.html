@@ -748,8 +748,51 @@
  </div>
  </div> <!-- end of #landing-content -->
 
+  <!-- Firebase Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <!-- Preloader Timeout Fallback kanka! -->
+  <script>
+    window.preloaderTimeout = setTimeout(() => {
+      console.warn("Preloader stuck fallback triggered! 🚨 (Offline/CDN issue fallback)");
+      const preloader = document.getElementById('preloader');
+      if (preloader && preloader.style.display !== 'none') {
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 400);
+        
+        // Show landing content or maintenance as offline fallback
+        const landingContent = document.getElementById('landing-content');
+        if (landingContent) landingContent.style.display = 'block';
+      }
+    }, 3500);
+  </script>
+
  <!-- Core Scripts for Interactions -->
  <script>
+  // Firebase Config kanka!
+  const firebaseConfig = {
+    apiKey: "AIzaSyBgP9Cr_XuIdcCx7RZykQNP9b93YuP1MYo",
+    authDomain: "almanca-arena.firebaseapp.com",
+    projectId: "almanca-arena",
+    storageBucket: "almanca-arena.firebasestorage.app",
+    messagingSenderId: "274345916793",
+    appId: "1:274345916793:android:e69ae7186ab295603817a8"
+  };
+
+  let db;
+  if (typeof firebase !== 'undefined') {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    db = firebase.firestore();
+  } else {
+    console.error("Firebase SDK could not be loaded! Running in offline-fallback mode.");
+  }
+
  // Header scrolled behavior
  window.addEventListener('scroll', function() {
  const header = document.getElementById('main-header');
@@ -862,7 +905,8 @@
  if (modalOverlay) {
  modalOverlay.classList.remove('active');
  }
-    const belloDreams = [
+ }
+     const belloDreams = [
     "arkadaslar bi sakin olun her seyi kontrol altina aliyoruz su an (yalan söylüyor) 🤫",
     "guncelleme yapiyoruz dediysek sirketi satmadik ya, iki dk bekleyin gelicem 🏃‍♂️",
     "veri tabanini temizlerken yanlislikla bir seyler sildim ama caktirmayin, toparliyoruz 🧹",
@@ -1131,15 +1175,7 @@
  return hashHex;
  }
 
- function hidePreloader() {
- const preloader = document.getElementById('preloader');
- if (preloader) {
- preloader.style.opacity = '0';
- setTimeout(() => {
- preloader.style.display = 'none';
- }, 400);
- }
- }
+ 
 
  function checkUserBanStatus(user) {
  const isLocalBanned = localStorage.getItem("banned_user") === "true";
@@ -1405,10 +1441,12 @@
  // Timeout fallback (5 seconds) to hide preloader if Firestore fails
  const fallbackTimeout = setTimeout(() => {
  hidePreloader();
- document.getElementById('landing-content').style.display = 'block';
+ const landing = document.getElementById('landing-content');
+ if (landing) landing.style.display = 'block';
  }, 5000);
 
  // Listen to maintenance config
+ if (typeof db !== 'undefined' && db) {
  db.collection("system_config").doc("maintenance").onSnapshot((doc) => {
  clearTimeout(fallbackTimeout);
  if (doc.exists) {
@@ -1417,24 +1455,35 @@
  handleMaintenanceMode(data.isUnderMaintenance, data.maintenanceMessage, data.endTimestamp || 0);
  } else {
  hidePreloader();
- document.getElementById('landing-content').style.display = 'block';
+ const landing = document.getElementById('landing-content');
+ if (landing) landing.style.display = 'block';
  }
  }, (error) => {
  console.error("Firestore connection error:", error);
  clearTimeout(fallbackTimeout);
  hidePreloader();
- document.getElementById('landing-content').style.display = 'block';
+ const landing = document.getElementById('landing-content');
+ if (landing) landing.style.display = 'block';
  });
+ } else {
+ // Offline / Firebase not loaded fallback
+ clearTimeout(fallbackTimeout);
+ if (window.preloaderTimeout) clearTimeout(window.preloaderTimeout);
+ hidePreloader();
+ const landing = document.getElementById('landing-content');
+ if (landing) landing.style.display = 'block';
+ }
 
  function hidePreloader() {
- const preloader = document.getElementById('preloader');
- if (preloader) {
- preloader.style.opacity = '0';
- setTimeout(() => {
- preloader.style.display = 'none';
- }, 400);
- }
- }
+  if (window.preloaderTimeout) clearTimeout(window.preloaderTimeout);
+  const preloader = document.getElementById('preloader');
+  if (preloader) {
+    preloader.style.opacity = '0';
+    setTimeout(() => {
+      preloader.style.display = 'none';
+    }, 400);
+  }
+}
 
  function handleMaintenanceMode(isMaint, message, endTimestamp) {
  const landingContent = document.getElementById('landing-content');
@@ -1516,6 +1565,7 @@
  }
 
  // --- Feedbacks Online Listener ---
+ if (typeof db !== 'undefined' && db) {
  db.collection("feedbacks").orderBy("timestamp", "desc").limit(30).onSnapshot((querySnapshot) => {
  const listContainer = document.getElementById("feedback-display-list");
  if (!listContainer) return;
@@ -1607,6 +1657,17 @@
  }, (error) => {
  console.error("Geri bildirim dinleme hatası:", error);
  });
+ } else {
+ // Offline / Firebase not loaded fallback
+ const listContainer = document.getElementById("feedback-display-list");
+ if (listContainer) {
+ listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 20px;">Çevrimdışı moddasınız. Yorumlar yüklenemedi. 🔌</div>`;
+ }
+ const landingList = document.getElementById("landing-feedback-display-list");
+ if (landingList) {
+ landingList.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 20px;">Çevrimdışı moddasınız. Yorumlar yüklenemedi. 🔌</div>`;
+ }
+ }
 
  // Mobil Sekme Geçişi
  function switchMobileTab(tabName) {
@@ -1942,6 +2003,7 @@
  }
 
  // Auth state listener
+ if (typeof firebase !== 'undefined' && firebase.auth) {
  firebase.auth().onAuthStateChanged((user) => {
  currentUser = user;
  checkUserBanStatus(user);
@@ -1980,6 +2042,7 @@
  }
 
  // Save/Sync user registration details on Firestore users collection!
+ if (typeof db !== 'undefined' && db) {
  db.collection("users").doc(user.email.toLowerCase().trim()).set({
  name: user.displayName,
  email: user.email,
@@ -1987,6 +2050,7 @@
  lastActive: "Web Sitesi",
  timestamp: Date.now()
  }, { merge: true }).catch(err => console.error("Error saving user profile:", err));
+ }
 
  if (tktName) {
  tktName.value = user.displayName;
@@ -2033,8 +2097,11 @@
  }
 
  // Load tickets list automatically
+ if (typeof db !== 'undefined' && db) {
  loadMyTicketsList();
+ }
  });
+ }
 
  function loadMyTicketsList() {
  const ticketsSection = document.getElementById("my-tickets-section");
@@ -2129,6 +2196,10 @@
  // Create Ticket
  function createTicket(event) {
  event.preventDefault();
+ if (typeof db === 'undefined' || !db) {
+ showWebToast("Şu an çevrimdışısınız veya Firebase bağlantısı kurulamadı. 🔌");
+ return;
+ }
  const name = document.getElementById("tkt-name").value.trim();
  const email = document.getElementById("tkt-email").value.trim();
  const subject = document.getElementById("tkt-subject").value.trim();
@@ -2194,6 +2265,10 @@
 
  // Query Ticket
  function queryTicket() {
+ if (typeof db === 'undefined' || !db) {
+ showWebToast("Şu an çevrimdışısınız veya Firebase bağlantısı kurulamadı. 🔌");
+ return;
+ }
  const code = document.getElementById("tkt-code-input").value.trim().toUpperCase();
  if (!code) {
  showWebToast("Lütfen bir destek kodu gir! 🐾");
@@ -2448,6 +2523,10 @@
  // --- Feedback Submit Handler ---
  function submitFeedback(event) {
  event.preventDefault();
+ if (typeof db === 'undefined' || !db) {
+ showWebToast("Şu an çevrimdışısınız veya Firebase bağlantısı kurulamadı. 🔌");
+ return;
+ }
  
  const userNameInput = document.getElementById("fb-user");
  const categorySelect = document.getElementById("fb-category");
@@ -2819,70 +2898,97 @@
   }
 
   // Mandatory Auth Gate State Listener
-  firebase.auth().onAuthStateChanged((user) => {
+  if (typeof firebase !== 'undefined' && firebase.auth) {
+    firebase.auth().onAuthStateChanged((user) => {
+      isAuthGateResolved = true;
+      const preloader = document.getElementById("preloader");
+      const authGate = document.getElementById("auth-gate-screen");
+      const landingContent = document.getElementById("landing-content");
+      const maintScreen = document.getElementById("maintenance-screen");
+
+      if (user) {
+        // User is logged in, hide auth gate
+        if (authGate) authGate.style.display = "none";
+        
+        // Track session activity
+        trackUserSession(user, "Giriş Yaptı");
+
+        // Verify ban status or maintenance as before
+        const emailLower = user.email.toLowerCase().trim();
+        if (typeof db !== 'undefined' && db) {
+          db.collection("banned_users").doc(emailLower).get().then((doc) => {
+            if (doc.exists) {
+              // Banned
+              const data = doc.data();
+              if (preloader) preloader.style.display = "none";
+              if (landingContent) landingContent.style.display = "none";
+              if (maintScreen) maintScreen.style.display = "none";
+              showBannedScreen(data.reason || "Kural ihlali nedeniyle banlandınız.");
+            } else {
+              // Safe, check maintenance mode
+              db.collection("system_config").doc("maintenance").get().then((maintDoc) => {
+                if (preloader) preloader.style.display = "none";
+                
+                if (maintDoc.exists && maintDoc.data().isUnderMaintenance) {
+                  // Maintenance screen
+                  if (landingContent) landingContent.style.display = "none";
+                  if (maintScreen) maintScreen.style.display = "block";
+                  setupMaintenanceTimer(maintDoc.data().maintenanceMessage, maintDoc.data().endTimestamp || 0);
+                } else {
+                  // Normal content screen
+                  if (maintScreen) maintScreen.style.display = "none";
+                  if (landingContent) landingContent.style.display = "block";
+                }
+              }).catch(err => {
+                // Offline/Failure fallback
+                if (preloader) preloader.style.display = "none";
+                if (landingContent) landingContent.style.display = "block";
+              });
+            }
+          }).catch(err => {
+            // Fallback if banned lookup fails
+            if (preloader) preloader.style.display = "none";
+            if (landingContent) landingContent.style.display = "block";
+          });
+        } else {
+          // No db fallback
+          if (preloader) preloader.style.display = "none";
+          if (landingContent) landingContent.style.display = "block";
+        }
+
+        // Load dynamic ads
+        loadDynamicAds();
+      } else {
+        // User is NOT logged in. Show Auth Gate Screen.
+        if (preloader) preloader.style.display = "none";
+        if (landingContent) landingContent.style.display = "none";
+        if (maintScreen) maintScreen.style.display = "none";
+        if (authGate) authGate.style.display = "flex";
+      }
+    });
+  } else {
+    // Offline / Firebase not loaded fallback kanka!
     isAuthGateResolved = true;
     const preloader = document.getElementById("preloader");
     const authGate = document.getElementById("auth-gate-screen");
     const landingContent = document.getElementById("landing-content");
     const maintScreen = document.getElementById("maintenance-screen");
-
-    if (user) {
-      // User is logged in, hide auth gate
-      if (authGate) authGate.style.display = "none";
-      
-      // Track session activity
-      trackUserSession(user, "Giriş Yaptı");
-
-      // Verify ban status or maintenance as before
-      const emailLower = user.email.toLowerCase().trim();
-      db.collection("banned_users").doc(emailLower).get().then((doc) => {
-        if (doc.exists) {
-          // Banned
-          const data = doc.data();
-          if (preloader) preloader.style.display = "none";
-          if (landingContent) landingContent.style.display = "none";
-          if (maintScreen) maintScreen.style.display = "none";
-          showBannedScreen(data.reason || "Kural ihlali nedeniyle banlandınız.");
-        } else {
-          // Safe, check maintenance mode
-          db.collection("system_config").doc("maintenance").get().then((maintDoc) => {
-            if (preloader) preloader.style.display = "none";
-            
-            if (maintDoc.exists && maintDoc.data().isUnderMaintenance) {
-              // Maintenance screen
-              if (landingContent) landingContent.style.display = "none";
-              if (maintScreen) maintScreen.style.display = "block";
-              setupMaintenanceTimer(maintDoc.data().maintenanceMessage, maintDoc.data().endTimestamp || 0);
-            } else {
-              // Normal content screen
-              if (maintScreen) maintScreen.style.display = "none";
-              if (landingContent) landingContent.style.display = "block";
-            }
-          }).catch(err => {
-            // Offline/Failure fallback
-            if (preloader) preloader.style.display = "none";
-            if (landingContent) landingContent.style.display = "block";
-          });
-        }
-      }).catch(err => {
-        // Fallback if banned lookup fails
-        if (preloader) preloader.style.display = "none";
-        if (landingContent) landingContent.style.display = "block";
-      });
-
-      // Load dynamic ads
-      loadDynamicAds();
-    } else {
-      // User is NOT logged in. Show Auth Gate Screen.
-      if (preloader) preloader.style.display = "none";
-      if (landingContent) landingContent.style.display = "none";
-      if (maintScreen) maintScreen.style.display = "none";
-      if (authGate) authGate.style.display = "flex";
-    }
-  });
+    
+    if (preloader) preloader.style.display = "none";
+    if (authGate) authGate.style.display = "none";
+    if (maintScreen) maintScreen.style.display = "none";
+    if (landingContent) landingContent.style.display = "block";
+    
+    loadDynamicAds();
+  }
 
   // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
   function loadDynamicAds() {
+    if (typeof db === 'undefined' || !db) {
+      showOfflineAdsFallback();
+      return;
+    }
+
     // 1. Kendi Tanıtımımız (Sol Bölüm)
     db.collection("system_config").doc("developer_ad").onSnapshot((doc) => {
       if (doc.exists) {
@@ -2962,6 +3068,30 @@
     }, 2500);
   }
 
+  function showOfflineAdsFallback() {
+    const leftContainer = document.getElementById("left-ad-container");
+    const rightCard = document.getElementById("right-ad-card");
+    const rightContainer = document.getElementById("right-ad-container");
+    
+    if (leftContainer) {
+      document.getElementById("left-ad-title").innerText = "Almanca Arena";
+      document.getElementById("left-ad-desc").innerText = "Bello ile Almanca öğrenme arenası!";
+      const img = document.getElementById("left-ad-img");
+      if (img) img.style.display = "none";
+      leftContainer.style.display = "flex";
+    }
+    
+    if (rightCard) {
+      rightCard.innerHTML = `
+        <span class="ad-badge">Sponsorluk</span>
+        <div class="ad-title">Sponsorumuz Olun 💎</div>
+        <div class="ad-desc">Projemize sponsor olarak binlerce kişiye ulaşın. İletişim için e-posta gönderin.</div>
+        <a class="ad-btn" style="background: transparent; border: 1.5px solid var(--color-gold); color: var(--color-gold); margin-bottom: 6px;" href="mailto:turcodevelop@gmail.com?subject=Almanca%20Arena%20Sponsorluk%20Talebi">E-posta Gönder 📧</a>
+      `;
+      if (rightContainer) rightContainer.style.display = "flex";
+    }
+  }
+
   function closeMobileAd() {
     const mobileContainer = document.getElementById("mobile-ad-container");
     if (mobileContainer) {
@@ -2998,8 +3128,12 @@
   let activeModalTicketId = null;
   let modalChatListener = null;
 
-  function createTicketModal(e) {
-    e.preventDefault();
+   function createTicketModal(e) {
+     e.preventDefault();
+     if (typeof db === 'undefined' || !db) {
+       showWebToast("Şu an çevrimdışısınız veya Firebase bağlantısı kurulamadı. 🔌");
+       return;
+     }
     const name = document.getElementById("modal-tkt-name").value.trim();
     const email = document.getElementById("modal-tkt-email").value.trim();
     const subject = document.getElementById("modal-tkt-subject").value.trim();
@@ -3049,8 +3183,12 @@
     });
   }
 
-  function queryTicketModal() {
-    const code = document.getElementById("modal-tkt-code-input").value.trim();
+   function queryTicketModal() {
+     if (typeof db === 'undefined' || !db) {
+       showWebToast("Şu an çevrimdışısınız veya Firebase bağlantısı kurulamadı. 🔌");
+       return;
+     }
+     const code = document.getElementById("modal-tkt-code-input").value.trim();
     if (!code) {
       showWebToast("Lütfen bilet kodunu girin! 🐾");
       return;
