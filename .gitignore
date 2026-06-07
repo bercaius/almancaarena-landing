@@ -12,3 +12,6 @@ Desktop.ini
 *.njsproj
 *.sln
 *.swp
+
+# Admin Panel (Local & Secret Only kanka!)
+admin.html
