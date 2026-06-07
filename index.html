@@ -135,7 +135,7 @@
  <div class="ticket-section" id="maint-mobile-sec-support">
  <p class="social-title-maint">🎫 Özel Destek Odası (Ticket)</p>
  <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4; text-align: left;">
- Bizimle özel olarak mesajlaşabilirsin. Talepler yoğunluğa göre geç yanıtlanabilir. Acil durumlarda doğrudan <strong>turcodevelop@gmail.com</strong> adresine yazabilirsin.
+ Bizimle özel olarak mesajlaşabilirsin. Talepler yoğunluğa göre geç yanıtlanabilir. Acil durumlarda Instagram üzerinden iletişime geçebilirsin.
  </p>
  
  <!-- User Authentication Panel -->
@@ -334,6 +334,7 @@
  <li><a href="#ai-coach" id="link-coach">AI Koç</a></li>
  <li><a href="#playground" id="link-playground">Mini Oyun</a></li>
  <li><a href="#gamification" id="link-gamification">Başarılar</a></li>
+ <li><a href="#reviews" id="link-reviews">Değerlendirmeler</a></li>
  <li><a href="#download" class="btn-premium btn-gold" id="link-download-btn">Hemen İndir</a></li>
  <li id="nav-auth-container" style="display: inline-flex; align-items: center;"></li>
  </ul>
@@ -538,6 +539,34 @@
  <span>Dosya Boyutu: <strong>~94 MB</strong></span>
  <span>Güvenlik Durumu: <strong>%100 Güvenli (Virus & Malware Free)</strong></span>
  </div>
+ </div>
+ </section>
+
+
+ <!-- ==========================================================================
+ COMMUNITY REVIEWS & FEEDBACK SECTION
+ ========================================================================== -->
+ <section class="container" id="reviews" style="padding-top: 60px; padding-bottom: 40px;">
+ <h2 class="section-title" style="text-align: center; margin-bottom: 30px;">Kullanıcı Değerlendirmeleri</h2>
+ <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">Arena savaşçılarının düşüncelerini oku ve sen de fikrini paylaş!</p>
+ 
+ <div class="glass-card" style="padding: 25px; max-width: 800px; margin: 0 auto;">
+ <div class="feedback-list" id="landing-feedback-display-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px;">
+ <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 20px;">Yorumlar yükleniyor...</div>
+ </div>
+ 
+ <form class="feedback-form" id="landing-feedback-form" onsubmit="submitLandingFeedback(event)" style="display: flex; flex-direction: column; gap: 10px;">
+ <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+ <input type="text" id="landing-fb-user" placeholder="Adınız / Rumuz" required class="maint-input" style="flex: 3; min-width: 150px; font-size: 0.82rem; padding: 10px 14px;">
+ <select id="landing-fb-category" class="maint-input" style="flex: 2; min-width: 120px; font-size: 0.82rem; padding: 10px 14px;">
+ <option value="thanks">Teşekkür 😊</option>
+ <option value="suggestion">Öneri 💡</option>
+ <option value="bug">Hata Bildirimi 🛠️</option>
+ </select>
+ </div>
+ <textarea id="landing-fb-comment" placeholder="Almanca Arena hakkındaki görüşlerinizi yazın..." required class="maint-input" style="font-size: 0.82rem; padding: 10px 14px; min-height: 80px; resize: vertical;"></textarea>
+ <button class="btn-premium btn-gold" type="submit" style="font-size: 0.85rem; padding: 12px; align-self: flex-end; min-width: 200px;">Geri Bildirim Gönder 🐾</button>
+ </form>
  </div>
  </section>
 
@@ -1435,6 +1464,31 @@
  `;
  listContainer.appendChild(card);
  });
+
+  // Also render to the landing page reviews section
+  const landingList = document.getElementById("landing-feedback-display-list");
+  if (landingList) {
+    landingList.innerHTML = "";
+    if (feedbacks.length === 0) {
+      landingList.innerHTML = '<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 20px;">Henüz yorum yok. İlk yorumu sen at! 🐾</div>';
+    } else {
+      feedbacks.forEach((data) => {
+        const lCard = document.createElement("div");
+        lCard.className = "feedback-card";
+        if (data.pinned) lCard.classList.add("pinned-card");
+        let lTagClass = "tag-thanks", lTagText = "Teşekkür";
+        if (data.category === "bug") { lTagClass = "tag-bug"; lTagText = "Hata Bildirimi"; }
+        else if (data.category === "suggestion") { lTagClass = "tag-suggestion"; lTagText = "Öneri"; }
+        let lPinnedBadge = data.pinned ? '<span class="pinned-badge">📌 Sabitlenen</span>' : "";
+        let lReplyHtml = "";
+        if (data.reply) {
+          lReplyHtml = '<div class="feedback-reply-box"><div class="feedback-reply-title">🏢 TurcoDevelop Admin:</div><div>' + data.reply + '</div></div>';
+        }
+        lCard.innerHTML = '<div class="feedback-user-row"><span class="feedback-user">' + escapeHtml(data.userName) + ' ' + lPinnedBadge + '</span><span class="feedback-tag ' + lTagClass + '">' + lTagText + '</span></div><p class="feedback-comment">' + escapeHtml(data.comment) + '</p>' + lReplyHtml;
+        landingList.appendChild(lCard);
+      });
+    }
+  }
  }, (error) => {
  console.error("Geri bildirim dinleme hatası:", error);
  });
@@ -2011,7 +2065,7 @@
  ${ticketCode}
  <button class="store-code-btn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: auto; padding: 4px 10px; font-size: 0.65rem;" onclick="copyPromoCode('${ticketCode}')">Kopyala 📋</button>
  </div>
- <p class="ticket-warn-txt">⚠️ Önemli: Yoğunluğa bağlı olarak yanıt süremiz uzayabilir. Acil konularda doğrudan <strong>turcodevelop@gmail.com</strong> adresine e-posta atabilirsiniz.</p>
+ <p class="ticket-warn-txt">⚠️ Önemli: Yoğunluğa bağlı olarak yanıt süremiz uzayabilir. Acil konularda Instagram üzerinden iletişime geçebilirsiniz.</p>
  <button class="store-code-btn" style="margin-top: 15px; width: auto; padding: 6px 20px; border-style: solid;" onclick="location.reload()">Tamam</button>
  </div>
  `;
@@ -2503,6 +2557,57 @@
  }
  runNextStep();
  }
+ 
+
+  // --- Landing Page Feedback Submit Handler ---
+  function submitLandingFeedback(event) {
+    event.preventDefault();
+    
+    const userNameInput = document.getElementById("landing-fb-user");
+    const categorySelect = document.getElementById("landing-fb-category");
+    const commentInput = document.getElementById("landing-fb-comment");
+    
+    const userName = userNameInput.value.trim();
+    const category = categorySelect.value;
+    const comment = commentInput.value.trim();
+    
+    if (!userName || !comment) {
+      showWebToast("Lütfen tüm alanları doldur! 🐾");
+      return;
+    }
+    
+    const lastSubmit = localStorage.getItem("last_feedback_submit_time");
+    const now = Date.now();
+    if (lastSubmit && (now - lastSubmit < 180000)) {
+      const remainingSec = Math.ceil((180000 - (now - lastSubmit)) / 1000);
+      showWebToast(`Çok hızlı gidiyorsun! 🐾 Lütfen ${remainingSec} saniye bekle.`);
+      return;
+    }
+
+    const cleanedComment = typeof transformFeedback === 'function' ? transformFeedback(comment) : comment;
+    const isBad = (comment.toLowerCase().replace(/[\s\W_]/g, '') !== cleanedComment.toLowerCase().replace(/[\s\W_]/g, ''));
+
+    db.collection("feedbacks").add({
+      userName: userName,
+      category: category,
+      comment: cleanedComment,
+      timestamp: now,
+      reply: "",
+      replyTimestamp: 0
+    }).then(() => {
+      if (isBad) {
+        localStorage.setItem("banned_user", "true");
+        showWebToast("Kural ihlali tespit edildi! 🐾");
+      } else {
+        showWebToast("Geri bildirimin başarıyla gönderildi! 🐾");
+        commentInput.value = "";
+        localStorage.setItem("last_feedback_submit_time", String(now));
+      }
+    }).catch((error) => {
+      console.error("Yorum gönderme hatası:", error);
+      showWebToast("Gönderilemedi! Firebase izin hatası olabilir. ❌");
+    });
+  }
  </script>
 </body>
 </html>
