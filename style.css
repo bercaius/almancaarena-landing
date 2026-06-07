@@ -81,19 +81,19 @@ h1, h2, h3, h4, .font-display {
 
 /* Glassmorphism Card Utility */
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  box-shadow: var(--glass-shadow);
+  background: linear-gradient(135deg, rgba(20, 15, 35, 0.45) 0%, rgba(10, 5, 20, 0.75) 100%);
+  backdrop-filter: blur(35px);
+  -webkit-backdrop-filter: blur(35px);
+  border: 1.5px solid rgba(212, 175, 55, 0.12);
+  border-radius: 28px;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.06), var(--glass-shadow);
   transition: var(--transition-luxury);
 }
 
 .glass-card:hover {
-  border-color: var(--glass-border-hover);
-  transform: translateY(-4px);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(223, 186, 115, 0.03);
+  border-color: rgba(212, 175, 55, 0.45);
+  transform: translateY(-6px);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), 0 0 50px rgba(212, 175, 55, 0.08);
 }
 
 /* Glow Effects */
@@ -922,8 +922,9 @@ footer {
   padding: 40px;
   border-radius: 28px;
   position: relative;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--glass-border-hover);
+  background: linear-gradient(135deg, rgba(15, 10, 30, 0.92) 0%, rgba(5, 2, 10, 0.98) 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.3);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.08), 0 50px 100px rgba(0,0,0,0.95), 0 0 50px rgba(212,175,55,0.06);
   box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8), 0 0 50px rgba(223, 186, 115, 0.05);
   transform: translateY(20px);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1117,8 +1118,9 @@ footer {
   padding: 40px;
   border-radius: 28px;
   position: relative;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--glass-border-hover);
+  background: linear-gradient(135deg, rgba(15, 10, 30, 0.92) 0%, rgba(5, 2, 10, 0.98) 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.3);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.08), 0 50px 100px rgba(0,0,0,0.95), 0 0 50px rgba(212,175,55,0.06);
   box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8), 0 0 50px rgba(223, 186, 115, 0.05);
   transform: translateY(20px);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2538,35 +2540,36 @@ input:checked + .slider:before {
    Premium Advertisement & Sponsor Banners (Left, Right, and Mobile)
    ========================================================================== */
 
-/* Side Banners Container - Luxury Spacing */
+/* Side Banners Container - Luxury Spacing kanka! */
 .ad-sidebar {
   position: absolute;
   top: 120px;
-  width: 250px;
-  z-index: 100;
-  display: none; /* Hidden on mobile/tablet */
+  width: 320px;
+  z-index: 9999; /* Higher than maintenance overlay kanka! */
+  display: none; /* Controlled by JS inline styles */
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+  transition: var(--transition-luxury);
 }
 
 .ad-sidebar-left {
-  left: calc(50% - 650px - 250px - 20px);
+  left: calc(50% - 650px - 320px - 30px);
 }
 
 .ad-sidebar-right {
-  right: calc(50% - 650px - 250px - 20px);
+  right: calc(50% - 650px - 320px - 30px);
 }
 
 /* Glass card styling for ads */
 .ad-card {
-  background: rgba(10, 5, 22, 0.75);
+  background: rgba(10, 5, 22, 0.85);
   backdrop-filter: blur(35px);
   -webkit-backdrop-filter: blur(35px);
-  border: 1.5px solid rgba(212, 175, 55, 0.2);
-  border-radius: 24px;
-  padding: 20px;
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), 0 0 30px rgba(212, 175, 55, 0.02);
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1.5px solid rgba(212, 175, 55, 0.25);
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.85), 0 0 40px rgba(212, 175, 55, 0.03);
+  transition: var(--transition-luxury);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -2579,91 +2582,95 @@ input:checked + .slider:before {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(223, 186, 115, 0.05) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(223, 186, 115, 0.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
 .ad-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   border-color: var(--color-gold);
-  box-shadow: 0 30px 60px rgba(223, 186, 115, 0.12);
+  box-shadow: 0 40px 80px rgba(223, 186, 115, 0.16), 0 0 30px rgba(212, 175, 55, 0.06);
 }
 
 .ad-badge {
-  font-size: 8px;
+  font-size: 9px;
   font-weight: 800;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--color-gold);
-  background: rgba(212, 175, 55, 0.1);
-  padding: 3px 8px;
-  border-radius: 6px;
+  background: rgba(212, 175, 55, 0.12);
+  padding: 4px 10px;
+  border-radius: 8px;
   display: inline-block;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .ad-title {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 800;
   color: #fff;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   line-height: 1.4;
   font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.01em;
 }
 
 .ad-desc {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-secondary);
-  line-height: 1.5;
-  margin-bottom: 12px;
+  line-height: 1.6;
+  margin-bottom: 16px;
 }
 
 .ad-img {
   width: 100%;
-  height: 120px;
+  height: 150px;
   object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .ad-btn {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
-  padding: 7px 12px;
-  border-radius: 8px;
-  background: var(--color-gold);
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
   color: #000;
   border: none;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: var(--transition-luxury);
   width: 100%;
   text-decoration: none;
   display: inline-block;
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .ad-btn:hover {
-  background: var(--color-gold-light);
-  transform: scale(1.02);
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  background: linear-gradient(135deg, var(--color-gold-light) 0%, #fff 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
 }
 
-/* Mobile Slide-Up Modal */
+/* Mobile Slide-Up Modal kanka! */
 .mobile-ad-modal {
   position: fixed;
-  bottom: -400px; /* Hidden initially, slides up */
+  bottom: -450px;
   left: 5%;
   width: 90%;
   max-width: 380px;
-  z-index: 1000;
-  background: rgba(10, 5, 22, 0.95);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border: 1.5px solid rgba(223, 186, 115, 0.15);
-  border-radius: 24px;
-  padding: 18px;
-  box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  background: rgba(10, 5, 22, 0.98);
+  backdrop-filter: blur(35px);
+  -webkit-backdrop-filter: blur(35px);
+  border: 1.5px solid rgba(223, 186, 115, 0.25);
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.95);
   transition: bottom 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: center;
 }
@@ -2674,15 +2681,15 @@ input:checked + .slider:before {
 
 .mobile-ad-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-muted);
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  font-size: 10px;
+  font-size: 11px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -2692,16 +2699,47 @@ input:checked + .slider:before {
 
 .mobile-ad-close:hover {
   color: #fff;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
 }
 
-/* Show ad-sidebar only on desktop */
-@media (min-width: 1840px) {
+/* Responsive and Inline positioning for smaller screens kanka! */
+@media (min-width: 2000px) {
   .ad-sidebar {
-    display: flex;
+    display: flex !important;
   }
 }
 
+@media (max-width: 1999px) {
+  .ad-sidebar {
+    position: relative;
+    top: 0;
+    left: auto !important;
+    right: auto !important;
+    width: 90%;
+    max-width: 1300px;
+    margin: 50px auto;
+    flex-direction: row;
+    justify-content: center;
+    gap: 30px;
+    z-index: 9999;
+  }
+  .ad-sidebar[style*="display: block"] {
+    display: flex !important;
+  }
+  .ad-sidebar[style*="display: flex"] {
+    display: flex !important;
+  }
+  .ad-card {
+    flex: 1;
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 767px) {
+  .ad-sidebar {
+    display: none !important;
+  }
+}
 
 /* Duplicates cleaned */
 
