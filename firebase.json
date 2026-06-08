@@ -4,10 +4,7 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**",
-      "firestore.rules",
-      "README.md",
-      "LICENSE"
+      "**/node_modules/**"
     ]
   }
 }

@@ -752,6 +752,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
 
   <!-- Preloader Timeout Fallback kanka! -->
   <script>
@@ -781,12 +782,24 @@
     appId: "1:274345916793:android:e69ae7186ab295603817a8"
   };
 
-  let db;
+  let db, messaging;
   if (typeof firebase !== 'undefined') {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
+      // Explicitly set LOCAL persistence so the user stays logged in
+      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        .catch(err => console.warn("Failed to set auth persistence:", err));
     }
     db = firebase.firestore();
+    
+    // Initialize Messaging if supported kanka!
+    if (firebase.messaging && firebase.messaging.isSupported()) {
+      try {
+        messaging = firebase.messaging();
+      } catch(e) {
+        console.warn("FCM not supported on this browser:", e);
+      }
+    }
   } else {
     console.error("Firebase SDK could not be loaded! Running in offline-fallback mode.");
   }
@@ -2086,6 +2099,13 @@
  if (typeof firebase !== 'undefined' && firebase.auth) {
  firebase.auth().onAuthStateChanged((user) => {
  currentUser = user;
+ isAuthGateResolved = true; // Set auth gate resolved!
+ 
+ if (user) {
+ trackUserSession(user, "Giriş Yaptı");
+ setupPushNotifications(user);
+ }
+ 
  checkUserBanStatus(user);
  const authContainer = document.getElementById("user-google-auth-container");
  const navAuthContainer = document.getElementById("nav-auth-container");
@@ -2176,12 +2196,43 @@
  }
  }
 
- // Load tickets list automatically
- if (typeof db !== 'undefined' && db) {
- loadMyTicketsList();
- }
- });
- }
+  // Load tickets list automatically
+  if (typeof db !== 'undefined' && db) {
+  loadMyTicketsList();
+  }
+  resolvePageLayout(); // Resolve layout!
+  });
+  }
+
+  function setupPushNotifications(user) {
+    if (typeof messaging === 'undefined' || !messaging) return;
+    
+    // Load config from Firestore dynamically to get VAPID Key kanka!
+    db.collection("system_config").doc("notifications").get().then((doc) => {
+      let vapidKey = "";
+      if (doc.exists) {
+        vapidKey = doc.data().vapidKey || "";
+      }
+      
+      // Request permission
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          const tokenOptions = vapidKey ? { vapidKey: vapidKey } : {};
+          messaging.getToken(tokenOptions).then((currentToken) => {
+            if (currentToken) {
+              const emailLower = user.email.toLowerCase().trim();
+              db.collection("users").doc(emailLower).set({
+                fcmToken: currentToken,
+                fcmTokens: firebase.firestore.FieldValue.arrayUnion(currentToken)
+              }, { merge: true }).then(() => {
+                console.log("FCM Token synchronized successfully kanka!");
+              }).catch(err => console.error("Error saving FCM token to user doc:", err));
+            }
+          }).catch(err => console.warn('FCM token retrieval failed:', err));
+        }
+      }).catch(err => console.warn("Permission request error:", err));
+    }).catch(err => console.warn("Failed to load notification settings:", err));
+  }
 
  function loadMyTicketsList() {
  const ticketsSection = document.getElementById("my-tickets-section");
@@ -2977,16 +3028,8 @@
     }
   }
 
-  // Mandatory Auth Gate State Listener
-  if (typeof firebase !== 'undefined' && firebase.auth) {
-    firebase.auth().onAuthStateChanged((user) => {
-      isAuthGateResolved = true;
-      if (user) {
-        trackUserSession(user, "Giriş Yaptı");
-      }
-      resolvePageLayout();
-    });
-  } else {
+  // Offline/fallback init gate
+  if (typeof firebase === 'undefined' || !firebase.auth) {
     isAuthGateResolved = true;
     resolvePageLayout();
   }
