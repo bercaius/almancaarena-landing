@@ -6,24 +6,26 @@ service cloud.firestore {
     // Helper function to check if the user is an authenticated administrator (admin/moderator/support)
     function isAdmin() {
       return request.auth != null && 
-        exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)) &&
-        (get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "admin" ||
-         get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "support" ||
-         get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "moderator");
+        (request.auth.token.email.lower() in ["berkayozdemirtrtr@gmail.com", "berkayozdemirmain@gmail.com", "turcodevelop@gmail.com"] ||
+         (exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)) &&
+          (get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "admin" ||
+           get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "support" ||
+           get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "moderator")));
     }
     
     // Helper function to check if the user is a super administrator (owner/admin role)
     function isSuperAdmin() {
       return request.auth != null && 
-        exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)) &&
-        get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "admin";
+        (request.auth.token.email.lower() in ["berkayozdemirtrtr@gmail.com", "berkayozdemirmain@gmail.com", "turcodevelop@gmail.com"] ||
+         (exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)) &&
+          get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "admin"));
     }
 
     // Helper function to check if the user is a sponsor
     function isSponsor() {
       return request.auth != null &&
-        exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)) &&
-        get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "sponsor";
+        (exists(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)) &&
+         get(/databases/$(database)/documents/admin_roles/$(request.auth.token.email)).data.role == "sponsor");
     }
 
     // 1. system_config rules with document-level security
