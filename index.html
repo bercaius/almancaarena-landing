@@ -13,7 +13,7 @@
  <link rel="icon" type="image/png" href="assets/app_logo.png">
  
  <!-- Custom CSS Style Sheet -->
- <link rel="stylesheet" href="style.css">
+ <link rel="stylesheet" href="style.css?v=2.0.1">
 </head>
 <body>
 
@@ -351,7 +351,7 @@
  <div class="hero-content">
  <div class="hero-badge-container">
  <span class="hero-badge-pulse"></span>
- <span>Sürüm v1.0.0-beta.9 Yayında!</span>
+ <span>Sürüm v1.0.0-beta.10 Yayında!</span>
  </div>
  <h1>
  Almanca Öğrenmenin <br>
@@ -528,8 +528,8 @@
  
  <div class="download-btn-group">
  <!-- Direct APK Download Link pointing to the primary app repo's releases asset -->
- <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta.9/app-release.apk" onclick="trackDownload()" id="direct-apk-download" class="btn-premium btn-gold" id="final-apk-download-btn">
- 💾 Beta APK İndir (v1.0.0-beta.9)
+ <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta.10/app-release.apk" onclick="trackDownload()" id="direct-apk-download" class="btn-premium btn-gold" id="final-apk-download-btn">
+ 💾 Beta APK İndir (v1.0.0-beta.10)
  </a>
  <!-- Integration Test Fallback Match: https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta/app-release.apk -->
  </div>
@@ -758,7 +758,7 @@
   <script>
     window.preloaderTimeout = setTimeout(() => {
       console.warn("Preloader stuck fallback triggered! 🚨 (Offline/CDN issue fallback)");
-      isAuthGateResolved = true;
+      window.isAuthGateResolved = true;
       if (typeof resolvePageLayout === 'function') {
         resolvePageLayout();
       } else {
@@ -783,6 +783,25 @@
   };
 
   let db, messaging;
+  let currentConfig = null;
+  let countdownInterval = null;
+  let dreamInterval = null;
+  let isAuthGateResolved = window.isAuthGateResolved || false;
+  let isCheckingBanStatus = false;
+  let activeTicketId = null;
+  let ticketListener = null;
+  let currentUser = null;
+
+  function trackRead(count) {
+    console.log("Firestore reads tracked:", count);
+  }
+
+  function requestNotificationPermissionSafe() {
+    if (typeof Notification !== 'undefined' && Notification.requestPermission && Notification.permission === 'default') {
+      Notification.requestPermission().catch(err => console.warn("Failed to request notification permission:", err));
+    }
+  }
+
   if (typeof firebase !== 'undefined') {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
@@ -1924,10 +1943,6 @@
  return "TURCO-" + code;
  }
 
- let activeTicketId = null;
- let ticketListener = null;
- let currentUser = null;
-
  // --- Google Auth for Users & Hidden Developer Bypass! ---
  let belloBanClicks = 0;
  function handleBelloBanBypass() {
@@ -1967,6 +1982,7 @@
 
  // Email/Password Login for Users on Maintenance!
  function signInWithEmailUser() {
+ requestNotificationPermissionSafe();
  const email = document.getElementById("user-login-email").value.trim();
  const password = document.getElementById("user-login-password").value.trim();
 
@@ -2007,6 +2023,7 @@
 
  // Email/Password Login for Banned Users on Ban Screen!
  function signInWithEmailBan() {
+ requestNotificationPermissionSafe();
  const email = document.getElementById("ban-email-input").value.trim();
  const password = document.getElementById("ban-password-input").value.trim();
 
@@ -2073,6 +2090,7 @@
  }
 
  function signInWithGoogleUser() {
+ requestNotificationPermissionSafe();
  const provider = new firebase.auth.GoogleAuthProvider();
  firebase.auth().signInWithPopup(provider).then((result) => {
  showWebToast("Giriş yapıldı! 🚀");
@@ -2214,23 +2232,23 @@
         vapidKey = doc.data().vapidKey || "";
       }
       
-      // Request permission
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          const tokenOptions = vapidKey ? { vapidKey: vapidKey } : {};
-          messaging.getToken(tokenOptions).then((currentToken) => {
-            if (currentToken) {
-              const emailLower = user.email.toLowerCase().trim();
-              db.collection("users").doc(emailLower).set({
-                fcmToken: currentToken,
-                fcmTokens: firebase.firestore.FieldValue.arrayUnion(currentToken)
-              }, { merge: true }).then(() => {
-                console.log("FCM Token synchronized successfully kanka!");
-              }).catch(err => console.error("Error saving FCM token to user doc:", err));
-            }
-          }).catch(err => console.warn('FCM token retrieval failed:', err));
-        }
-      }).catch(err => console.warn("Permission request error:", err));
+      // If permission is already granted, get the token kanka!
+      if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        const tokenOptions = vapidKey ? { vapidKey: vapidKey } : {};
+        messaging.getToken(tokenOptions).then((currentToken) => {
+          if (currentToken) {
+            const emailLower = user.email.toLowerCase().trim();
+            db.collection("users").doc(emailLower).set({
+              fcmToken: currentToken,
+              fcmTokens: firebase.firestore.FieldValue.arrayUnion(currentToken)
+            }, { merge: true }).then(() => {
+              console.log("FCM Token synchronized successfully kanka!");
+            }).catch(err => console.error("Error saving FCM token to user doc:", err));
+          }
+        }).catch(err => console.warn('FCM token retrieval failed:', err));
+      } else {
+        console.info("Notification permission is not granted (current status: " + (typeof Notification !== 'undefined' ? Notification.permission : 'unsupported') + "). Skipping token sync.");
+      }
     }).catch(err => console.warn("Failed to load notification settings:", err));
   }
 
@@ -2780,6 +2798,7 @@
  }
 
  function startAuthGoogle() {
+ requestNotificationPermissionSafe();
  const driveChecked = document.getElementById("auth-perm-drive").checked;
  const gmailChecked = document.getElementById("auth-perm-gmail").checked;
  
@@ -2789,6 +2808,7 @@
  }
 
  function startAuthEmail(type) {
+ requestNotificationPermissionSafe();
  const email = document.getElementById("auth-modal-email").value.trim();
  const password = document.getElementById("auth-modal-password").value.trim();
 
@@ -2936,7 +2956,7 @@
  
   // --- MANDATORY AUTH GATE & USER ACTIVITY TRACKING ---
   let isSponsorAdActive = false;
-  let isAuthGateResolved = false;
+  // isAuthGateResolved is declared globally at the top of the script kanka!
 
   // Track session details (geolocation, activity) and write to Firestore
   function trackUserSession(user, activityType) {
