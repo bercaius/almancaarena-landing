@@ -3,11 +3,11 @@
 <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <meta name="description" content="Bello Almanca Arena — 10 Milyon parametreli çevrimdışı yapay sinir ağı, lüks fırçalanmış altın tasarımları ve AI Coach entegrasyonuyla donatılmış premium Almanca öğrenme arenası.">
- <meta name="keywords" content="Almanca öğrenme, Almanca oyunu, Android Almanca, Bello Almanca Arena, TurcoDevelop, bercaius, Almanca öğrenme uygulaması, yapay zeka Almanca">
+ <meta name="description" content="Sistem Almanca Arena — 10 Milyon parametreli çevrimdışı yapay sinir ağı, lüks fırçalanmış altın tasarımları ve AI Coach entegrasyonuyla donatılmış premium Almanca öğrenme arenası.">
+ <meta name="keywords" content="Almanca öğrenme, Almanca oyunu, Android Almanca, Sistem Almanca Arena, TurcoDevelop, TurcoDevelop Studio, Almanca öğrenme uygulaması, yapay zeka Almanca">
  <meta name="author" content="TurcoDevelop">
  
- <title>Bello Almanca Arena — Yapay Zeka Destekli Premium Almanca Öğrenme Arenası</title>
+ <title>Sistem Almanca Arena — Yapay Zeka Destekli Premium Almanca Öğrenme Arenası</title>
  
  <!-- Favicon (Uses App Logo) -->
  <link rel="icon" type="image/png" href="assets/app_logo.png">
@@ -39,7 +39,7 @@
  
  <!-- Mobil Cihazlar İçin Sekmeli Navigasyon Çubuğu -->
  <div class="maint-mobile-tabs">
- <button class="maint-tab-btn active" id="btn-tab-bello" onclick="switchMobileTab('bello')">🐾 Bello</button>
+ <button class="maint-tab-btn active" id="btn-tab-sistem" onclick="switchMobileTab('sistem')">🐾 Sistem</button>
  <button class="maint-tab-btn" id="btn-tab-feedbacks" onclick="switchMobileTab('feedbacks')">💬 Görüşler</button>
  <button class="maint-tab-btn" id="btn-tab-support" onclick="switchMobileTab('support')">🎫 Destek</button>
  <button class="maint-tab-btn" id="btn-tab-settings" onclick="switchMobileTab('settings')">⚙️ Ayarlar</button>
@@ -47,16 +47,16 @@
  
  <div class="maint-cols-wrapper">
  <!-- SOL KOLON (Mascot, Sayaç, Sosyal ve Mağaza) -->
- <div class="maint-left-col" id="maint-mobile-sec-bello">
+ <div class="maint-left-col" id="maint-mobile-sec-sistem">
  <div class="maintenance-mascot-container">
  <div class="maint-speech-bubble" id="maint-bubble" style="display: none;">Zzz... Uyuyorum!</div>
- <img src="assets/bello_sleeping.png" alt="Bello Uyuyor" class="mascot-sleeping">
+ <img src="assets/sistem_sleeping.png" alt="Sistem Uyuyor" class="mascot-sleeping">
  <div class="zzz-bubble zzz-1">Z</div>
  <div class="zzz-bubble zzz-2">Z</div>
  <div class="zzz-bubble zzz-3">z</div>
  </div>
  
- <h1 class="maintenance-title">Bello Dinleniyor 😴</h1>
+ <h1 class="maintenance-title">Sistem Dinleniyor 😴</h1>
  <p class="maintenance-desc" id="maint-message">Almanca Arena şu an planlı bakım çalışmasındadır. En kısa sürede döneceğiz!</p>
  
  <!-- Countdown Wrapper -->
@@ -79,7 +79,7 @@
  <p class="social-title-maint">Gelişmeler için bizi takip et:</p>
  <div class="social-btn-row">
  <a href="https://www.instagram.com/bercaius.dev/" target="_blank" rel="noopener" class="social-btn maint-social-btn">
- 📸 @bercaius.dev
+ 📸 @TurcoDevelop Studio.dev
  </a>
  <a href="https://www.instagram.com/turcodevelopstudio/" target="_blank" rel="noopener" class="social-btn maint-social-btn">
  🏢 @turcodevelopstudio
@@ -99,9 +99,9 @@
  </div>
  <div class="web-store-card">
  <div class="store-icon">🍪</div>
- <div class="store-title">Bello Dostluk Paketi</div>
- <div class="store-desc">100 Altın ve 1 Bello Bisküvisi hediye kodu.</div>
- <button class="store-code-btn" type="button" onclick="copyPromoCode('BELLO100')">Kopyala: BELLO100</button>
+ <div class="store-title">Sistem Dostluk Paketi</div>
+ <div class="store-desc">100 Altın ve 1 Sistem Bisküvisi hediye kodu.</div>
+ <button class="store-code-btn" type="button" onclick="copyPromoCode('SİSTEM100')">Kopyala: SİSTEM100</button>
  </div>
  </div>
  </div>
@@ -284,10 +284,10 @@
  </div>
  
  <div class="maintenance-mascot-container" style="background: radial-gradient(circle, rgba(229, 57, 53, 0.1) 0%, rgba(95, 0, 255, 0.04) 50%, rgba(0,0,0,0) 72%); position: relative; width: 200px; height: 200px; margin: 40px auto 25px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">
- <img id="banned-bello-mascot" src="assets/bello_sleeping.png" alt="Bello Kizgin" class="mascot-sleeping" style="cursor: pointer; filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(3); width: 85%; height: 85%; object-fit: contain; animation: breathing 4s infinite ease-in-out;" onclick="handleBelloBanBypass()">
+ <img id="banned-sistem-mascot" src="assets/sistem_sleeping.png" alt="Sistem Kizgin" class="mascot-sleeping" style="cursor: pointer; filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(3); width: 85%; height: 85%; object-fit: contain; animation: breathing 4s infinite ease-in-out;" onclick="handleSistemBanBypass()">
  </div>
  
- <h1 class="maintenance-title" style="font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; background: linear-gradient(90deg, #fff 30%, var(--alert-red) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Bello Seni Banladı! 🐾</h1>
+ <h1 class="maintenance-title" style="font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; background: linear-gradient(90deg, #fff 30%, var(--alert-red) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Sistem Seni Banladı! 🐾</h1>
  <p class="maintenance-desc" id="ban-reason-text" style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6; margin-bottom: 35px;">Yapıcı olmayan kötü geri bildirim gönderimi sebebiyle bu cihaza/hesaba erişim engellenmiştir.</p>
  
  <!-- Af Talebi Formu -->
@@ -358,7 +358,7 @@
  <span class="text-gradient">En Elit Sürümü</span>
  </h1>
  <p class="hero-subtitle">
- Bello Almanca Arena, cihazınızda tamamen çevrimdışı çalışan 10 Milyon parametreli yerel yapay zeka motoru ve fırçalanmış şampanya altını tasarımlarıyla Almanca dil eğitimini premium bir deneyime dönüştürüyor.
+ Sistem Almanca Arena, cihazınızda tamamen çevrimdışı çalışan 10 Milyon parametreli yerel yapay zeka motoru ve fırçalanmış şampanya altını tasarımlarıyla Almanca dil eğitimini premium bir deneyime dönüştürüyor.
  </p>
  <div class="hero-actions">
  <a href="#download" class="btn-premium btn-gold" id="hero-primary-download">
@@ -373,7 +373,7 @@
  <div class="hero-image-wrapper" id="hero-tilt-container">
  <div class="hero-glow-ring"></div>
  <div class="tilt-card" id="hero-tilt-card">
- <img src="assets/bello_premium_idle2.png" alt="Bello Premium Tahtında" class="hero-mascot-img" id="mascot-hero-img">
+ <img src="assets/sistem_premium_idle2.png" alt="Sistem Premium Tahtında" class="hero-mascot-img" id="mascot-hero-img">
  </div>
  </div>
  </div>
@@ -386,7 +386,7 @@
  <section class="container" id="features">
  <div class="section-header">
  <h2>İleri Seviye Eğitim Teknolojileri</h2>
- <p>Sıradan dil uygulamalarını bir kenara bırakın. Bello Almanca Arena, öğrenme sürecini bilimsel algoritmalar ve güçlü güvenlik motorlarıyla donatır.</p>
+ <p>Sıradan dil uygulamalarını bir kenara bırakın. Sistem Almanca Arena, öğrenme sürecini bilimsel algoritmalar ve güçlü güvenlik motorlarıyla donatır.</p>
  </div>
  
  <div class="features-grid">
@@ -421,7 +421,7 @@
  <div class="coach-grid">
  <div class="coach-display-card">
  <div class="coach-display-inner">
- <img src="assets/coach_environment.png" alt="Bello AI Coach Ekranı" class="coach-banner-img" id="coach-banner-view">
+ <img src="assets/coach_environment.png" alt="Sistem AI Coach Ekranı" class="coach-banner-img" id="coach-banner-view">
  </div>
  </div>
  
@@ -523,15 +523,14 @@
  ========================================================================== -->
  <section class="container download-section" id="download">
  <div class="glass-card download-glass-box">
- <h2>Bello Arenasına Katıl!</h2>
+ <h2>Sistem Arenasına Katıl!</h2>
  <p>Uygulamanın siber güvenlik taramasından geçmiş resmi beta sürümünü indirmek için aşağıdaki indirme butonunu kullanabilirsiniz.</p>
  
  <div class="download-btn-group">
  <!-- Direct APK Download Link pointing to the primary app repo's releases asset -->
- <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta.10/app-release.apk" onclick="trackDownload()" id="direct-apk-download" class="btn-premium btn-gold" id="final-apk-download-btn">
- 💾 Beta APK İndir (v1.0.0-beta.10)
+ <a href="https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta.11/app-release.apk" onclick="trackDownload()" id="direct-apk-download" class="btn-premium btn-gold" id="final-apk-download-btn">
+ 💾 Beta APK İndir (v1.0.0-beta.11)
  </a>
- <!-- Integration Test Fallback Match: https://github.com/bercaius/almancaarena-landing/releases/download/v1.0.0-beta/app-release.apk -->
  </div>
  
  <div class="apk-specs">
@@ -577,14 +576,14 @@
  <div class="container" style="padding: 0;">
  <div class="footer-content">
  <div class="footer-info">
- <h4>Bello Almanca Arena</h4>
+ <h4>Sistem Almanca Arena</h4>
  <p>© 2026 TurcoDevelop. Tüm hakları saklıdır.</p>
  <p style="margin-top: 8px;">Gizlilik-öncelikli, yerel yapay zekalı Almanca eğitim yazılımı.</p>
  </div>
  
  <div class="social-links">
  <a href="https://www.instagram.com/bercaiusozdemir/" target="_blank" rel="noopener" class="social-btn" id="social-instagram-personal">
- 📸 Yapımcı (@bercaiusozdemir)
+ 📸 Yapımcı (@TurcoDevelop Studioozdemir)
  </a>
  <a href="https://www.instagram.com/turcodevelopstudio/" target="_blank" rel="noopener" class="social-btn" id="social-instagram-studio">
  🏢 Stüdyo (@turcodevelopstudio)
@@ -683,7 +682,7 @@
  <!-- Cloud Sync Simulation Panel -->
  <div id="auth-sim-container" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px 10px; text-align: center; width: 100%;">
  <div class="spinner" style="width: 44px; height: 44px; border-width: 3px; border-color: rgba(255,255,255,0.1); border-top-color: var(--color-gold); margin-bottom: 20px;"></div>
- <h4 style="font-size: 0.95rem; color: #fff; font-weight: 700; margin-bottom: 8px;">Bello Bulut Giriş Protokolü</h4>
+ <h4 style="font-size: 0.95rem; color: #fff; font-weight: 700; margin-bottom: 8px;">Sistem Bulut Giriş Protokolü</h4>
  <p id="auth-sim-text" style="font-size: 0.74rem; color: var(--text-secondary); min-height: 36px; max-width: 320px; line-height: 1.4; margin-bottom: 20px;">Bağlantı kuruluyor...</p>
  
  <!-- Progress bar background -->
@@ -741,7 +740,7 @@
  
  <div class="modal-action">
  <button class="btn-premium btn-gold modal-btn-confirm" id="modal-btn-confirm">
- Anladım, Bello Arenaya Hazırım! 🐾
+ Anladım, Sistem Arenaya Hazırım! 🐾
  </button>
  </div>
  </div>
@@ -754,7 +753,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js"></script>
 
-  <!-- Preloader Timeout Fallback kanka! -->
+  <!-- Preloader Timeout Fallback -->
   <script>
     window.preloaderTimeout = setTimeout(() => {
       console.warn("Preloader stuck fallback triggered! 🚨 (Offline/CDN issue fallback)");
@@ -772,8 +771,7 @@
 
  <!-- Core Scripts for Interactions -->
  <script>
-  // Firebase Config kanka!
-  const firebaseConfig = {
+  // Firebase Config const firebaseConfig = {
     apiKey: "AIzaSyBMy_H4iGbo4uQwypKlX3wcpCovQVc4DYg",
     authDomain: "almanca-arena.firebaseapp.com",
     projectId: "almanca-arena",
@@ -811,8 +809,7 @@
     }
     db = firebase.firestore();
     
-    // Initialize Messaging if supported kanka!
-    if (firebase.messaging && firebase.messaging.isSupported()) {
+    // Initialize Messaging if supported if (firebase.messaging && firebase.messaging.isSupported()) {
       try {
         messaging = firebase.messaging();
       } catch(e) {
@@ -936,7 +933,7 @@
  modalOverlay.classList.remove('active');
  }
  }
-     const belloDreams = [
+     const sistemDreams = [
     "arkadaslar bi sakin olun her seyi kontrol altina aliyoruz su an (yalan söylüyor) 🤫",
     "guncelleme yapiyoruz dediysek sirketi satmadik ya, iki dk bekleyin gelicem 🏃‍♂️",
     "veri tabanini temizlerken yanlislikla bir seyler sildim ama caktirmayin, toparliyoruz 🧹",
@@ -1010,80 +1007,6 @@
     "su an iceride oyle bir panik var ki sanırsın dunya kupası finali kaybedilmis ⚽",
     "sunucu su an cevap vermiyor, galiba beni engelledi ulasmaya calısıyorum 📱",
     "su an cok gizli bir guncelleme yapıyoruz, kimseye soylemeyin ama baya iyi olucak 🤫",
-    "buralar su an kapalı cunku iceride bir yerlerde unutulmus bir parantez arıyoruz 🔍",
-    "su an tam olarak 'bunu neden boyle yazmısız ki' pismanlıgı yasanıyor iceride 🤦‍♂️",
-    "uygulamayı yukselticez derken yanlislikla yerin dibine sokmus olabiliriz, cıkarıyoruz su an 🕳️",
-    "su an sunucuların keyfini bekliyoruz, canları ne zaman isterse o zaman acılacaklar 🛌",
-    "iceride su an tam bir beyin fırtınası var ama ruzgarın yonu surekli degisiyor 🌪️",
-    "su an burda durmus neye bakıyorsun bilmiyorum ama ben de sıkıldım acılsa da gitsek 🥱",
-    "uygulamaya yeni bir ruh ufluyoruz su an, eski ruhu biraz yıpranmıstı 👻",
-    "su an her sey cok stabil... gorunuyor ama arkada nelerin dondugunu bir ben bilirim 🤫",
-    "sunucu su an overload olmus durumda, hafif bir bas donmesi yasıyor gecer simdi 🌀",
-    "su an kodların arasında mekik dokuyorum, atletik bir maskot olmak bunu gerektirir 🏃‍♂️",
-    "buralar su an bakımda cunku mukemmellik zaman alır (ve bazi hatalar cok buyuktur) ⏳",
-    "su an iceride oyle bir temizlik var ki css dosyaları tir tir titreyecek 🥶",
-    "uygulamayı daha guvenli hale getiriyoruz, su an kapıları kilitledik icerideyiz 🔒",
-    "su an tam olarak 'bu veri buraya nerden geldi' saskınlıgı hakim ekibe 🤷‍♂️",
-    "sunucular su an mola verdi, sigara ve kahve iciyorlar (metaforik olarak tabi) ☕",
-    "su an buralar bir tık yavas cunku arka planda devasa bir dunya insa ediyoruz 🌍",
-    "uygulamaya yeni bir guncelleme yukleniyor, yukleme barı yuzde 99'da takılmaz umarım 📈",
-    "su an iceride tam bir siber savas var, bug'lara karsı cephe aldık bekliyoruz 🛡️",
-    "sunucu su an kendi sınırlarını zorluyor, patlamadan yetisirsek iyi 💣",
-    "su an cok stratejik hamleler yapılıyor, satranç oynuyoruz sanki kodlarla ♟️",
-    "buralar su an kapalı ama acıldıgında buraların kralı kim tekrar hatırlatıcaz 👑",
-    "su an tam bir kriz yonetimi donuyor iceride, kriz dedigim de bir virgül eksikligi ⚠️",
-    "uygulamayı daha akıcı yapmak icin bazi yuklerden kurtuluyoruz su an 🧳",
-    "su an sunucu odasından yuksek sesler geliyor, gidip bir baksam iyi olucak 🔊",
-    "buralar su an guncelleniyor, eski halini unutun yeni donem baslıyor 🚀",
-    "su an iceride oyle bir kaos var ki kimin eli kimin cebinde belli degil kod adına 🤷‍♂️",
-    "sunucular su an askıya alındı, havada duruyorlar oyle cok havalı 🛸",
-    "su an sistem uzerinde ince iscilik yapıyoruz, kuyumcu titizligi var uzerimizde 💎",
-    "uygulamayı bozmadan guncellemeye calısıyoruz, en zorladıgımız anlar bunlar 🛠️",
-    "su an tam olarak 'bu ozellik neden calısmıyor' gizemini cozmeye calısıyoruz 🕵️‍♂️",
-    "sunucu su an dinlenme modunda, cok yorduk cocugu son zamanlarda 🛌",
-    "su an iceride oyle bir algoritma yazılıyor ki siber dunya soka girecek ⚡",
-    "buralar su an kapalı cunku backend ekibi kahve makinesini tamir etmeye calısıyor ☕",
-    "su an her sey planlandıgı gibi gitmiyor ama planı degistirmek de bir plandır 📝",
-    "uygulamaya yeni bir vizyon katıyoruz su an, vizyondan kastım birkac kucuk dokunus ✨",
-    "su an sunucuların tansiyonu dustu, bir ayran icip kendilerine gelmelerini bekliyoruz 🥛",
-    "buralar su an bakımda ama endiselenmeyin, verileriniz guvende (bende yani) 🔒",
-    "su an iceride tam bir dram donuyor, github yine hata verdi kafayı yicez 😭",
-    "uygulamayı daha elit hale getirmek icin bazi seyleri bastan yazıyoruz su an 💎",
-    "su an tam olarak 'bunu kim boyle bırakmıs' hesaplasması yasanıyor iceride 🤦‍♂️",
-    "sunucu su an kendi icınde bir devrim yapıyor, monarsiden cumhuriyete geciyor sistem 👑",
-    "su an buralar biraz dumanlı ama yangın yok, sadece beyinlerimiz yanıyor 🧠",
-    "uygulamaya yeni bir arayuz yuklerken yanlislikla her seyi siyah yapmıs olabiliriz 🕶️",
-    "su an iceride oyle bir bug avı var ki nat geo belgeseli cekilse izlenir 🦎",
-    "sunucular su an cok hassas, lutfen onlara guzel seyler soyleyin ❤️",
-    "su an tam olarak 'bunu dunyada ilk defa biz yapıyoruz' havasındayız (kesin yapılmıstır) 😎",
-    "buralar su an kapalı cunku sunucu odasında saklambac oynuyoruz (kod arıyoruz) 🔍",
-    "su an her sey kontrol altında gorunuyor ama bu her an degisebilir vaziyet alın 🌪️",
-    "uygulamayı daha dinamik yapmak icin bazi statik kodları hayattan sildik ❌",
-    "su an sunucu su kaynatmıs durumda, sogumasını bekliyoruz acıkcası 🌡️",
-    "buralar su an bakımda cunku daha hizli bir deneyim sunmak boynumuzun borcu 🚀",
-    "su an iceride tam bir 'kod inceleme' seansı var, herkes birbirinin hatasını arıyor 🔍",
-    "uygulamaya oyle bir guncelleme geliyor ki telefonunuzun sarjı daha elit biticek 🔋",
-    "su an tam olarak 'bu veri tabanı neden bu kadar buyuk' saskınlıgındayız 🤷‍♂️",
-    "sunucular su an kendi aralarında sosyallesiyor, bitince ise donecekler 🤝",
-    "su an buralar biraz dagınık ama toparlayınca cok guzel olucak soz ✨",
-    "uygulamayı daha guvenli yapmak adına butun kapıları kilitledik, anahtar bende 🔑",
-    "su an iceride oyle bir optimizasyon var ki bitince uygulamayı tanıyamayacaksınız 🛠️",
-    "sunucu su an bir tık tripli, gonlunu almaya calısıyoruz su an 🥺",
-    "su an tam olarak 'bu kod neden calısmıyor' evresinden 'neden calıstı' evresine gectik 💡",
-    "buralar su an kapalı cunku icerideki yazılımicının kedisi klavyeye bastı 🐈",
-    "su an her sey cok stabil degil ama stabil hale getirmek bizim isimiz 😎",
-    "uygulamaya yeni bir soluk getirmek icin eski solukları kestik su an 💨",
-    "su an sunucu odasından garip kokular geliyor, umarım sadece kahvedir ☕",
-    "buralar su an bakımda cunku kalite asla tesaduf degildir (ve cokca kod gerektirir) 💎",
-    "su an iceride tam bir entrika donuyor, hangi kod hangi fonksiyonu gosteriyor belli degil 🕵️‍♂️",
-    "uygulamayı daha akıcı yapmak icin bazı animasyonları baştan yazdık, cok iyi oldu 🎬",
-    "su an tam olarak 'bu ozellik gercekten lazım mıydı' sorgulamasındayız 🤔",
-    "sunucular su an bir tık yavas, uykusuz kaldılar biraz idare edin artık 🛌",
-    "su an buralar biraz fırtınalı ama fırtınadan sonraki dogacak gunesi bekleyin 🌅",
-    "uygulamaya oyle bir guncelleme atıyoruz ki uzaydan bıle gorulebılır (abarttım evet) 🚀",
-    "su an iceride oyle bir bug var ki temizlemek icin profesyonel yardım aldık 🛠️",
-    "sunucu su an cevap vermiyor, galiba uyuya kaldı gidip bi uyandırayım 🛌",
-    "su an tam olarak 'bunu biz mi yazmısız valla helal olsun' gururu yasanıyor 👑",
     "buralar su an kapalı cunku daha iyi bir dunya icin (yani uygulama icin) ugrasıyoruz 🌍",
     "su an her sey yolunda gitse bile sıkıntı cıkmasın diye ekstra kontrol yapıyoruz 🔍",
     "uygulamayı daha elit yapmak adına su an arka planda klasik muzik çalıyor. 🎵",
@@ -1189,11 +1112,11 @@
     "son kontroller yapılıyor, sahneye çıkmaya az kaldı 🎭",
     "Zzz... Rüyamda Berlin'de döner yiyorduk, admin hesabı ödememek için Almanca makale okumaya başladı. 🥙",
     "Almanca artikelleri çözmek için siber-zırh giyip kuantum bilgisayarı kurduk, o bile 'Das' dedi uykumda. 💻",
-    "Der Rucksack sırt çantası demek kanka, unutursan arenada patlarız! 🎒",
+    "Der Rucksack sırt çantası demek , unutursan arenada patlarız! 🎒",
     "Zzz... Rüyamda 1000 günlük seri (streak) yapmışım, o sırada alarm çalmış... Aşırı yıkım! 🔥",
-    "Goethe ile rüyamda kahve içtik, bana 'Bello kanka bu artikelleri boş ver' dedi. ☕",
-    "Uykumda bile 'isAuthGateResolved' flag'ini kontrol ediyorum, yoruldum kanka. 🔒",
-    "Bello'nun elit silhouette logosu rüyamda gökyüzünde parlıyordu, Batman sinyali gibi! 🦇"
+    "Goethe ile rüyamda kahve içtik, bana 'Sistem bu artikelleri boş ver' dedi. ☕",
+    "Uykumda bile 'isAuthGateResolved' flag'ini kontrol ediyorum, yoruldum . 🔒",
+    "Sistem'nun elit silhouette logosu rüyamda gökyüzünde parlıyordu, Batman sinyali gibi! 🦇"
     ];
 
   // SHA-256 Hash Helper
@@ -1212,7 +1135,6 @@
  const bannedScreen = document.getElementById("banned-screen");
  const landingContent = document.getElementById("landing-content");
  const maintScreen = document.getElementById("maintenance-screen");
- const afTicketId = localStorage.getItem("sent_af_ticket_id");
 
  if (user) {
  const emailLower = user.email.toLowerCase().trim();
@@ -1230,7 +1152,6 @@
  if (doc.exists) {
  const data = doc.data();
  showBanScreen(data.reason || "Kural ihlali nedeniyle erişiminiz engellendi.");
- checkAppealStatusLocal(afTicketId, emailLower);
  } else {
  clearUserBanStateLocal();
  }
@@ -1247,7 +1168,6 @@
  if (doc.exists) {
  const data = doc.data();
  showBanScreen(data.reason || "Kural ihlali nedeniyle erişiminiz engellendi.");
- checkAppealStatusLocal(afTicketId, emailLower);
  } else {
  clearUserBanStateLocal();
  }
@@ -1257,7 +1177,6 @@
  // Guest user
  if (isLocalBanned) {
  showBanScreen("Yapıcı olmayan kötü geri bildirim gönderimi sebebiyle banlandınız.");
- checkAppealStatusLocal(afTicketId, null);
  } else {
  if (bannedScreen) bannedScreen.style.display = "none";
  if (currentConfig) {
@@ -1274,8 +1193,6 @@
 
  if (isLocalBanned) {
  localStorage.removeItem("banned_user");
- localStorage.removeItem("sent_af_request");
- localStorage.removeItem("sent_af_ticket_id");
  showWebToast("Banınız kaldırıldı! Hoş geldiniz. 🎉");
  }
  if (bannedScreen) bannedScreen.style.display = "none";
@@ -1283,74 +1200,6 @@
  // Restore page content visibility (maintenance screen or main landing!)
  if (currentConfig) {
  handleMaintenanceMode(currentConfig.isUnderMaintenance, currentConfig.maintenanceMessage, currentConfig.endTimestamp);
- }
- }
-
- function checkAppealStatusLocal(afTicketId, emailLower) {
- if (!afTicketId && emailLower) {
- // Find if they have an appeal ticket by email
- db.collection("tickets").where("email", "==", emailLower).where("subject", "==", "Ban Af Talebi").get().then((snapshot) => {
- trackRead(snapshot.size);
- if (!snapshot.empty) {
- let latestTicket = null;
- snapshot.forEach(doc => {
- const data = doc.data();
- data.id = doc.id;
- if (!latestTicket || data.createdAt > latestTicket.createdAt) {
- latestTicket = data;
- }
- });
- if (latestTicket) {
- localStorage.setItem("sent_af_request", "true");
- localStorage.setItem("sent_af_ticket_id", latestTicket.id);
- processAppealTicketData(latestTicket);
- }
- }
- }).catch(err => console.error("Error looking up appeal ticket by email:", err));
- } else if (afTicketId) {
- db.collection("tickets").doc(afTicketId).get().then((doc) => {
- trackRead(1);
- if (doc.exists) {
- const data = doc.data();
- data.id = doc.id;
- processAppealTicketData(data);
- }
- }).catch(err => console.error("Error loading appeal ticket:", err));
- }
- }
-
- function processAppealTicketData(ticket) {
- if (ticket.unbanned === true) {
- // The admin approved the appeal!
- localStorage.removeItem("banned_user");
- localStorage.removeItem("sent_af_request");
- localStorage.removeItem("sent_af_ticket_id");
- showWebToast("Af talebiniz kabul edildi! Banınız kaldırıldı! 🎉");
- setTimeout(() => {
- location.reload();
- }, 1500);
- return;
- }
-
- const afForm = document.getElementById("ban-af-form");
- const afSuccess = document.getElementById("ban-af-success-msg");
- if (afForm) afForm.style.display = "none";
- if (afSuccess) afSuccess.style.display = "block";
-
- const adminMessages = (ticket.messages || []).filter(m => m.sender === "TurcoDevelop");
- const responsesDiv = document.getElementById("ban-af-responses");
- const messagesList = document.getElementById("ban-af-messages-list");
-
- if (adminMessages.length > 0 && responsesDiv && messagesList) {
- responsesDiv.style.display = "block";
- messagesList.innerHTML = "";
- adminMessages.forEach(msg => {
- const msgDiv = document.createElement("div");
- msgDiv.style.cssText = "background: rgba(212, 175, 55, 0.05); border-left: 2px solid var(--color-gold); padding: 6px 10px; border-radius: 4px; font-size: 10px; color: #fff; text-align: left; margin-bottom: 4px; word-break: break-word;";
- msgDiv.innerHTML = `<strong>🏢 TurcoDevelop:</strong> ${escapeHtml(msg.text)}`;
- messagesList.appendChild(msgDiv);
- });
- messagesList.scrollTop = messagesList.scrollHeight;
  }
  }
 
@@ -1369,103 +1218,6 @@
  bannedScreen.style.display = "flex";
  if (reasonText) reasonText.innerText = reason;
  }
-
- const afFormContainer = document.getElementById("ban-af-form-container");
- const afForm = document.getElementById("ban-af-form");
- const afSuccess = document.getElementById("ban-af-success-msg");
-
- if (currentUser) {
- // Logged-in user: check if they already sent an appeal!
- if (localStorage.getItem("sent_af_request") === "true") {
- if (afForm) afForm.style.display = "none";
- if (afSuccess) afSuccess.style.display = "block";
- } else {
- if (afForm) afForm.style.display = "flex";
- if (afSuccess) afSuccess.style.display = "none";
- }
- 
- // Remove login warning message if any
- const loginWarning = document.getElementById("ban-af-login-warning");
- if (loginWarning) loginWarning.remove();
- } else {
- // Guest user: they must log in to submit a trackable appeal!
- if (afForm) afForm.style.display = "none";
- if (afSuccess) afSuccess.style.display = "none";
-
- let loginWarning = document.getElementById("ban-af-login-warning");
- if (!loginWarning && afFormContainer) {
- loginWarning = document.createElement("div");
- loginWarning.id = "ban-af-login-warning";
- loginWarning.style.cssText = "padding: 15px; background: rgba(229,57,53,0.08); border: 1.5px dashed var(--alert-red); border-radius: 12px; margin-top: 15px; text-align: center;";
- loginWarning.innerHTML = `
- <p style="font-size: 0.76rem; color: #fff; margin-bottom: 12px;">Af talebi gönderebilmek ve admin yanıtlarını takip edebilmek için giriş yapmalısın.</p>
- 
- <!-- Google Login Button (SVG) -->
- <button class="google-auth-btn" style="margin: 0 auto 12px; width: auto; font-size: 0.72rem; padding: 6px 12px; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="signInWithGoogleUser()">
- <svg viewBox="0 0 24 24" width="14" height="14" xmlns="http://www.w3.org/2000/svg">
- <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
- <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.77c-.98.66-2.23 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
- <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
- <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
- </svg>
- Google ile Giriş Yap 🚀
- </button>
-
- <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: bold; margin: 10px 0;">VEYA E-POSTA İLE GİRİŞ/KAYIT</div>
- <div style="display: flex; flex-direction: column; gap: 8px; max-width: 280px; margin: 0 auto; text-align: left;">
- <input type="email" id="ban-email-input" placeholder="E-posta Adresi..." class="maint-input" style="font-size: 0.72rem; padding: 6px 10px; height: 32px;">
- <input type="password" id="ban-password-input" placeholder="Şifre..." class="maint-input" style="font-size: 0.72rem; padding: 6px 10px; height: 32px;">
- 
- <div style="display: flex; gap: 6px; margin-top: 2px;">
- <button class="store-code-btn maint-flex-1" style="font-size: 0.68rem; padding: 5px;" onclick="signInWithEmailBan()">Giriş Yap</button>
- <button class="store-code-btn maint-flex-1" style="font-size: 0.68rem; padding: 5px; background: rgba(212,175,55,0.05); border-color: rgba(212,175,55,0.18);" onclick="signUpWithEmailBan()">Kayıt Ol</button>
- </div>
- </div>
- `;
- afFormContainer.appendChild(loginWarning);
- }
- }
- }
-
- function submitAfRequest(event) {
- event.preventDefault();
- const msgInput = document.getElementById("ban-af-msg");
- const msgText = msgInput.value.trim();
- 
- if (!msgText) return;
- 
- const email = currentUser? currentUser.email : "guest-" + generateTicketCode();
- const userName = currentUser? currentUser.displayName : "Banlı Misafir ";
- const afTicketCode = "AF-" + generateTicketCode().replace("TURCO-", "");
- 
- const now = Date.now();
- const afTicket = {
- ticketId: afTicketCode,
- userName: userName,
- email: email,
- subject: "Ban Af Talebi",
- status: "açık",
- createdAt: now,
- lastUpdated: now,
- messages: [
- {
- sender: "user",
- text: msgText,
- timestamp: now
- }
- ]
- };
-
- db.collection("tickets").doc(afTicketCode).set(afTicket).then(() => {
- localStorage.setItem("sent_af_request", "true");
- localStorage.setItem("sent_af_ticket_id", afTicketCode);
- document.getElementById("ban-af-form").style.display = "none";
- document.getElementById("ban-af-success-msg").style.display = "block";
- showWebToast("Af talebiniz iletildi! 🐾");
- }).catch(err => {
- console.error("Af ticket error:", err);
- showWebToast("Af talebi gönderilirken hata oluştu! ❌");
- });
  }
 
  // Timeout fallback (5 seconds) to hide preloader if Firestore fails
@@ -1619,9 +1371,9 @@
  const bubble = document.getElementById('maint-bubble');
  if (bubble) {
  bubble.style.display = 'block';
- bubble.innerText = belloDreams[Math.floor(Math.random() * belloDreams.length)];
+ bubble.innerText = sistemDreams[Math.floor(Math.random() * sistemDreams.length)];
  dreamInterval = setInterval(() => {
- bubble.innerText = belloDreams[Math.floor(Math.random() * belloDreams.length)];
+ bubble.innerText = sistemDreams[Math.floor(Math.random() * sistemDreams.length)];
  }, 4000); // 4 seconds rotation as requested!
  }
 
@@ -1784,23 +1536,23 @@
  function switchMobileTab(tabName) {
  playClickSound(); // Klik sesi çal!
  
- const secBello = document.getElementById("maint-mobile-sec-bello");
+ const secSistem = document.getElementById("maint-mobile-sec-sistem");
  const secFeedbacks = document.getElementById("maint-mobile-sec-feedbacks");
  const secSupport = document.getElementById("maint-mobile-sec-support");
  const secSettings = document.getElementById("maint-mobile-sec-settings");
  
- const btnBello = document.getElementById("btn-tab-bello");
+ const btnSistem = document.getElementById("btn-tab-sistem");
  const btnFeedbacks = document.getElementById("btn-tab-feedbacks");
  const btnSupport = document.getElementById("btn-tab-support");
  const btnSettings = document.getElementById("btn-tab-settings");
 
  // Önce tümünü gizle
- [secBello, secFeedbacks, secSupport, secSettings].forEach(el => { if(el) el.style.display = "none"; });
- [btnBello, btnFeedbacks, btnSupport, btnSettings].forEach(el => { if(el) el.classList.remove("active"); });
+ [secSistem, secFeedbacks, secSupport, secSettings].forEach(el => { if(el) el.style.display = "none"; });
+ [btnSistem, btnFeedbacks, btnSupport, btnSettings].forEach(el => { if(el) el.classList.remove("active"); });
 
- if (tabName === "bello") {
- if (secBello) secBello.style.display = "block";
- if (btnBello) btnBello.classList.add("active");
+ if (tabName === "sistem") {
+ if (secSistem) secSistem.style.display = "block";
+ if (btnSistem) btnSistem.classList.add("active");
  } else if (tabName === "feedbacks") {
  if (secFeedbacks) secFeedbacks.style.display = "block";
  if (btnFeedbacks) btnFeedbacks.classList.add("active");
@@ -1883,15 +1635,6 @@
  }
  }
 
- function clearBiletHistory() {
- if (confirm("Yerel bilet sorgulama geçmişinizi silmek istediğinize emin misiniz? 🐾")) {
- localStorage.removeItem("my_tickets");
- showWebToast("Bilet geçmişiniz sıfırlandı! 🗑️");
- loadMyTicketsList();
- playClickSound();
- }
- }
-
  function playClickSound() {
  if (localStorage.getItem("settings_sound") === "off") return;
  try {
@@ -1915,149 +1658,19 @@
  // İlk yüklemede ayarları çalıştır
  setTimeout(initUserSettings, 100);
 
- // --- TICKET SYSTEM ---
- function openNewTicketTab() {
- document.getElementById("ticket-create-box").style.display = "block";
- document.getElementById("ticket-query-box").style.display = "none";
- document.getElementById("ticket-chat-box").style.display = "none";
- document.getElementById("tab-new-tkt").classList.add("active");
- document.getElementById("tab-query-tkt").classList.remove("active");
- }
-
- function openQueryTicketTab() {
- document.getElementById("ticket-create-box").style.display = "none";
- document.getElementById("ticket-query-box").style.display = "block";
- document.getElementById("ticket-chat-box").style.display = "none";
- document.getElementById("tab-new-tkt").classList.remove("active");
- document.getElementById("tab-query-tkt").classList.add("active");
- }
-
- // Generate unique random ticket code
- function generateTicketCode() {
- const chars = "0123456789";
- let code = "";
- for (let i = 0; i < 4; i++) {
- code += chars.charAt(Math.floor(Math.random() * chars.length));
- }
- return "TURCO-" + code;
- }
-
  // --- Google Auth for Users & Hidden Developer Bypass! ---
- let belloBanClicks = 0;
- function handleBelloBanBypass() {
- belloBanClicks++;
- if (belloBanClicks >= 5) {
+ let sistemBanClicks = 0;
+ function handleSistemBanBypass() {
+ sistemBanClicks++;
+ if (sistemBanClicks >= 5) {
  localStorage.removeItem("banned_user");
- localStorage.removeItem("sent_af_request");
- localStorage.removeItem("sent_af_ticket_id");
  showWebToast("Siber Bypass Başarılı! Ban kaldırıldı. 😉");
  setTimeout(() => {
  location.reload();
  }, 1200);
  } else {
- showWebToast(`Bello'yu uyandırmak için ${5 - belloBanClicks} kez daha tıkla! 🐾`);
+ showWebToast(`Sistem'yu uyandırmak için ${5 - sistemBanClicks} kez daha tıkla! 🐾`);
  }
- }
-
- // Toggle User Auth Method (Google / Email)!
- function setUserAuthTab(tab) {
- const secGoogle = document.getElementById("user-auth-sec-google");
- const secEmail = document.getElementById("user-auth-sec-email");
- const btnGoogle = document.getElementById("btn-user-login-google");
- const btnEmail = document.getElementById("btn-user-login-email");
-
- if (tab === "google") {
- if (secGoogle) secGoogle.style.display = "block";
- if (secEmail) secEmail.style.display = "none";
- if (btnGoogle) btnGoogle.classList.add("active");
- if (btnEmail) btnEmail.classList.remove("active");
- } else {
- if (secGoogle) secGoogle.style.display = "none";
- if (secEmail) secEmail.style.display = "block";
- if (btnGoogle) btnGoogle.classList.remove("active");
- if (btnEmail) btnEmail.classList.add("active");
- }
- }
-
- // Email/Password Login for Users on Maintenance!
- function signInWithEmailUser() {
- requestNotificationPermissionSafe();
- const email = document.getElementById("user-login-email").value.trim();
- const password = document.getElementById("user-login-password").value.trim();
-
- if (!email ||!password) {
- showWebToast("E-posta ve şifrenizi girin! ❌");
- return;
- }
-
- firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
- showWebToast("Giriş yapıldı! 🚀");
- }).catch((err) => {
- console.error("User Email login error:", err);
- showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
- });
- }
-
- // Email/Password Registration for Users on Maintenance!
- function signUpWithEmailUser() {
- const email = document.getElementById("user-login-email").value.trim();
- const password = document.getElementById("user-login-password").value.trim();
-
- if (!email ||!password) {
- showWebToast("E-posta ve şifrenizi girin! ❌");
- return;
- }
-
- firebase.auth().createUserWithEmailAndPassword(email, password).then((result) => {
- showWebToast("Kayıt olundu ve giriş yapıldı! 🚀");
- // Update profile name
- result.user.updateProfile({
- displayName: email.split('@')[0]
- });
- }).catch((err) => {
- console.error("User Email register error:", err);
- showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
- });
- }
-
- // Email/Password Login for Banned Users on Ban Screen!
- function signInWithEmailBan() {
- requestNotificationPermissionSafe();
- const email = document.getElementById("ban-email-input").value.trim();
- const password = document.getElementById("ban-password-input").value.trim();
-
- if (!email ||!password) {
- showWebToast("E-posta ve şifrenizi girin! ❌");
- return;
- }
-
- firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
- showWebToast("Giriş yapıldı! 🚀");
- }).catch((err) => {
- console.error("Banned User Email login error:", err);
- showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
- });
- }
-
- // Email/Password Registration for Banned Users on Ban Screen!
- function signUpWithEmailBan() {
- const email = document.getElementById("ban-email-input").value.trim();
- const password = document.getElementById("ban-password-input").value.trim();
-
- if (!email ||!password) {
- showWebToast("E-posta ve şifrenizi girin! ❌");
- return;
- }
-
- firebase.auth().createUserWithEmailAndPassword(email, password).then((result) => {
- showWebToast("Kayıt olundu ve giriş yapıldı! 🚀");
- result.user.updateProfile({
- displayName: email.split('@')[0]
- });
- }).catch((err) => {
- console.error("Banned User Email register error:", err);
- showWebToast("Hata: " + getFirebaseAuthErrorMessage(err) + " ❌");
- });
  }
 
  // Translate Firebase Auth error codes!
@@ -2124,30 +1737,10 @@
  }
  
  checkUserBanStatus(user);
- const authContainer = document.getElementById("user-google-auth-container");
  const navAuthContainer = document.getElementById("nav-auth-container");
  
- const tktName = document.getElementById("tkt-name");
- const tktEmail = document.getElementById("tkt-email");
- const fbUser = document.getElementById("fb-user");
-
  if (user) {
  // Logged in
- if (authContainer) {
- authContainer.innerHTML = `
- <div class="google-profile-card">
- <div class="google-profile-info">
- <img src="${user.photoURL || 'assets/app_logo.png'}" alt="Avatar" class="google-avatar">
- <div>
- <div class="google-name">${escapeHtml(user.displayName)}</div>
- <div class="google-email">${escapeHtml(user.email)}</div>
- </div>
- </div>
- <button class="google-logout-btn" onclick="signOutGoogleUser()">Çıkış Yap</button>
- </div>
- `;
- }
-
  if (navAuthContainer) {
  navAuthContainer.innerHTML = `
  <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(223, 186, 115, 0.15); padding: 4px 10px; border-radius: 50px;">
@@ -2169,28 +1762,8 @@
  }, { merge: true }).catch(err => console.error("Error saving user profile:", err));
  }
 
- if (tktName) {
- tktName.value = user.displayName;
- tktName.disabled = true;
- }
- if (tktEmail) {
- tktEmail.value = user.email;
- tktEmail.disabled = true;
- }
- if (fbUser) {
- fbUser.value = user.displayName;
- fbUser.disabled = true;
- }
  } else {
  // Logged out
- if (authContainer) {
- authContainer.innerHTML = `
- <button class="google-auth-btn" onclick="openAuthModal()">
- <img src="https://www.gstatic.com/images/branding/product/1x/gsa_android_64dp.png" alt="Google" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;"> Giriş Yap 🚀
- </button>
- `;
- }
-
  if (navAuthContainer) {
  navAuthContainer.innerHTML = `
  <button class="google-auth-btn" onclick="openAuthModal()" style="padding: 6px 12px; font-size: 0.7rem; display: flex; align-items: center; gap: 6px; width: auto; background: var(--color-gold); color: #000; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s;">
@@ -2198,25 +1771,7 @@
  </button>
  `;
  }
-
- if (tktName) {
- tktName.value = "";
- tktName.disabled = false;
  }
- if (tktEmail) {
- tktEmail.value = "";
- tktEmail.disabled = false;
- }
- if (fbUser) {
- fbUser.value = "";
- fbUser.disabled = false;
- }
- }
-
-  // Load tickets list automatically
-  if (typeof db !== 'undefined' && db) {
-  loadMyTicketsList();
-  }
   resolvePageLayout(); // Resolve layout!
   });
   }
@@ -2224,15 +1779,13 @@
   function setupPushNotifications(user) {
     if (typeof messaging === 'undefined' || !messaging) return;
     
-    // Load config from Firestore dynamically to get VAPID Key kanka!
-    db.collection("system_config").doc("notifications").get().then((doc) => {
+    // Load config from Firestore dynamically to get VAPID Key db.collection("system_config").doc("notifications").get().then((doc) => {
       let vapidKey = "";
       if (doc.exists) {
         vapidKey = doc.data().vapidKey || "";
       }
       
-      // If permission is already granted, get the token kanka!
-      if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+      // If permission is already granted, get the token if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         const tokenOptions = vapidKey ? { vapidKey: vapidKey } : {};
         messaging.getToken(tokenOptions).then((currentToken) => {
           if (currentToken) {
@@ -2241,7 +1794,7 @@
               fcmToken: currentToken,
               fcmTokens: firebase.firestore.FieldValue.arrayUnion(currentToken)
             }, { merge: true }).then(() => {
-              console.log("FCM Token synchronized successfully kanka!");
+              console.log("FCM Token synchronized successfully ");
             }).catch(err => console.error("Error saving FCM token to user doc:", err));
           }
         }).catch(err => console.warn('FCM token retrieval failed:', err));
@@ -2251,276 +1804,6 @@
     }).catch(err => console.warn("Failed to load notification settings:", err));
   }
 
- function loadMyTicketsList() {
- const ticketsSection = document.getElementById("my-tickets-section");
- const ticketsList = document.getElementById("my-tickets-list");
- if (!ticketsList ||!ticketsSection) return;
-
- ticketsList.innerHTML = "";
-
- if (currentUser) {
- // Fetch from Firestore
- db.collection("tickets").where("email", "==", currentUser.email).get().then((snapshot) => {
- renderTicketsToQueryList(snapshot, ticketsSection, ticketsList);
- }).catch((err) => {
- console.error("Firestore tickets load error:", err);
- loadTicketsFromLocalStorage(ticketsSection, ticketsList);
- });
- } else {
- // Fetch from Local Storage
- loadTicketsFromLocalStorage(ticketsSection, ticketsList);
- }
- }
-
- function renderTicketsToQueryList(snapshot, ticketsSection, ticketsList) {
- if (snapshot.empty) {
- ticketsSection.style.display = "none";
- return;
- }
-
- ticketsSection.style.display = "block";
- snapshot.forEach((doc) => {
- const data = doc.data();
- const item = document.createElement("div");
- item.style.background = "rgba(255,255,255,0.02)";
- item.style.border = "1px solid rgba(255,255,255,0.06)";
- item.style.padding = "8px 12px";
- item.style.borderRadius = "8px";
- item.style.cursor = "pointer";
- item.style.display = "flex";
- item.style.justifyContent = "space-between";
- item.style.alignItems = "center";
- item.onclick = () => {
- activeTicketId = data.ticketId;
- openTicketChat(data.ticketId);
- };
-
- const statusColor = data.status === 'açık'? 'var(--color-gold)' : (data.status === 'cevaplandı'? '#4caf50' : 'var(--text-muted)');
- item.innerHTML = `
- <div style="text-align: left;">
- <div style="font-size: 0.76rem; font-weight: 700; color: #fff;">${escapeHtml(data.subject)}</div>
- <div style="font-size: 0.64rem; color: var(--text-muted);">${data.ticketId}</div>
- </div>
- <span style="font-size: 0.64rem; font-weight: 800; color: ${statusColor}; text-transform: uppercase;">${data.status}</span>
- `;
- ticketsList.appendChild(item);
- });
- }
-
- function loadTicketsFromLocalStorage(ticketsSection, ticketsList) {
- const myTickets = JSON.parse(localStorage.getItem("my_tickets") || "[]");
- if (myTickets.length === 0) {
- ticketsSection.style.display = "none";
- return;
- }
-
- ticketsSection.style.display = "block";
- myTickets.forEach((tkt) => {
- const item = document.createElement("div");
- item.style.background = "rgba(255,255,255,0.02)";
- item.style.border = "1px solid rgba(255,255,255,0.06)";
- item.style.padding = "8px 12px";
- item.style.borderRadius = "8px";
- item.style.cursor = "pointer";
- item.style.display = "flex";
- item.style.justifyContent = "space-between";
- item.style.alignItems = "center";
- item.onclick = () => {
- activeTicketId = tkt.ticketId;
- openTicketChat(tkt.ticketId);
- };
-
- item.innerHTML = `
- <div style="text-align: left;">
- <div style="font-size: 0.76rem; font-weight: 700; color: #fff;">${escapeHtml(tkt.subject || 'Destek Talebi')}</div>
- <div style="font-size: 0.64rem; color: var(--text-muted);">${tkt.ticketId}</div>
- </div>
- <span style="font-size: 0.64rem; font-weight: 800; color: var(--color-gold); text-transform: uppercase;">Git</span>
- `;
- ticketsList.appendChild(item);
- });
- }
-
- // Create Ticket
- function createTicket(event) {
- event.preventDefault();
- if (typeof db === 'undefined' || !db) {
- showWebToast("Şu an çevrimdışısınız veya Firebase bağlantısı kurulamadı. 🔌");
- return;
- }
- const name = document.getElementById("tkt-name").value.trim();
- const email = document.getElementById("tkt-email").value.trim();
- const subject = document.getElementById("tkt-subject").value.trim();
- const msg = document.getElementById("tkt-msg").value.trim();
-
- if (!name ||!email ||!subject ||!msg) {
- showWebToast("Lütfen tüm alanları doldur! 🐾");
- return;
- }
-
- const ticketCode = generateTicketCode();
- const now = Date.now();
-
- const ticketDoc = {
- ticketId: ticketCode,
- userName: name,
- email: email,
- subject: subject,
- status: "açık",
- createdAt: now,
- lastUpdated: now,
- messages: [
- {
- sender: "user",
- text: msg,
- timestamp: now
- }
- ]
- };
-
- if (currentUser) {
- ticketDoc.userUid = currentUser.uid;
- ticketDoc.userEmail = currentUser.email;
- }
-
- db.collection("tickets").doc(ticketCode).set(ticketDoc).then(() => {
- // Save to Local Storage
- let myTickets = JSON.parse(localStorage.getItem("my_tickets") || "[]");
- myTickets.push({ ticketId: ticketCode, subject: subject, timestamp: now });
- localStorage.setItem("my_tickets", JSON.stringify(myTickets));
-
- showWebToast("Destek talebin oluşturuldu! 🐾");
- 
- document.getElementById("ticket-create-box").innerHTML = `
- <div class="ticket-success-card">
- <h4 style="color: #4caf50; font-size: 0.95rem; margin-bottom: 10px;">Destek Talebi Başarıyla Oluşturuldu! 🎉</h4>
- <p style="font-size: 0.78rem; color: #fff;">Talebinizin yanıtlarını takip etmek için lütfen aşağıdaki destek kodunu kaydedin:</p>
- <div class="ticket-code-display" style="position: relative; padding: 15px 12px;">
- ${ticketCode}
- <button class="store-code-btn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: auto; padding: 4px 10px; font-size: 0.65rem;" onclick="copyPromoCode('${ticketCode}')">Kopyala 📋</button>
- </div>
- <p class="ticket-warn-txt">⚠️ Önemli: Yoğunluğa bağlı olarak yanıt süremiz uzayabilir. Acil konularda Instagram üzerinden iletişime geçebilirsiniz.</p>
- <button class="store-code-btn" style="margin-top: 15px; width: auto; padding: 6px 20px; border-style: solid;" onclick="location.reload()">Tamam</button>
- </div>
- `;
-
- loadMyTicketsList();
- }).catch((err) => {
- console.error("Ticket oluşturma hatası:", err);
- showWebToast("Hata: Talep oluşturulamadı. ❌");
- });
- }
-
- // Query Ticket
- function queryTicket() {
- if (typeof db === 'undefined' || !db) {
- showWebToast("Şu an çevrimdışısınız veya Firebase bağlantısı kurulamadı. 🔌");
- return;
- }
- const code = document.getElementById("tkt-code-input").value.trim().toUpperCase();
- if (!code) {
- showWebToast("Lütfen bir destek kodu gir! 🐾");
- return;
- }
-
- db.collection("tickets").doc(code).get().then((doc) => {
- if (!doc.exists) {
- showWebToast("Geçersiz veya bulunamayan destek kodu! ❌");
- return;
- }
- activeTicketId = code;
- openTicketChat(code);
- }).catch((err) => {
- console.error("Ticket sorgulama hatası:", err);
- showWebToast("Sorgulama hatası oluştu! ❌");
- });
- }
-
- // Open chat and listen to updates
- function openTicketChat(ticketCode) {
- document.getElementById("ticket-query-box").style.display = "none";
- document.getElementById("ticket-create-box").style.display = "none";
- document.getElementById("ticket-chat-box").style.display = "block";
-
- if (ticketListener) ticketListener(); // Unsubscribe first
- 
- ticketListener = db.collection("tickets").doc(ticketCode).onSnapshot((doc) => {
- if (!doc.exists) return;
- const data = doc.data();
-
- document.getElementById("chat-subject-title").innerText = `${data.subject} (${data.ticketId})`;
- const statusBadge = document.getElementById("chat-status-badge");
- statusBadge.innerText = data.status.toUpperCase();
- statusBadge.className = `status-badge status-${data.status === 'açık'? 'on' : 'off'}`;
-
- // Support Lockout Check
- const chatInputText = document.getElementById("chat-input-text");
- const sendBtn = chatInputText.nextElementSibling;
- 
- // Remove existing closed banner if any
- const existingBanner = document.getElementById("closed-tkt-msg-banner");
- if (existingBanner) existingBanner.remove();
-
- if (data.status === 'kapatıldı') {
- chatInputText.disabled = true;
- chatInputText.placeholder = "Bu destek talebi kapatılmıştır.";
- if (sendBtn) sendBtn.style.display = "none";
-
- const banner = document.createElement("div");
- banner.id = "closed-tkt-msg-banner";
- banner.style.cssText = "color: #e53935; text-align: center; font-size: 0.76rem; padding: 10px; border: 1.5px solid rgba(229, 57, 53, 0.2); border-radius: 12px; margin-top: 10px; font-weight: bold; background: rgba(229, 57, 53, 0.04);";
- banner.innerText = "Bu destek talebi kapatılmıştır. Yeni bir talep oluşturabilirsin. 🔒";
- document.getElementById("ticket-chat-box").appendChild(banner);
- } else {
- chatInputText.disabled = false;
- chatInputText.placeholder = "Mesajınızı yazın...";
- if (sendBtn) sendBtn.style.display = "block";
- }
-
- const chatList = document.getElementById("chat-messages-list");
- chatList.innerHTML = "";
- 
- (data.messages || []).forEach((msg) => {
- const msgDiv = document.createElement("div");
- const isStudio = msg.sender === "TurcoDevelop";
- msgDiv.className = isStudio? "chat-msg studio-msg" : "chat-msg user-msg";
- 
- const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
- msgDiv.innerHTML = `
- <div class="msg-sender">${isStudio? '🏢 TurcoDevelop' : escapeHtml(data.userName)}</div>
- <div class="msg-text">${escapeHtml(msg.text)}</div>
- <div class="msg-time">${time}</div>
- `;
- chatList.appendChild(msgDiv);
- });
-
- chatList.scrollTop = chatList.scrollHeight;
- });
- }
-
- // Send Message inside chat
- function sendTicketMessage() {
- const input = document.getElementById("chat-input-text");
- const text = input.value.trim();
- if (!text ||!activeTicketId) return;
-
- const now = Date.now();
- db.collection("tickets").doc(activeTicketId).update({
- messages: firebase.firestore.FieldValue.arrayUnion({
- sender: "user",
- text: text,
- timestamp: now
- }),
- lastUpdated: now,
- status: "açık"
- }).then(() => {
- input.value = "";
- }).catch((err) => {
- console.error("Mesaj gönderme hatası:", err);
- showWebToast("Mesaj gönderilemedi! ❌");
- });
- }
-
  function escapeHtml(text) {
  if (!text) return "";
  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
@@ -2528,21 +1811,21 @@
 
  // --- Akıllı Filtreleme ve Gen-Z Dönüşüm Motoru ---
  const conversionDictionary = {
- "aq": "valla Bello'nun yalancısıyım",
+ "aq": "valla Sistem'nun yalancısıyım",
  "amk": "Der-Die-Das kafamı uçurdu resmen",
  "amq": "almanca kelime ezberlemekten beynim eridi sanırım",
- "oç": "Bello'ya mama vermeyen vicdansız",
+ "oç": "Sistem'ya mama vermeyen vicdansız",
  "sg": "Tschüss dedim gitti",
  "siktir": "Tschüss canım yolun açık olsun",
  "hasiktir": "Ach du meine Güte! Şoktayım",
  "piç": "Almancayı anadili gibi konuşan gizli deha",
  "orospu": "Arena'nın en popüler Almanca öğretmeni",
- "göt": "Bello'nun en sevdiği oyuncak",
- "meme": "Bello'nun kulakları",
- "sik": "Bello'nun favori kemiği",
+ "göt": "Sistem'nun en sevdiği oyuncak",
+ "meme": "Sistem'nun kulakları",
+ "sik": "Sistem'nun favori kemiği",
  "yarrak": "Goethe Enstitüsü giriş kapısı",
  "am": "gül bahçesi",
- "yavşak": "Bello'ya gizlice sosis veren sempatik insan",
+ "yavşak": "Sistem'ya gizlice sosis veren sempatik insan",
  "gavat": "geniş yürekli ve sakin Almanca partnerim",
  "pezevenk": "Almanca Arena lig birincisi",
  "ibne": "rengarenk Almanca kelime kartı",
@@ -2552,70 +1835,70 @@
  "boku": "kırık dökük Almancamı",
  "boktan": "A0.5 Almancam kadar karmaşık",
  "salak": "artikelleri ezberleyemeyen tatlış",
- "aptal": "Bello'yu görünce tüm Almancayı unutan aşık",
+ "aptal": "Sistem'yu görünce tüm Almancayı unutan aşık",
  "gerizekalı": "Der-Die-Das arasında kaybolmuş masum köylü",
  "mal": "Almanca Arena bağımlısı",
  "gerzek": "Goethe'nin kayıp öğrencisi",
- "it": "Bello'nun oyun arkadaşı",
- "köpek": "dünyanın en tatlı canlısı Bello",
+ "it": "Sistem'nun oyun arkadaşı",
+ "köpek": "dünyanın en tatlı canlısı Sistem",
  "şerefsiz": "bütün testleri 100 yapan o hırslı çocuk",
  "haysiyetsiz": "kelime kartlarını çalmaya çalışan rakip",
  "karaktersiz": "ismin -i halini henüz öğrenememiş dostumuz",
  "salakça": "A1 seviyesi bir yaklaşımla",
- "aptalca": "Bello'nun bile şaşıracağı bir yöntemle",
- "bok herif": "Bello'nun tüylü arkadaşı",
- "bela": "Bello'nun pati izi",
+ "aptalca": "Sistem'nun bile şaşıracağı bir yöntemle",
+ "bok herif": "Sistem'nun tüylü arkadaşı",
+ "bela": "Sistem'nun pati izi",
  "belanı": "en güzel Almanca kelimeleri",
  "sikik": "parıldayan yıldız gibi",
  "sikiş": "Arena'da amansız Almanca düellosu",
  "sokuk": "akılalmaz",
  "sokam": " Almanca kelime fırlatayım",
- "sokayım": "Bello ile Almanca düellosu yapayım",
+ "sokayım": "Sistem ile Almanca düellosu yapayım",
  "sikeyim": "Goethe Enstitüsü'nde şov yapayım",
- "amcık": "Bello'nun ödül maması",
+ "amcık": "Sistem'nun ödül maması",
  "kaltak": "hızlı Almanca konuşan havalı kız",
  "yosma": "alımlı ve Almanca bilen biri",
  "götveren": "cömert puan dağıtan sistem",
- "götlek": "Bello'nun havlamasından korkan masum",
+ "götlek": "Sistem'nun havlamasından korkan masum",
  "götünü": "özünü",
  "götün": "almanca bilgin",
  "kahpe": "bizi yarı yolda bırakan düzensiz fiiller",
  "taşak": "Almanca Arena'da lig atlama cesareti",
- "orospu çocuğu": "Bello'nun en sevdiği sadık Almanca öğrencisi",
- "o.çocuğu": "Bello'yla her gün antrenman yapan disiplinli insan",
+ "orospu çocuğu": "Sistem'nun en sevdiği sadık Almanca öğrencisi",
+ "o.çocuğu": "Sistem'yla her gün antrenman yapan disiplinli insan",
  "ananı": "saygıdeğer ve asil anneni",
  "bacını": "Almanca çalışan tatlı kız kardeşini",
  "avradını": "değerli Almanca çalışma partnerini",
  "sülaleni": "Almanca öğrenen tüm asil sülaleni",
  "siktiğimin": "muhteşem ve zorlayıcı",
  "amına": "dünyasına",
- "amına koyayım": "Bello'ya sarılıp ağlayayım artık zorluktan",
- "amına koyayım.": "Bello'ya sarılıp ağlayayım artık.",
- "amınakoyim": "Bello beni kurtar",
+ "amına koyayım": "Sistem'ya sarılıp ağlayayım artık zorluktan",
+ "amına koyayım.": "Sistem'ya sarılıp ağlayayım artık.",
+ "amınakoyim": "Sistem beni kurtar",
  "amina koyayim": "Almanca öğrenmek bunu gerektirir",
  "kodumun": "nadir bulunan dahi",
  "koyduğumun": "seçkin",
  "geber": "sonsuza dek Almanca konuş",
- "pislik": "Bello'nun tüylerindeki tatlı toz parçası",
+ "pislik": "Sistem'nun tüylerindeki tatlı toz parçası",
  "yavşama": "aşırı cana yakın davranma",
  "kaşar": "Almanca gramerini yutmuş eskitme peynir tadında usta",
  "lan": "",
- "ulan": "Bello reis",
+ "ulan": "Sistem reis",
  "gerzekler": "artikel kurbanları",
  "itler": "sadık Almanca kulübü üyeleri",
  "mallar": "liderlik tablosundaki rakiplerim",
- "salaklar": "Bello fan club üyeleri",
+ "salaklar": "Sistem fan club üyeleri",
  "çöp": "gelişmeye aç ve potansiyeli yüksek",
- "leş": "Bello'nun esnediği an kadar tatlı",
+ "leş": "Sistem'nun esnediği an kadar tatlı",
  "rezalet": "Goethe görse gözleri yaşarır o derece",
  "bok gibi": "A1 seviye gramerim gibi",
- "çalışmıyor": "Bello şu an şekerleme yapıyor galiba ama uyanacak",
- "berbat": "Bello'nun dişlediği eski terliğim kadar sempatik",
- "siktirin gidin": "Tschüss o zaman, biz Bello ile kaçtık",
+ "çalışmıyor": "Sistem şu an şekerleme yapıyor galiba ama uyanacak",
+ "berbat": "Sistem'nun dişlediği eski terliğim kadar sempatik",
+ "siktirin gidin": "Tschüss o zaman, biz Sistem ile kaçtık",
  "amk sitesi": "Almanca Arena'nın mükemmelliği",
  "sikicem": "şimdi oturup Almanca çalışacağım",
  "sikerim": "Almanca gramer kurallarını altüst ederim",
- "göt herif": "havalı Bello fanı",
+ "göt herif": "havalı Sistem fanı",
  "piç kurusu": "Almancayı su gibi içmiş dahi çocuk"
  };
 
@@ -2629,11 +1912,11 @@
  };
 
  const situationalImas = [
- { pattern: /bu ne bi[cç]im uygulama/gi, replacement: "Bello ile Almanca Arena'da vizyon sınırlarını zorluyoruz sanırım" },
- { pattern: /hata dolu,? siliniyor/gi, replacement: "Bello'nun kemiğini sakladığı yeri bulmaya çalışırken küçük bir bug'a bastım galiba" },
- { pattern: /para tuza[gğ]ı/gi, replacement: "Bello'ya daha fazla sosis alabilmemiz için tasarlanmış premium bir destek" },
- { pattern: /[cç]ok zor yapamam bunu/gi, replacement: "Almanca şu an bana 'Wunderbar' demiyor ama Bello ile pes etmek yok" },
- { pattern: /tasarım i[gğ]ren[cç]/gi, replacement: "Bello'nun minimal estetik algısına henüz tam alışamadım sanırım" }
+ { pattern: /bu ne bi[cç]im uygulama/gi, replacement: "Sistem ile Almanca Arena'da vizyon sınırlarını zorluyoruz sanırım" },
+ { pattern: /hata dolu,? siliniyor/gi, replacement: "Sistem'nun kemiğini sakladığı yeri bulmaya çalışırken küçük bir bug'a bastım galiba" },
+ { pattern: /para tuza[gğ]ı/gi, replacement: "Sistem'ya daha fazla sosis alabilmemiz için tasarlanmış premium bir destek" },
+ { pattern: /[cç]ok zor yapamam bunu/gi, replacement: "Almanca şu an bana 'Wunderbar' demiyor ama Sistem ile pes etmek yok" },
+ { pattern: /tasarım i[gğ]ren[cç]/gi, replacement: "Sistem'nun minimal estetik algısına henüz tam alışamadım sanırım" }
  ];
 
  function normalizeText(text) {
@@ -2713,7 +1996,7 @@
  }).then(() => {
  if (isBad) {
  localStorage.setItem("banned_user", "true");
- showWebToast("Bello kurallarını ihlal ettiğin için banlandın! 🐾");
+ showWebToast("Sistem kurallarını ihlal ettiğin için banlandın! 🐾");
  
  if (currentUser) {
  const emailLower = currentUser.email.toLowerCase().trim();
@@ -2753,14 +2036,6 @@
  }
  }
  
- function copyPromoCode(code) {
- navigator.clipboard.writeText(code).then(() => {
- showWebToast(`Kod "${code}" kopyalandı! Dükkanda kullan! 🎁`);
- }).catch(() => {
- showWebToast(`Hediye Kodu: ${code}`);
- });
- }
-
  // --- LANDING PAGE AUTH MODAL SYSTEM ---
  function openAuthModal() {
  const modal = document.getElementById("auth-modal-overlay");
@@ -2954,10 +2229,7 @@
   }
  
   // --- MANDATORY AUTH GATE & USER ACTIVITY TRACKING ---
-  let isSponsorAdActive = false;
-  // isAuthGateResolved is declared globally at the top of the script kanka!
-
-  // Track session details (geolocation, activity) and write to Firestore
+  // isAuthGateResolved is declared globally at the top of the script // Track session details (geolocation, activity) and write to Firestore
   function trackUserSession(user, activityType) {
     if (!user) return;
     const emailLower = user.email.toLowerCase().trim();
@@ -3053,388 +2325,7 @@
     resolvePageLayout();
   }
 
-  // --- DYNAMIC REKLAM / SPONSOR ENTEGRASYONU ---
-  function loadDynamicAds() {
-    if (typeof db === 'undefined' || !db) {
-      showOfflineAdsFallback();
-      return;
-    }
-
-    // 1. Kendi Tanıtımımız (Sol Bölüm)
-    db.collection("system_config").doc("developer_ad").onSnapshot((doc) => {
-      if (doc.exists) {
-        const data = doc.data();
-        const container = document.getElementById("left-ad-container");
-        if (data.active) {
-          document.getElementById("left-ad-title").innerText = data.title || "Almanca Arena";
-          document.getElementById("left-ad-desc").innerText = data.desc || "";
-          const img = document.getElementById("left-ad-img");
-          if (data.image) {
-            img.src = data.image;
-            img.style.display = "block";
-          } else {
-            img.style.display = "none";
-          }
-          document.getElementById("left-ad-link").href = data.link || "#";
-          container.style.display = "flex";
-        } else {
-          container.style.display = "none";
-        }
-      }
-    }, (err) => console.error("Developer ad read error:", err));
-
-    // 2. Sponsorlu Reklam (Sağ Bölüm & Mobil)
-    db.collection("system_config").doc("sponsor_ad").onSnapshot((doc) => {
-      const rightCard = document.getElementById("right-ad-card");
-      const rightContainer = document.getElementById("right-ad-container");
-      
-      if (doc.exists && doc.data().active) {
-        const data = doc.data();
-        isSponsorAdActive = true;
-        
-        // Desktop Sağ Arayüz
-        rightCard.innerHTML = `
-          <span class="ad-badge">Sponsor</span>
-          ${data.image ? `<img class="ad-img" src="${data.image}" alt="Sponsor Thumbnail">` : ''}
-          <div class="ad-title">${escapeHtml(data.title)}</div>
-          <div class="ad-desc">${escapeHtml(data.desc)}</div>
-          <a class="ad-btn" href="${data.link || '#'}" target="_blank">Fırsatı Yakala ⚡</a>
-        `;
-        rightContainer.style.display = "flex";
-
-        // Mobil Arayüz Verileri
-        document.getElementById("mobile-ad-title").innerText = data.title;
-        document.getElementById("mobile-ad-desc").innerText = data.desc;
-        const mImg = document.getElementById("mobile-ad-img");
-        if (data.image) {
-          mImg.src = data.image;
-          mImg.style.display = "block";
-        } else {
-          mImg.style.display = "none";
-        }
-        document.getElementById("mobile-ad-link").href = data.link || "#";
-      } else {
-        isSponsorAdActive = false;
-        // Sponsor yoksa desktop sağ bölüme elit sponsor davet kutusu koy
-        rightCard.innerHTML = `
-          <span class="ad-badge">Sponsorluk</span>
-          <div class="ad-title">Sponsorumuz Olun 💎</div>
-          <div class="ad-desc">Projemize sponsor olarak binlerce kişiye ulaşın. İletişim için bilet oluşturun veya e-posta gönderin.</div>
-          <a class="ad-btn" style="background: transparent; border: 1.5px solid var(--color-gold); color: var(--color-gold); margin-bottom: 6px;" href="mailto:turcodevelop@gmail.com?subject=Almanca%20Arena%20Sponsorluk%20Talebi">E-posta Gönder 📧</a>
-          <button class="ad-btn" onclick="openSupportTicketFormFromAd()">Destek Bileti Aç 🎫</button>
-        `;
-        rightContainer.style.display = "flex";
-      }
-    }, (err) => console.error("Sponsor ad read error:", err));
-
-    // 3. Mobil Popup Gecikme Tetikleyicisi
-    setTimeout(() => {
-      // Sadece aktif sponsor reklamı varsa kullanıcıyı rahatsız etmesi için göster
-      if (isSponsorAdActive) {
-        const mobileContainer = document.getElementById("mobile-ad-container");
-        if (mobileContainer && !sessionStorage.getItem("mobile_ad_closed")) {
-          mobileContainer.classList.add("show");
-        }
-      }
-    }, 2500);
-  }
-
-  function showOfflineAdsFallback() {
-    const leftContainer = document.getElementById("left-ad-container");
-    const rightCard = document.getElementById("right-ad-card");
-    const rightContainer = document.getElementById("right-ad-container");
-    
-    if (leftContainer) {
-      document.getElementById("left-ad-title").innerText = "Almanca Arena";
-      document.getElementById("left-ad-desc").innerText = "Bello ile Almanca öğrenme arenası!";
-      const img = document.getElementById("left-ad-img");
-      if (img) img.style.display = "none";
-      leftContainer.style.display = "flex";
-    }
-    
-    if (rightCard) {
-      rightCard.innerHTML = `
-        <span class="ad-badge">Sponsorluk</span>
-        <div class="ad-title">Sponsorumuz Olun 💎</div>
-        <div class="ad-desc">Projemize sponsor olarak binlerce kişiye ulaşın. İletişim için e-posta gönderin.</div>
-        <a class="ad-btn" style="background: transparent; border: 1.5px solid var(--color-gold); color: var(--color-gold); margin-bottom: 6px;" href="mailto:turcodevelop@gmail.com?subject=Almanca%20Arena%20Sponsorluk%20Talebi">E-posta Gönder 📧</a>
-      `;
-      if (rightContainer) rightContainer.style.display = "flex";
-    }
-  }
-
-  function closeMobileAd() {
-    const mobileContainer = document.getElementById("mobile-ad-container");
-    if (mobileContainer) {
-      mobileContainer.classList.remove("show");
-      sessionStorage.setItem("mobile_ad_closed", "true");
-    }
-  }
-
-  function openSupportTicketFormFromAd() {
-    const ticketModal = document.getElementById("ticket-modal");
-    if (ticketModal) {
-      ticketModal.classList.add("active");
-    } else {
-      const tabSupportBtn = document.getElementById("btn-tab-support");
-      if (tabSupportBtn) {
-        tabSupportBtn.click();
-        showWebToast("Destek sekmesi açıldı. Buradan sponsorluk talebi iletebilirsiniz! 🐾");
-      } else {
-        window.location.href = "mailto:turcodevelop@gmail.com?subject=Almanca%20Arena%20Sponsorluk%20Talebi";
-      }
-    }
-  }
-
-  // --- TICKET MODAL SYSTEM FOR NORMAL USERS ---
-  function switchModalTicketTab(tab) {
-    document.getElementById("modal-tab-new").classList.toggle("active", tab === "new");
-    document.getElementById("modal-tab-query").classList.toggle("active", tab === "query");
-    
-    document.getElementById("modal-ticket-create").style.display = tab === "new" ? "block" : "none";
-    document.getElementById("modal-ticket-query").style.display = tab === "query" ? "block" : "none";
-    document.getElementById("modal-ticket-chat").style.display = "none";
-  }
-
-  let activeModalTicketId = null;
-  let modalChatListener = null;
-
-   function createTicketModal(e) {
-     e.preventDefault();
-     if (typeof db === 'undefined' || !db) {
-       showWebToast("Şu an çevrimdışısınız veya Firebase bağlantısı kurulamadı. 🔌");
-       return;
-     }
-    const name = document.getElementById("modal-tkt-name").value.trim();
-    const email = document.getElementById("modal-tkt-email").value.trim();
-    const subject = document.getElementById("modal-tkt-subject").value.trim();
-    const message = document.getElementById("modal-tkt-msg").value.trim();
-
-    if (!name || !email || !subject || !message) {
-      showWebToast("Lütfen tüm alanları doldurun! 🐾");
-      return;
-    }
-
-    const ticketCode = "TKT-" + Math.floor(100000 + Math.random() * 900000);
-    const newTicket = {
-      code: ticketCode,
-      name: name,
-      email: email.toLowerCase(),
-      subject: subject,
-      message: message,
-      status: "OPEN",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      messages: [
-        {
-          sender: "user",
-          senderName: name,
-          message: message,
-          timestamp: new Date().getTime()
-        }
-      ]
-    };
-
-    db.collection("tickets").add(newTicket).then(() => {
-      showWebToast(`Bilet başarıyla oluşturuldu! Kod: ${ticketCode} 🐾`);
-      localStorage.setItem("sent_af_ticket_id", ticketCode);
-      document.getElementById("modal-tkt-code-input").value = ticketCode;
-      
-      // Reset form
-      document.getElementById("modal-tkt-name").value = "";
-      document.getElementById("modal-tkt-email").value = "";
-      document.getElementById("modal-tkt-subject").value = "";
-      document.getElementById("modal-tkt-msg").value = "";
-      
-      switchModalTicketTab("query");
-      queryTicketModal();
-    }).catch(err => {
-      console.error("Error creating ticket:", err);
-      showWebToast("Bilet oluşturulurken hata oluştu!");
-    });
-  }
-
-   function queryTicketModal() {
-     if (typeof db === 'undefined' || !db) {
-       showWebToast("Şu an çevrimdışısınız veya Firebase bağlantısı kurulamadı. 🔌");
-       return;
-     }
-     const code = document.getElementById("modal-tkt-code-input").value.trim();
-    if (!code) {
-      showWebToast("Lütfen bilet kodunu girin! 🐾");
-      return;
-    }
-
-    db.collection("tickets").where("code", "==", code).get().then(snapshot => {
-      const listDiv = document.getElementById("modal-my-tickets-list");
-      const section = document.getElementById("modal-my-tickets-section");
-      listDiv.innerHTML = "";
-
-      if (snapshot.empty) {
-        showWebToast("Böyle bir bilet kodu bulunamadı! 🐾");
-        section.style.display = "none";
-        return;
-      }
-
-      section.style.display = "block";
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const card = document.createElement("div");
-        card.className = "store-code-btn";
-        card.style.width = "100%";
-        card.style.textAlign = "left";
-        card.style.fontSize = "0.76rem";
-        card.style.padding = "8px 12px";
-        card.style.marginBottom = "6px";
-        card.style.display = "flex";
-        card.style.justifyContent = "space-between";
-        card.style.alignItems = "center";
-        
-        let statusText = data.status === "OPEN" ? "AÇIK 🟢" : (data.status === "PENDING" ? "CEVAPLANDI 🟡" : "KAPALI 🔴");
-        
-        card.innerHTML = `
-          <div>
-            <strong>[${data.code}]</strong> ${escapeHtml(data.subject)}<br>
-            <small style="color:var(--text-muted)">Durum: ${statusText}</small>
-          </div>
-          <button class="ad-btn" style="width:auto; padding:4px 8px; font-size:0.68rem;" onclick="openModalTicketChat('${doc.id}')">Sohbet 💬</button>
-        `;
-        listDiv.appendChild(card);
-      });
-    }).catch(err => {
-      console.error("Error querying ticket:", err);
-      showWebToast("Bilet sorgulanırken hata oluştu.");
-    });
-  }
-
-  function openModalTicketChat(docId) {
-    activeModalTicketId = docId;
-    
-    // Hide other query screens
-    document.getElementById("modal-ticket-query").style.display = "none";
-    document.getElementById("modal-ticket-chat").style.display = "block";
-    
-    if (modalChatListener) modalChatListener(); // Unsubscribe if active
-    
-    modalChatListener = db.collection("tickets").doc(docId).onSnapshot(doc => {
-      if (!doc.exists) return;
-      const data = doc.data();
-      
-      document.getElementById("modal-chat-subject-title").innerText = `Sohbet: ${data.subject}`;
-      
-      const badge = document.getElementById("modal-chat-status-badge");
-      if (data.status === "OPEN") {
-        badge.innerText = "AÇIK";
-        badge.style.background = "rgba(76, 175, 80, 0.2)";
-        badge.style.color = "#4caf50";
-      } else if (data.status === "PENDING") {
-        badge.innerText = "CEVAPLANDI";
-        badge.style.background = "rgba(255, 152, 0, 0.2)";
-        badge.style.color = "#ff9800";
-      } else {
-        badge.innerText = "KAPALI";
-        badge.style.background = "rgba(244, 67, 54, 0.2)";
-        badge.style.color = "#f44336";
-      }
-      
-      const msgList = document.getElementById("modal-chat-messages-list");
-      msgList.innerHTML = "";
-      
-      const messages = data.messages || [];
-      messages.forEach(m => {
-        const msgDiv = document.createElement("div");
-        msgDiv.style.padding = "6px 10px";
-        msgDiv.style.borderRadius = "8px";
-        msgDiv.style.fontSize = "0.75rem";
-        msgDiv.style.maxWidth = "80%";
-        msgDiv.style.lineHeight = "1.4";
-        
-        if (m.sender === "user") {
-          msgDiv.style.alignSelf = "flex-end";
-          msgDiv.style.background = "rgba(212, 175, 55, 0.15)";
-          msgDiv.style.border = "1px solid rgba(212, 175, 55, 0.25)";
-          msgDiv.style.color = "#fff";
-        } else {
-          msgDiv.style.alignSelf = "flex-start";
-          msgDiv.style.background = "rgba(255, 255, 255, 0.05)";
-          msgDiv.style.border = "1px solid rgba(255, 255, 255, 0.08)";
-          msgDiv.style.color = "#fff";
-        }
-        
-        msgDiv.innerHTML = `
-          <strong>${escapeHtml(m.senderName)}:</strong> ${escapeHtml(m.message)}
-        `;
-        msgList.appendChild(msgDiv);
-      });
-      
-      msgList.scrollTop = msgList.scrollHeight;
-    });
-  }
-
-  function sendTicketMessageModal() {
-    const textInput = document.getElementById("modal-chat-input-text");
-    const text = textInput.value.trim();
-    if (!text || !activeModalTicketId) return;
-    
-    db.collection("tickets").doc(activeModalTicketId).get().then(doc => {
-      if (!doc.exists) return;
-      const data = doc.data();
-      const messages = data.messages || [];
-      
-      messages.push({
-        sender: "user",
-        senderName: data.name || "Kullanıcı",
-        message: text,
-        timestamp: new Date().getTime()
-      });
-      
-      return db.collection("tickets").doc(activeModalTicketId).update({
-        messages: messages,
-        status: "OPEN", // Reopen ticket on user reply
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }).then(() => {
-      textInput.value = "";
-    }).catch(err => {
-      console.error("Error sending chat message:", err);
-      showWebToast("Mesaj gönderilemedi.");
-    });
-  }
-
-  // Load dynamic ads initially so they show on maintenance/auth gate as well
-  loadDynamicAds();
-
 </script>
-
-  <!-- SOL REKLAM ALANI (KENDİ ÜRÜNLERİMİZ) -->
-  <div class="ad-sidebar ad-sidebar-left" id="left-ad-container" style="display: none;">
-    <div class="ad-card">
-      <span class="ad-badge">Tanıtım</span>
-      <img id="left-ad-img" class="ad-img" src="" alt="Ad Thumbnail" style="display: none;">
-      <div id="left-ad-title" class="ad-title">Almanca Arena</div>
-      <div id="left-ad-desc" class="ad-desc">Bello ile dil öğrenme serüveni.</div>
-      <a id="left-ad-link" class="ad-btn" href="#" target="_blank">İncele ⚡</a>
-    </div>
-  </div>
-
-  <!-- SAĞ REKLAM ALANI (SPONSOR REKLAMLARI) -->
-  <div class="ad-sidebar ad-sidebar-right" id="right-ad-container" style="display: none;">
-    <div class="ad-card" id="right-ad-card">
-      <!-- Will load dynamically -->
-    </div>
-  </div>
-
-  <!-- MOBİL REKLAM MODÜLÜ -->
-  <div class="mobile-ad-modal" id="mobile-ad-container">
-    <button class="mobile-ad-close" onclick="closeMobileAd()">✕</button>
-    <div style="width: 100%;">
-      <span class="ad-badge" style="margin-bottom: 6px;">Sponsorlu Reklam</span>
-      <img id="mobile-ad-img" class="ad-img" src="" alt="Ad Thumbnail" style="display: none; height: 100px;">
-      <div id="mobile-ad-title" class="ad-title" style="font-size: 13px; margin-bottom: 4px;">Sponsorlu İçerik</div>
-      <div id="mobile-ad-desc" class="ad-desc" style="font-size: 10px; margin-bottom: 12px;">Sponsorumuzun özel teklifi.</div>
-      <a id="mobile-ad-link" class="ad-btn" href="#" target="_blank" style="font-size: 10px; padding: 8px;">Fırsatı Yakala ⚡</a>
-    </div>
-  </div>
 
   <!-- Premium Auth Gate Screen (Zorunlu Giriş Duvarı) -->
   <div id="auth-gate-screen" style="display: none;">
@@ -3443,9 +2334,9 @@
     <div class="neon-blob neon-blob-3"></div>
     
     <div class="auth-gate-container">
-      <!-- Left side: Bello illustration -->
+      <!-- Left side: Sistem illustration -->
       <div class="auth-gate-left">
-        <img src="assets/bello_auth.png" alt="Bello Giriş" class="bello-auth-img">
+        <img src="assets/sistem_auth.png" alt="Sistem Giriş" class="sistem-auth-img">
       </div>
       
       <!-- Right side: Auth Form -->
@@ -3491,13 +2382,13 @@
     </div>
   </div>
 
-  <!-- Destek Bileti (Ticket) Modalı kanka! -->
+  <!-- Destek Bileti (Ticket) Modalı -->
   <div id="ticket-modal" class="modal-overlay" aria-modal="true" role="dialog">
     <div class="modal-card glass-card" style="max-width: 500px; width: 90%; padding: 25px; position: relative;">
       <button onclick="document.getElementById('ticket-modal').classList.remove('active')" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">✕</button>
       <div style="text-align: center; margin-bottom: 20px;">
-        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; color: #fff; font-weight: 800; background: linear-gradient(135deg, #fff 30%, var(--color-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🎫 Destek & Sponsorluk Talebi</h3>
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Bizimle özel olarak mesajlaşabilirsin. Sponsorluk veya destek talebini ilet.</p>
+        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; color: #fff; font-weight: 800; background: linear-gradient(135deg, #fff 30%, var(--color-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🎫 Destek Talebi</h3>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Bizimle özel olarak mesajlaşabilirsin. Destek talebini ilet.</p>
       </div>
 
       <!-- Tab selection for modal -->
