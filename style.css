@@ -4,15 +4,15 @@
    ========================================================================== */
 
 :root {
-  --bg-color: #07040f;
-  --card-bg: rgba(18, 12, 36, 0.65);
-  --color-gold: #dfba73;
-  --color-gold-hover: #e9d09e;
-  --color-gold-glow: rgba(223, 186, 115, 0.25);
-  --primary-accent: #8a2be2; /* Cyber Purple */
-  --secondary-accent: #00f0ff; /* Cyber Cyan */
+  --bg-color: #080511;
+  --card-bg: rgba(18, 12, 33, 0.65);
+  --color-gold: #ff6600; /* Studio Orange */
+  --color-gold-hover: #ff8533;
+  --color-gold-glow: rgba(255, 102, 0, 0.25);
+  --primary-accent: #ffffff; /* Chrome White */
+  --secondary-accent: #ffa200; /* Golden Amber Accent */
   --text-light: #eceff1;
-  --text-muted: #9e95b0;
+  --text-muted: #a49cb5;
   --alert-red: #ff3b30;
   --alert-green: #34c759;
   --font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -34,9 +34,9 @@ body {
   overflow-x: hidden;
   position: relative;
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(138, 43, 226, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(7, 4, 15, 1) 0%, rgba(4, 2, 8, 1) 100%);
+    radial-gradient(circle at 10% 20%, rgba(255, 102, 0, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(8, 5, 17, 1) 0%, rgba(4, 3, 9, 1) 100%);
 }
 
 /* Background Blobs (Premium Animations) */
@@ -62,7 +62,7 @@ body {
 .blob-1 {
   width: 400px;
   height: 400px;
-  background: var(--primary-accent);
+  background: var(--color-gold);
   top: -100px;
   left: -100px;
 }
@@ -70,7 +70,7 @@ body {
 .blob-2 {
   width: 500px;
   height: 500px;
-  background: var(--color-gold);
+  background: var(--primary-accent);
   bottom: -150px;
   right: -100px;
   animation-duration: 25s;
@@ -100,7 +100,7 @@ body {
   background: var(--bg-color);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(223, 186, 115, 0.3);
+  background: rgba(255, 102, 0, 0.3);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {

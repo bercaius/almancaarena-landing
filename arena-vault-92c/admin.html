@@ -7,16 +7,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #06030c;
-            --card-bg: rgba(15, 8, 30, 0.65);
-            --color-gold: #dfba73;
-            --color-gold-hover: #e6c88f;
-            --primary-accent: #ff007f;
-            --secondary-accent: #00f0ff;
+            --bg-color: #080511;
+            --card-bg: rgba(18, 12, 33, 0.65);
+            --color-gold: #ff6600; /* Studio Orange */
+            --color-gold-hover: #ff8533;
+            --primary-accent: #ffffff; /* Chrome White */
+            --secondary-accent: #ffa200; /* Golden Amber Accent */
             --text-light: #eceff1;
-            --text-muted: #8c7e9c;
-            --alert-red: #e53935;
-            --alert-green: #4caf50;
+            --text-muted: #a49cb5;
+            --alert-red: #ff3b30;
+            --alert-green: #34c759;
         }
 
         * {
@@ -34,9 +34,9 @@
             justify-content: center;
             align-items: center;
             background-image: 
-                radial-gradient(circle at 5% 5%, rgba(223, 186, 115, 0.06) 0%, transparent 40%),
-                radial-gradient(circle at 95% 95%, rgba(255, 0, 127, 0.06) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(10, 5, 21, 1) 0%, rgba(6, 3, 12, 1) 100%);
+                radial-gradient(circle at 5% 5%, rgba(255, 102, 0, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 95% 95%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(8, 5, 17, 1) 0%, rgba(4, 3, 9, 1) 100%);
             padding: 20px;
         }
 
@@ -671,6 +671,33 @@
                             </div>
                         </div>
 
+                        <!-- Uygulama Sürüm Güncelleyici Modülü -->
+                        <div class="form-group" style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                            <label style="color: var(--color-gold); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 12px;">📱 Uygulama Sürüm Yönetimi</label>
+                            
+                            <div class="form-group">
+                                <label for="app-version-code">Version Code (Zorunlu)</label>
+                                <input type="number" id="app-version-code" class="maint-input" placeholder="Örn: 11" style="background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; padding: 10px;">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="app-version-name">Version Name (Zorunlu)</label>
+                                <input type="text" id="app-version-name" class="maint-input" placeholder="Örn: 1.0.0-beta.11" style="background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; padding: 10px;">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="app-download-url">APK İndirme URL'si (Zorunlu)</label>
+                                <input type="text" id="app-download-url" class="maint-input" placeholder="https://..." style="background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; padding: 10px;">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="app-changelog">Yenilikler (Changelog)</label>
+                                <textarea id="app-changelog" placeholder="Sürüm yeniliklerini yazın..." style="height: 60px; background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; padding: 10px;"></textarea>
+                            </div>
+
+                            <button class="btn" style="background: var(--color-gold); color: #000; width: 100%; justify-content: center; margin-bottom: 20px;" onclick="saveAppVersion()">Sürüm Ayarlarını Yayınla ⚡</button>
+                        </div>
+
                         <!-- Admin Scratchpad (Local storage notes) -->
                         <div class="form-group" style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
                             <label for="admin-scratchpad" style="color: var(--color-gold); display: flex; justify-content: space-between;">
@@ -920,7 +947,7 @@
     <script>
         // Firebase Config
         const firebaseConfig = {
-            apiKey: "AIzaSyBgP9Cr_XuIdcCx7RZykQNP9b93YuP1MYo",
+            apiKey: "AIzaSyBMy_H4iGbo4uQwypKlX3wcpCovQVc4DYg",
             authDomain: "almanca-arena.firebaseapp.com",
             projectId: "almanca-arena",
             storageBucket: "almanca-arena.firebasestorage.app",
@@ -1312,6 +1339,7 @@
 
         let configListener = null;
         function loadCurrentConfig() {
+            loadAppVersionConfig();
             if (configListener) configListener(); // Unsubscribe first
             configListener = configRef.onSnapshot((doc) => {
                 trackRead(1);
@@ -1427,6 +1455,45 @@
                     console.error("Kaydetme hatası:", error);
                     showToast("Kaydedilemedi! İzin hatası olabilir. ❌");
                 });
+        }
+
+        function loadAppVersionConfig() {
+            db.collection("system_config").doc("app_version").get().then((doc) => {
+                trackRead(1);
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById("app-version-code").value = data.versionCode || 11;
+                    document.getElementById("app-version-name").value = data.versionName || "1.0.0-beta.11";
+                    document.getElementById("app-download-url").value = data.downloadUrl || "";
+                    document.getElementById("app-changelog").value = data.changelog || "";
+                }
+            }).catch(err => console.error("Error loading app version:", err));
+        }
+
+        function saveAppVersion() {
+            const code = parseInt(document.getElementById("app-version-code").value);
+            const name = document.getElementById("app-version-name").value.trim();
+            const url = document.getElementById("app-download-url").value.trim();
+            const log = document.getElementById("app-changelog").value.trim();
+
+            if (isNaN(code) || !name || !url) {
+                showToast("Lütfen tüm zorunlu alanları doldurun! 🐾");
+                return;
+            }
+
+            db.collection("system_config").doc("app_version").set({
+                versionCode: code,
+                versionName: name,
+                downloadUrl: url,
+                changelog: log
+            }).then(() => {
+                trackWrite(1);
+                showToast("Uygulama sürüm ayarları kaydedildi! 📱");
+                addSystemLog(`Uygulama sürümü güncellendi: ${name} (Code: ${code})`);
+            }).catch(err => {
+                console.error("Error saving app version:", err);
+                showToast("Sürüm ayarları kaydedilemedi! ❌");
+            });
         }
 
         // Live maintenance screen preview helper (0 Quota cost )
