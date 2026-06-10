@@ -1103,13 +1103,15 @@
             }
 
             if (role === "moderator") {
-                // Sadece yorumlar sekmesine erişim [btnSettings, btnUsers, btnTickets, btnRoles, btnBans, btnPortals, 
+                // Sadece yorumlar sekmesine erişim
+                [btnSettings, btnUsers, btnTickets, btnRoles, btnBans, btnPortals, 
                  mobileBtnSettings, mobileBtnUsers, mobileBtnTickets, mobileBtnRoles, mobileBtnBans, mobileBtnPortals].forEach(btn => {
                     if (btn) btn.style.display = "none";
                 });
                 switchTab('feedbacks');
             } else if (role === "support") {
-                // Sadece bilet sekmesine erişim [btnSettings, btnUsers, btnFeedbacks, btnRoles, btnBans, btnPortals, 
+                // Sadece bilet sekmesine erişim
+                [btnSettings, btnUsers, btnFeedbacks, btnRoles, btnBans, btnPortals, 
                  mobileBtnSettings, mobileBtnUsers, mobileBtnFeedbacks, mobileBtnRoles, mobileBtnBans, mobileBtnPortals].forEach(btn => {
                     if (btn) btn.style.display = "none";
                 });
@@ -1169,7 +1171,8 @@
             }
         }
 
-        // Toggle Login Method (PIN / Email) function setLoginMethod(method) {
+        // Toggle Login Method (PIN / Email)
+        function setLoginMethod(method) {
             const secPin = document.getElementById("login-sec-pin");
             const secEmail = document.getElementById("login-sec-email");
             const btnPin = document.getElementById("btn-login-pin");
@@ -1188,7 +1191,8 @@
             }
         }
 
-        // Email / Password Auth for Admin Panel function signInWithEmailAdmin() {
+        // Email / Password Auth for Admin Panel
+        function signInWithEmailAdmin() {
             const email = document.getElementById("admin-email").value.trim();
             const password = document.getElementById("admin-password").value.trim();
 
@@ -1230,7 +1234,8 @@
             });
         }
 
-        // Translate Firebase Auth error codes function getFirebaseAuthErrorMessage(err) {
+        // Translate Firebase Auth error codes
+        function getFirebaseAuthErrorMessage(err) {
             if (!err || !err.code) return "Bilinmeyen bir hata oluştu .";
             console.warn("Firebase Auth Error Detail:", err);
             switch (err.code) {
@@ -1861,12 +1866,14 @@
             const unbanBtn = document.getElementById("adm-chat-unban-btn");
             const chatInput = document.getElementById("adm-chat-input");
 
-            // Kurucu / Super Admin her şeye yetkilidir let canSend = isSuperAdmin;
+            // Kurucu / Super Admin her şeye yetkilidir
+            let canSend = isSuperAdmin;
             let canStatus = isSuperAdmin;
             let canDelete = isSuperAdmin;
 
             if (!isSuperAdmin) {
-                // Destek veya Mod ise izin matrisini sorgula const role = currentAdminRole;
+                // Destek veya Mod ise izin matrisini sorgula
+                const role = currentAdminRole;
                 if (rolePermissions[role]) {
                     canSend = !!rolePermissions[role].msg;
                     canStatus = !!rolePermissions[role].status;
@@ -1874,7 +1881,8 @@
                 }
             }
 
-            // İzin durumuna göre butonları göster/gizle ve inputları aktif/pasif et if (sendBtn) sendBtn.style.display = canSend ? "block" : "none";
+            // İzin durumuna göre butonları göster/gizle ve inputları aktif/pasif et
+            if (sendBtn) sendBtn.style.display = canSend ? "block" : "none";
             if (chatInput) chatInput.disabled = !canSend;
             
             if (answeredBtn) answeredBtn.style.display = canStatus ? "block" : "none";
@@ -1882,7 +1890,8 @@
             
             if (deleteBtn) deleteBtn.style.display = canDelete ? "block" : "none";
 
-            // Ban Af Talepleri için özel affetme butonu if (unbanBtn) {
+            // Ban Af Talepleri için özel affetme butonu
+            if (unbanBtn) {
                 if (ticket.subject === "Ban Af Talebi" && canStatus) {
                     unbanBtn.style.display = "block";
                 } else {
@@ -2161,7 +2170,8 @@
             });
         }
 
-        // Tek tıkla kolay yetki verme modülü function quickAssignRole(email, role) {
+        // Tek tıkla kolay yetki verme modülü
+        function quickAssignRole(email, role) {
             if (!confirm(`${email} kullanıcısına '${getRoleNameTurkish(role)}' yetkisi vermek istediğine emin misin ? 🐾`)) return;
             
             db.collection("admin_roles").doc(email.toLowerCase().trim()).set({
