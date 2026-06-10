@@ -25,6 +25,15 @@
   padding: 0;
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
+  cursor: default;
+}
+
+a, button, select, option, label, .clickable, .btn, .nav-pill, .tab-btn, [role="button"], [onclick] {
+  cursor: pointer;
+}
+
+input, textarea, [contenteditable="true"] {
+  cursor: text;
 }
 
 body {
