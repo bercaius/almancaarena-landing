@@ -2592,7 +2592,8 @@
             closedBar.style.width = `${Math.round((closed / total) * 100)}%`;
         }
 
-        // Window resize event handler for desktop layout window.addEventListener('resize', () => {
+        // Window resize event handler for desktop layout
+        window.addEventListener('resize', () => {
             if (window.innerWidth >= 992) {
                 const activeSidebarBtn = document.querySelector('.admin-sidebar .sidebar-nav-btn.active');
                 if (activeSidebarBtn) {
